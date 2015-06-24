@@ -1,0 +1,3 @@
+[submodule "Externals/SwiftyJSON"]
+	path = Externals/SwiftyJSON
+	url = git@github.com:otanistudio/SwiftyJSON.git
