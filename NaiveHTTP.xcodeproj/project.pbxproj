@@ -10,6 +10,8 @@
 		5C2660B21B3B30A1004DF6E7 /* NaiveHTTP.h in Headers */ = {isa = PBXBuildFile; fileRef = 5C2660B11B3B30A1004DF6E7 /* NaiveHTTP.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5C2660B91B3B30A1004DF6E7 /* NaiveHTTP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C2660AE1B3B30A1004DF6E7 /* NaiveHTTP.framework */; };
 		5C2660BE1B3B30A1004DF6E7 /* NaiveHTTPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2660BD1B3B30A1004DF6E7 /* NaiveHTTPTests.swift */; };
+		5C2660C91B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */; };
+		5C2660CA1B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +31,7 @@
 		5C2660B81B3B30A1004DF6E7 /* NaiveHTTPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NaiveHTTPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C2660BD1B3B30A1004DF6E7 /* NaiveHTTPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaiveHTTPTests.swift; sourceTree = "<group>"; };
 		5C2660BF1B3B30A1004DF6E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaiveHTTP.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +58,7 @@
 			children = (
 				5C2660B01B3B30A1004DF6E7 /* NaiveHTTP */,
 				5C2660BC1B3B30A1004DF6E7 /* NaiveHTTPTests */,
+				5C2660CB1B3B34B7004DF6E7 /* Externals */,
 				5C2660AF1B3B30A1004DF6E7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -73,6 +77,7 @@
 			children = (
 				5C2660B11B3B30A1004DF6E7 /* NaiveHTTP.h */,
 				5C2660B31B3B30A1004DF6E7 /* Info.plist */,
+				5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */,
 			);
 			path = NaiveHTTP;
 			sourceTree = "<group>";
@@ -84,6 +89,13 @@
 				5C2660BF1B3B30A1004DF6E7 /* Info.plist */,
 			);
 			path = NaiveHTTPTests;
+			sourceTree = "<group>";
+		};
+		5C2660CB1B3B34B7004DF6E7 /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Externals;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -142,6 +154,7 @@
 		5C2660A51B3B30A1004DF6E7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = otanistudio.com;
 				TargetAttributes = {
@@ -193,6 +206,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C2660C91B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,6 +215,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5C2660BE1B3B30A1004DF6E7 /* NaiveHTTPTests.swift in Sources */,
+				5C2660CA1B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,6 +322,7 @@
 		5C2660C31B3B30A1004DF6E7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -317,12 +333,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.otanistudio.NaiveHTTP;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		5C2660C41B3B30A1004DF6E7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -375,6 +393,7 @@
 				5C2660C41B3B30A1004DF6E7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5C2660C51B3B30A1004DF6E7 /* Build configuration list for PBXNativeTarget "NaiveHTTPTests" */ = {
 			isa = XCConfigurationList;
@@ -383,6 +402,7 @@
 				5C2660C71B3B30A1004DF6E7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
