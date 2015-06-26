@@ -62,9 +62,9 @@ public class NaiveHTTP {
     }
     
     public func jsonGET(uri uri:String, success:((json: JSON)->())?, failure:(()->())?) {
-        self.dataGET(uri: uri, success: { (data) -> () in
+        dataGET(uri: uri, success: { (data) -> () in
             let json = JSON(data: data)
-
+            
             if let error = json.error {
                 debugPrint(error)
                 failure!()
@@ -72,14 +72,7 @@ public class NaiveHTTP {
             }
             
             success!(json: json)
-            /*
-            do {
-                let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)
-                success!(json: json)
-            } catch {
-                failure!()
-            }
-            */
+            
             }, failure: failure)
     }
 }
