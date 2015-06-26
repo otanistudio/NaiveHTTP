@@ -35,10 +35,8 @@ class ExternalTests: XCTestCase {
                 XCTFail()
                 networkExpectation.fulfill()
         }
-
-        self.waitForExpectationsWithTimeout(1.0) { (error) -> Void in
-            
-        }
+        
+        self.waitForExpectationsWithTimeout(1.0, handler: nil)
     }
     
     
