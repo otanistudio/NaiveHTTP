@@ -35,7 +35,7 @@ public class NaiveHTTP {
             let image = UIImage(data: imageData!)
             success!(image: image)
             
-            }!.resume()
+            }.resume()
         
     }
     
@@ -58,7 +58,7 @@ public class NaiveHTTP {
             
             success!(data: responseData!)
             
-            }!.resume()
+            }.resume()
     }
     
     public func jsonGET(uri uri:String, success:((json: JSON)->())?, failure:(()->())?) {
@@ -104,6 +104,6 @@ public class NaiveHTTP {
             
             let json = JSON(data: data!)
             success!(json: json)
-        }!.resume()
+        }.resume()
     }
 }
