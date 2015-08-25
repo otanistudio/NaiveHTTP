@@ -10,6 +10,8 @@ import XCTest
 
 class ExternalTests: XCTestCase {
     
+    let networkTimeout = 2.0
+    
     override func setUp() {
         super.setUp()
     }
@@ -33,7 +35,7 @@ class ExternalTests: XCTestCase {
                 networkExpectation.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(1.0, handler: nil)
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
     func testBadImageGET() {
@@ -48,7 +50,7 @@ class ExternalTests: XCTestCase {
                 XCTFail()
                 networkExpectation.fulfill()
         }
-        self.waitForExpectationsWithTimeout(1.0, handler: nil)
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
     func testPNGImageGET() {
@@ -64,7 +66,7 @@ class ExternalTests: XCTestCase {
                 networkExpectation.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(1.0, handler: nil)
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
     func testJSONPOST() {
@@ -81,7 +83,7 @@ class ExternalTests: XCTestCase {
                 XCTFail()
                 networkExpectation.fulfill()
         }
-        self.waitForExpectationsWithTimeout(1.0, handler: nil)
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
     
