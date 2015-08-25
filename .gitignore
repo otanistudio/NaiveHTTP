@@ -9,7 +9,9 @@ build/
 !default.mode2v3
 *.perspectivev3
 !default.perspectivev3
-xcuserdata
+*xcuserdatad/
+*.xcuserstate
+*.xcscmblueprint
 #xcshareddata
 profile
 *.moved-aside
@@ -17,8 +19,7 @@ DerivedData
 .idea/
 *.hmap
 *.xccheckout
-build_output/
-*.xcuserstate
+*.ipa
 
 #CocoaPods
 Pods
