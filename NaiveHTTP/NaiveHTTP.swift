@@ -76,6 +76,38 @@ public class NaiveHTTP {
             }, failure: failure)
     }
     
+    public func post(uri uri:String, postObject: AnyObject, success: ((responseJSON: JSON)->Void)?, failure:( ()->Void )?) {
+        
+        let url = NSURL(string: uri)!
+        let request = NSMutableURLRequest(URL: url)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.HTTPMethod = "POST"
+        
+        do {
+            try request.HTTPBody = JSON(postObject).rawData()
+        } catch {
+            failure!()
+        }
+        
+        urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
+            if error != nil {
+                failure!()
+                return
+            }
+            
+            let httpResponse = response as! NSHTTPURLResponse
+            
+            if (httpResponse.statusCode > 400) {
+                failure!()
+                return
+            }
+            
+            let json = JSON(data: data!)
+            success!(responseJSON: json)
+            }.resume()
+    }
+    
     public func jsonPOST(uri uri:String, postData:JSON, success:( (json:JSON)->Void)?, failure:( ()->Void )?) {
         let url = NSURL(string: uri)!
         let request = NSMutableURLRequest(URL: url)
