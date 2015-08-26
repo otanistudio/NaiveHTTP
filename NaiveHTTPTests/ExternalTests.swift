@@ -78,7 +78,7 @@ class ExternalTests: XCTestCase {
         naive.post(uri: "https://httpbin.org/post", postObject: postObject, success: { (responseJSON) -> Void in
             XCTAssertEqual(expectedResponseJSON, responseJSON.dictionary!["json"])
             networkExpectation.fulfill()
-            }) { () -> Void in
+            }) { (error) -> Void in
                 XCTFail()
                 networkExpectation.fulfill()
         }
@@ -93,8 +93,9 @@ class ExternalTests: XCTestCase {
         naive.post(uri: "http://httpbin.org/status/500", postObject: postObject, success: { (responseJSON) -> Void in
             XCTFail()
             networkExpectation.fulfill()
-            }) { () -> Void in
-                XCTAssert(true)
+            }) { (error) -> Void in
+                XCTAssertEqual(error.code, 400)
+                XCTAssertEqual("HTTP Error 500", error.userInfo[NSLocalizedDescriptionKey] as? String)
                 networkExpectation.fulfill()
         }
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)

@@ -76,7 +76,7 @@ public class NaiveHTTP {
             }, failure: failure)
     }
     
-    public func post(uri uri:String, postObject: AnyObject, success: ((responseJSON: JSON)->Void)?, failure:( ()->Void )?) {
+    public func post(uri uri:String, postObject: AnyObject, success: ((responseJSON: JSON)->Void)?, failure:( (postError: NSError)->Void )?) {
         
         let url = NSURL(string: uri)!
         let request = NSMutableURLRequest(URL: url)
@@ -87,19 +87,21 @@ public class NaiveHTTP {
         do {
             try request.HTTPBody = JSON(postObject).rawData()
         } catch {
-            failure!()
+            let postObjectError = NSError(domain: "com.otanistudio.NaiveHTTP.error", code: -1, userInfo: [NSLocalizedFailureReasonErrorKey: "failed to convert postObject to JSON"])
+            failure!(postError: postObjectError)
         }
         
         urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
             if error != nil {
-                failure!()
+                failure!(postError: error!)
                 return
             }
             
             let httpResponse = response as! NSHTTPURLResponse
             
             if (httpResponse.statusCode > 400) {
-                failure!()
+                let responseError = NSError(domain: "com.otanistudio.NaiveHTTP.error", code: 400, userInfo: [NSLocalizedFailureReasonErrorKey: "400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
+                failure!(postError: responseError)
                 return
             }
             
