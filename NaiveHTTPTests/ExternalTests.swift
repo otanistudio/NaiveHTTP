@@ -111,6 +111,7 @@ class ExternalTests: XCTestCase {
             XCTFail()
             networkExpectation.fulfill()
             }) { () -> Void in
+                XCTAssert(true)
                 networkExpectation.fulfill()
         }
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
