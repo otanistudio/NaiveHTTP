@@ -69,23 +69,6 @@ class ExternalTests: XCTestCase {
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
-    func testJSONPOST() {
-        let naive = NaiveHTTP(configuration: nil)
-        let networkExpectation = self.expectationWithDescription("naive network expectation")
-        let postString = NSString(string: "{\"herp\":\"derp\"}")
-        let postData = postString.dataUsingEncoding(NSUTF8StringEncoding)
-        let postJSON = JSON(data: postData!)
-        naive.jsonPOST(uri: "https://httpbin.org:443/post", postData: postJSON, success: { (json) -> Void in
-            debugPrint(json)
-            XCTAssertEqual("derp", json["json"]["herp"])
-            networkExpectation.fulfill()
-            }) { () -> Void in
-                XCTFail()
-                networkExpectation.fulfill()
-        }
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
-    }
-    
     func testPOST() {
         let naive = NaiveHTTP(configuration: nil)
         let networkExpectation = self.expectationWithDescription("naive network expectation")

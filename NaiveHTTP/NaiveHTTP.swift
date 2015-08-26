@@ -108,7 +108,5 @@ public class NaiveHTTP {
             }.resume()
     }
     
-    public func jsonPOST(uri uri:String, postData:JSON, success:( (json:JSON)->Void)?, failure:( ()->Void )?) {
-        self.post(uri: uri, postObject: postData.object, success: success, failure: failure)
-    }
+
 }
