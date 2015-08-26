@@ -75,7 +75,7 @@ class ExternalTests: XCTestCase {
         let postString = NSString(string: "{\"herp\":\"derp\"}")
         let postData = postString.dataUsingEncoding(NSUTF8StringEncoding)
         let postJSON = JSON(data: postData!)
-        naive.jsonPOST(uri: "https://httpbin.org/post", postData: postJSON, success: { (json) -> Void in
+        naive.jsonPOST(uri: "https://httpbin.org:443/post", postData: postJSON, success: { (json) -> Void in
             debugPrint(json)
             XCTAssertEqual("derp", json["json"]["herp"])
             networkExpectation.fulfill()
