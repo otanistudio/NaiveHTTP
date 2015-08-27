@@ -34,16 +34,19 @@ public class NaiveHTTP {
         }
         
         // Now, incorporate items in queryParams to generate the fully-formed NSURL
-        for (key, val) in params! {
-            let qItem = NSURLQueryItem(name: key, value: val)
-            queryItems?.append(qItem)
+        if let p = params {
+            for (key, val) in p {
+                let qItem = NSURLQueryItem(name: key, value: val)
+                queryItems?.append(qItem)
+            }
         }
         
-        queryItems?.sortInPlace({ (qItem1: NSURLQueryItem, qItem2: NSURLQueryItem) -> Bool in
-            return qItem1.name < qItem2.name
-        })
-        
-        urlComponents?.queryItems = queryItems
+        if queryItems!.count > 0 {
+            queryItems?.sortInPlace({ (qItem1: NSURLQueryItem, qItem2: NSURLQueryItem) -> Bool in
+                return qItem1.name < qItem2.name
+            })
+            urlComponents?.queryItems = queryItems
+        }
         
         return NSURL(string: (urlComponents?.string)!)!
     }

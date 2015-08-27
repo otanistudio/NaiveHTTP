@@ -32,6 +32,12 @@ class ExternalTests: XCTestCase {
         XCTAssertEqual(NSURL(string: "http://example.com?a=123&b=456&c=xxx&d=yyy"), url)
     }
     
+    func testNormalizedURLWithNilQueryParam() {
+        let url = NaiveHTTP.normalizedURL(uri: "http://example.com", params: nil)
+        let expectedURL = NSURL(string: "http://example.com")
+        XCTAssertEqual(expectedURL, url)
+    }
+    
     func testJSONGETWithParams() {
         let naive = NaiveHTTP(configuration: nil)
         let testURI = "https://httpbin.org/get"
