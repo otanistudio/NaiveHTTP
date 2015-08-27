@@ -20,17 +20,30 @@ class ExternalTests: XCTestCase {
         super.tearDown()
     }
     
-    func testJSONGET() {
+    func testNormalizedURL() {
+        let testQueryParams = ["a":"123","b":"456"]
+        let url = NaiveHTTP.normalizedURL(uri: "http://example.com", params: testQueryParams)
+        XCTAssertEqual(NSURL(string: "http://example.com?a=123&b=456"), url)
+    }
+    
+    func testNormalizedURLWithExistingQueryParameters() {
+        let testQueryParams = ["a":"123","b":"456"]
+        let url = NaiveHTTP.normalizedURL(uri: "http://example.com?c=xxx&d=yyy", params: testQueryParams)
+        XCTAssertEqual(NSURL(string: "http://example.com?a=123&b=456&c=xxx&d=yyy"), url)
+    }
+    
+    func testJSONGETWithParams() {
         let naive = NaiveHTTP(configuration: nil)
-        let testURI = "https://httpbin.org/get?herp=derp"
+        let testURI = "https://httpbin.org/get"
+        let params = ["herp":"derp"]
         
         let networkExpectation = self.expectationWithDescription("naive network expectation")
         
-        naive.jsonGET(uri: testURI, success: { (json) -> () in
+        naive.jsonGET(uri: testURI, params: params, success: { (json) -> () in
             XCTAssertNil(json.error)
             XCTAssertEqual("derp", json["args"]["herp"])
             networkExpectation.fulfill()
-            }) { () -> () in
+            }) { (error) -> Void in
                 XCTFail()
                 networkExpectation.fulfill()
         }

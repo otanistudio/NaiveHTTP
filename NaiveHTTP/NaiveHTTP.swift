@@ -24,6 +24,30 @@ public class NaiveHTTP {
         urlSession.invalidateAndCancel()
     }
     
+    public class func normalizedURL(uri uri:String, params:[String: String]?) -> NSURL {
+        // Deal with any query params already in the URI String
+        let urlComponents = NSURLComponents(string: uri)
+        var queryItems: [NSURLQueryItem]? = urlComponents?.queryItems
+        
+        if queryItems == nil {
+            queryItems = []
+        }
+        
+        // Now, incorporate items in queryParams to generate the fully-formed NSURL
+        for (key, val) in params! {
+            let qItem = NSURLQueryItem(name: key, value: val)
+            queryItems?.append(qItem)
+        }
+        
+        queryItems?.sortInPlace({ (qItem1: NSURLQueryItem, qItem2: NSURLQueryItem) -> Bool in
+            return qItem1.name < qItem2.name
+        })
+        
+        urlComponents?.queryItems = queryItems
+        
+        return NSURL(string: (urlComponents?.string)!)!
+    }
+    
     public func imageGET(uri uri:String, success:((image: UIImage?)->())?, failure:(()->())?) {
         
         let url = NSURL(string: uri)!
@@ -39,20 +63,22 @@ public class NaiveHTTP {
         
     }
     
-    public func dataGET(uri uri:String, success:((data: NSData)->())?, failure:(()->())?) {
-        let url = NSURL(string: uri)!
+    public func dataGET(uri uri:String, params:[String: String], success:((data: NSData)->())?, failure:((error: NSError)->Void)?) {
+        
+        let url: NSURL =  NaiveHTTP.normalizedURL(uri: uri, params: params)
         
         urlSession.dataTaskWithURL(url) { (responseData: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
             
             let httpResponse = response as! NSHTTPURLResponse
             
             if (error != nil) {
-                failure!()
+                failure!(error: error!)
                 return
             }
             
             if (httpResponse.statusCode > 400) {
-                failure!()
+                let responseError = NSError(domain: "com.otanistudio.NaiveHTTP.error", code: 400, userInfo: nil)
+                failure!(error: responseError)
                 return
             }
             
@@ -61,13 +87,13 @@ public class NaiveHTTP {
             }.resume()
     }
     
-    public func jsonGET(uri uri:String, success:((json: JSON)->())?, failure:(()->())?) {
-        dataGET(uri: uri, success: { (data) -> () in
+    public func jsonGET(uri uri:String, params:[String: String], success:((json: JSON)->())?, failure:((error: NSError)->Void)?) {
+        dataGET(uri: uri, params: params, success: { (data) -> () in
             let json = JSON(data: data)
             
             if let error = json.error {
                 debugPrint(error)
-                failure!()
+                failure!(error: error)
                 return
             }
             
@@ -110,5 +136,5 @@ public class NaiveHTTP {
             }.resume()
     }
     
-
+    
 }
