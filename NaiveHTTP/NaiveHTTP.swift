@@ -66,7 +66,7 @@ public class NaiveHTTP {
         
     }
     
-    public func dataGET(uri uri:String, params:[String: String], success:((data: NSData)->())?, failure:((error: NSError)->Void)?) {
+    public func dataGET(uri uri:String, params:[String: String]?, success:((data: NSData)->())?, failure:((error: NSError)->Void)?) {
         
         let url: NSURL =  NaiveHTTP.normalizedURL(uri: uri, params: params)
         
@@ -90,7 +90,7 @@ public class NaiveHTTP {
             }.resume()
     }
     
-    public func jsonGET(uri uri:String, params:[String: String], success:((json: JSON)->())?, failure:((error: NSError)->Void)?) {
+    public func jsonGET(uri uri:String, params:[String: String]?, success:((json: JSON)->())?, failure:((error: NSError)->Void)?) {
         dataGET(uri: uri, params: params, success: { (data) -> () in
             let json = JSON(data: data)
             
