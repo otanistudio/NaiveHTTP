@@ -72,12 +72,12 @@ public class NaiveHTTP {
         
         urlSession.dataTaskWithURL(url) { (responseData: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
             
-            let httpResponse = response as! NSHTTPURLResponse
-            
             if (error != nil) {
                 failure!(error: error!)
                 return
             }
+            
+            let httpResponse = response as! NSHTTPURLResponse
             
             if (httpResponse.statusCode > 400) {
                 let responseError = NSError(domain: "com.otanistudio.NaiveHTTP.error", code: 400, userInfo: nil)
