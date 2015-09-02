@@ -11,11 +11,14 @@ import UIKit
 
 public class NaiveHTTP {
     let urlSession: NSURLSession!
+    let configuration: NSURLSessionConfiguration!
     
     required public init(configuration: NSURLSessionConfiguration?) {
         if let config = configuration {
+            self.configuration = config
             urlSession = NSURLSession(configuration: config)
         } else {
+            self.configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
             urlSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
         }
     }
