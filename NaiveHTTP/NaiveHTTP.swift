@@ -81,13 +81,13 @@ public class NaiveHTTP {
                 return
             }
             
-            let httpResponse = response as! NSHTTPURLResponse
-            
-            if (httpResponse.statusCode > 400) {
-                let responseError = NSError(domain: self!.errorDomain, code: 400, userInfo: nil)
-                failure!(error: responseError)
-                return
-            }
+            if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
+                if (httpResponse.statusCode > 400) {
+                    let responseError = NSError(domain: self!.errorDomain, code: 400, userInfo: nil)
+                    failure!(error: responseError)
+                    return
+                }
+            }            
             
             success!(data: responseData!)
             
@@ -109,7 +109,49 @@ public class NaiveHTTP {
             }, failure: failure)
     }
     
-    public func post(uri uri:String, postObject: AnyObject?, additionalHeaders: [String:String]?, success: ((responseJSON: JSON)->())?, failure:((postError: NSError)->())?) {
+    public func get(uri uri:String, params:[String: String]?, responseFilter: String?, success:((json: JSON)->())?, failure:((error: NSError)->Void)?) {
+        dataGET(uri: uri, params: params, success: { [weak self](data) -> () in
+            
+            let json: JSON?
+            
+            if responseFilter != nil {
+                json = self!.preFilterResponseData(responseFilter!, data: data)
+            } else {
+                json = JSON(data: data)
+            }
+            
+            if let error = json!.error {
+                debugPrint(error)
+                failure!(error: error)
+                return
+            }
+            
+            success!(json: json!)
+            
+            }, failure: failure)
+    }
+    
+    private func preFilterResponseData(prefixFilter: String, data: NSData?) -> JSON {
+        let json: JSON?
+
+        if let unfilteredJSONStr = NSString(data: data!, encoding: NSUTF8StringEncoding) {
+            if unfilteredJSONStr.hasPrefix(prefixFilter) {
+                let range = unfilteredJSONStr.rangeOfString(prefixFilter, options: .LiteralSearch)
+                let filteredStr = unfilteredJSONStr.substringFromIndex(range.length)
+                let filteredData = filteredStr.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+                json = JSON(data: filteredData!)
+            } else {
+                let filteredData = unfilteredJSONStr.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+                json = JSON(data: filteredData!)
+            }
+        } else {
+            json = JSON(NSNull())
+        }
+        
+        return json!
+    }
+    
+    public func post(uri uri:String, postObject: AnyObject?, preFilter: String?, additionalHeaders: [String: String]?, success: ((responseJSON: JSON)->())?, failure:((postError: NSError)->())?) {
         let url = NSURL(string: uri)!
         let request = NSMutableURLRequest(URL: url)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
@@ -137,17 +179,28 @@ public class NaiveHTTP {
                 return
             }
             
-            let httpResponse = response as! NSHTTPURLResponse
-            
-            if (httpResponse.statusCode > 400) {
-                let responseError = NSError(domain: self!.errorDomain, code: 400, userInfo: [NSLocalizedFailureReasonErrorKey: "400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
-                failure!(postError: responseError)
-                return
+            if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
+                if (httpResponse.statusCode > 400) {
+                    let responseError = NSError(domain: self!.errorDomain, code: 400, userInfo: [NSLocalizedFailureReasonErrorKey: "400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
+                    failure!(postError: responseError)
+                    return
+                }
             }
             
-            let json = JSON(data: data!)
-            success!(responseJSON: json)
+            let json: JSON?
+            
+            if preFilter != nil {
+                json = self!.preFilterResponseData(preFilter!, data: data)
+            } else {
+                json = JSON(data: data!)
+            }
+            
+            success!(responseJSON: json!)
             }.resume()
+    }
+    
+    public func post(uri uri:String, postObject: AnyObject?, additionalHeaders: [String:String]?, success: ((responseJSON: JSON)->())?, failure:((postError: NSError)->())?) {
+        post(uri: uri, postObject: postObject, preFilter: nil, additionalHeaders: additionalHeaders, success: success, failure: failure)
     }
     
     public func post(uri uri:String, postObject: AnyObject?, success: ((responseJSON: JSON)->Void)?, failure:( (postError: NSError)->Void )?) {

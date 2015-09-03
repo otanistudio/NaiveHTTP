@@ -150,4 +150,40 @@ class ExternalTests: XCTestCase {
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
+    func testGETWithPreFilter() {
+        let naive = NaiveHTTP(configuration: nil)
+        let networkExpectation = self.expectationWithDescription("naive network expectation")
+        let prefixFilter = "while(1);</x>"
+        let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
+        let uri = url?.absoluteString
+    
+        naive.get(uri: uri!, params: nil, responseFilter:prefixFilter, success: { (json) -> () in
+                XCTAssertEqual(JSON(["feh":"bleh"]), json)
+                networkExpectation.fulfill()
+            }) { (error) -> Void in
+                XCTFail(error.description)
+                networkExpectation.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
+    
+    func testPOSTWithPreFilter() {
+        let naive = NaiveHTTP(configuration: nil)
+        let networkExpectation = self.expectationWithDescription("naive network expectation")
+        let prefixFilter = "while(1);</x>"
+        let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
+        let uri = url?.absoluteString
+        
+        naive.post(uri: uri!, postObject: nil, preFilter: prefixFilter, additionalHeaders: nil
+            , success: { (responseJSON) -> () in
+                XCTAssertEqual(JSON(["feh":"bleh"]), responseJSON)
+                networkExpectation.fulfill()
+            }) { (postError) -> () in
+                XCTFail(postError.description)
+                networkExpectation.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
 }
