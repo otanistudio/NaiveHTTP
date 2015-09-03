@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		5C2660B21B3B30A1004DF6E7 /* NaiveHTTP.h in Headers */ = {isa = PBXBuildFile; fileRef = 5C2660B11B3B30A1004DF6E7 /* NaiveHTTP.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5C2660B91B3B30A1004DF6E7 /* NaiveHTTP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C2660AE1B3B30A1004DF6E7 /* NaiveHTTP.framework */; };
-		5C2660BE1B3B30A1004DF6E7 /* NaiveHTTPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2660BD1B3B30A1004DF6E7 /* NaiveHTTPTests.swift */; };
 		5C2660C91B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */; };
 		5C2660CA1B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */; };
 		5C65BA251B3B4CF1005B4DCE /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C65BA241B3B4CF1005B4DCE /* SwiftyJSON.swift */; };
@@ -32,7 +31,6 @@
 		5C2660B11B3B30A1004DF6E7 /* NaiveHTTP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NaiveHTTP.h; sourceTree = "<group>"; };
 		5C2660B31B3B30A1004DF6E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5C2660B81B3B30A1004DF6E7 /* NaiveHTTPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NaiveHTTPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5C2660BD1B3B30A1004DF6E7 /* NaiveHTTPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaiveHTTPTests.swift; sourceTree = "<group>"; };
 		5C2660BF1B3B30A1004DF6E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaiveHTTP.swift; sourceTree = "<group>"; };
 		5C65BA241B3B4CF1005B4DCE /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftyJSON.swift; path = SwiftyJSON/Source/SwiftyJSON.swift; sourceTree = "<group>"; };
@@ -91,7 +89,6 @@
 			isa = PBXGroup;
 			children = (
 				5C65BA271B3B67D6005B4DCE /* ExternalTests.swift */,
-				5C2660BD1B3B30A1004DF6E7 /* NaiveHTTPTests.swift */,
 				5C2660BF1B3B30A1004DF6E7 /* Info.plist */,
 			);
 			path = NaiveHTTPTests;
@@ -232,7 +229,6 @@
 			files = (
 				5C65BA281B3B67D6005B4DCE /* ExternalTests.swift in Sources */,
 				5C65BA261B3B66FF005B4DCE /* SwiftyJSON.swift in Sources */,
-				5C2660BE1B3B30A1004DF6E7 /* NaiveHTTPTests.swift in Sources */,
 				5C2660CA1B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
