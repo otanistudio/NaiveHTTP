@@ -88,6 +88,22 @@ class ExternalTests: XCTestCase {
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
+    func testPostWithAdditionalHeaders() {
+        let naive = NaiveHTTP(configuration: nil)
+        let networkExpectation = self.expectationWithDescription("naive network expectation")
+        let postObject = ["herp":"derp"];
+        let additionalHeaders = ["X-Some-Custom-Header":"hey-hi-ho"]
+        
+        naive.post(uri: "https://httpbin.org/post", postObject: postObject, additionalHeaders: additionalHeaders, success: { (responseJSON) -> Void in
+            XCTAssertEqual("hey-hi-ho", responseJSON["headers"]["X-Some-Custom-Header"].string)
+            networkExpectation.fulfill()
+            }) { (error) -> Void in
+                XCTFail()
+                networkExpectation.fulfill()
+        }
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
+    
     func testPOST() {
         let naive = NaiveHTTP(configuration: nil)
         let networkExpectation = self.expectationWithDescription("naive network expectation")
