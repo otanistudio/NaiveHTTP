@@ -11,7 +11,7 @@ import UIKit
 
 public class NaiveHTTP {
     let urlSession: NSURLSession!
-    let configuration: NSURLSessionConfiguration!
+    public let configuration: NSURLSessionConfiguration!
     let errorDomain = "com.otanistudio.NaiveHTTP.error"
     
     required public init(configuration: NSURLSessionConfiguration?) {
