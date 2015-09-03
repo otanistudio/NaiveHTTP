@@ -109,7 +109,7 @@ public class NaiveHTTP {
             }, failure: failure)
     }
     
-    public func post(uri uri:String, postObject: AnyObject, additionalHeaders: [String:String]?, success: ((responseJSON: JSON)->())?, failure:((postError: NSError)->())?) {
+    public func post(uri uri:String, postObject: AnyObject?, additionalHeaders: [String:String]?, success: ((responseJSON: JSON)->())?, failure:((postError: NSError)->())?) {
         let url = NSURL(string: uri)!
         let request = NSMutableURLRequest(URL: url)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
@@ -122,11 +122,13 @@ public class NaiveHTTP {
             }
         }
         
-        do {
-            try request.HTTPBody = JSON(postObject).rawData()
-        } catch {
-            let postObjectError = NSError(domain: self.errorDomain, code: -1, userInfo: [NSLocalizedFailureReasonErrorKey: "failed to convert postObject to JSON"])
-            failure!(postError: postObjectError)
+        if postObject != nil {
+            do {
+                try request.HTTPBody = JSON(postObject!).rawData()
+            } catch {
+                let postObjectError = NSError(domain: self.errorDomain, code: -1, userInfo: [NSLocalizedFailureReasonErrorKey: "failed to convert postObject to JSON"])
+                failure!(postError: postObjectError)
+            }
         }
         
         urlSession.dataTaskWithRequest(request) { [weak self](data, response, error) -> Void in
@@ -148,7 +150,7 @@ public class NaiveHTTP {
             }.resume()
     }
     
-    public func post(uri uri:String, postObject: AnyObject, success: ((responseJSON: JSON)->Void)?, failure:( (postError: NSError)->Void )?) {
+    public func post(uri uri:String, postObject: AnyObject?, success: ((responseJSON: JSON)->Void)?, failure:( (postError: NSError)->Void )?) {
         post(uri: uri, postObject: postObject, additionalHeaders: nil, success: success, failure: failure)
     }
     
