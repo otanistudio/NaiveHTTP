@@ -12,6 +12,7 @@ import UIKit
 public class NaiveHTTP {
     let urlSession: NSURLSession!
     let configuration: NSURLSessionConfiguration!
+    let errorDomain = "com.otanistudio.NaiveHTTP.error"
     
     required public init(configuration: NSURLSessionConfiguration?) {
         if let config = configuration {
@@ -73,7 +74,7 @@ public class NaiveHTTP {
         
         let url: NSURL =  NaiveHTTP.normalizedURL(uri: uri, params: params)
         
-        urlSession.dataTaskWithURL(url) { (responseData: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
+        urlSession.dataTaskWithURL(url) { [weak self](responseData: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
             
             if (error != nil) {
                 failure!(error: error!)
@@ -83,7 +84,7 @@ public class NaiveHTTP {
             let httpResponse = response as! NSHTTPURLResponse
             
             if (httpResponse.statusCode > 400) {
-                let responseError = NSError(domain: "com.otanistudio.NaiveHTTP.error", code: 400, userInfo: nil)
+                let responseError = NSError(domain: self!.errorDomain, code: 400, userInfo: nil)
                 failure!(error: responseError)
                 return
             }
@@ -119,11 +120,11 @@ public class NaiveHTTP {
         do {
             try request.HTTPBody = JSON(postObject).rawData()
         } catch {
-            let postObjectError = NSError(domain: "com.otanistudio.NaiveHTTP.error", code: -1, userInfo: [NSLocalizedFailureReasonErrorKey: "failed to convert postObject to JSON"])
+            let postObjectError = NSError(domain: self.errorDomain, code: -1, userInfo: [NSLocalizedFailureReasonErrorKey: "failed to convert postObject to JSON"])
             failure!(postError: postObjectError)
         }
         
-        urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
+        urlSession.dataTaskWithRequest(request) { [weak self](data, response, error) -> Void in
             if error != nil {
                 failure!(postError: error!)
                 return
@@ -132,7 +133,7 @@ public class NaiveHTTP {
             let httpResponse = response as! NSHTTPURLResponse
             
             if (httpResponse.statusCode > 400) {
-                let responseError = NSError(domain: "com.otanistudio.NaiveHTTP.error", code: 400, userInfo: [NSLocalizedFailureReasonErrorKey: "400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
+                let responseError = NSError(domain: self!.errorDomain, code: 400, userInfo: [NSLocalizedFailureReasonErrorKey: "400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
                 failure!(postError: responseError)
                 return
             }
