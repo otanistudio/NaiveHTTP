@@ -70,7 +70,7 @@ public class NaiveHTTP {
         
     }
     
-    public func dataGET(uri uri:String, params:[String: String]?, success:((data: NSData)->())?, failure:((error: NSError)->Void)?) {
+    public func dataGET(uri uri:String, params:[String: String]?, success:((data: NSData, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
         
         let url: NSURL =  NaiveHTTP.normalizedURL(uri: uri, params: params)
         
@@ -89,13 +89,13 @@ public class NaiveHTTP {
                 }
             }            
             
-            success!(data: responseData!)
+            success!(data: responseData!, response: response!)
             
             }.resume()
     }
     
-    public func jsonGET(uri uri:String, params:[String: String]?, success:((json: JSON)->())?, failure:((error: NSError)->Void)?) {
-        dataGET(uri: uri, params: params, success: { (data) -> () in
+    public func jsonGET(uri uri:String, params:[String: String]?, success:((json: JSON, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
+        dataGET(uri: uri, params: params, success: { (data, response) -> () in
             let json = JSON(data: data)
             
             if let error = json.error {
@@ -104,13 +104,13 @@ public class NaiveHTTP {
                 return
             }
             
-            success!(json: json)
+            success!(json: json, response: response)
             
             }, failure: failure)
     }
     
-    public func get(uri uri:String, params:[String: String]?, responseFilter: String?, success:((json: JSON)->())?, failure:((error: NSError)->Void)?) {
-        dataGET(uri: uri, params: params, success: { [weak self](data) -> () in
+    public func get(uri uri:String, params:[String: String]?, responseFilter: String?, success:((json: JSON, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
+        dataGET(uri: uri, params: params, success: { [weak self](data, response) -> () in
             
             let json: JSON?
             
@@ -126,7 +126,7 @@ public class NaiveHTTP {
                 return
             }
             
-            success!(json: json!)
+            success!(json: json!, response: response)
             
             }, failure: failure)
     }
@@ -151,7 +151,7 @@ public class NaiveHTTP {
         return json!
     }
     
-    public func post(uri uri:String, postObject: AnyObject?, preFilter: String?, additionalHeaders: [String: String]?, success: ((responseJSON: JSON)->())?, failure:((postError: NSError)->())?) {
+    public func post(uri uri:String, postObject: AnyObject?, preFilter: String?, additionalHeaders: [String: String]?, success: ((responseJSON: JSON, response: NSURLResponse)->())?, failure:((postError: NSError)->())?) {
         let url = NSURL(string: uri)!
         let request = NSMutableURLRequest(URL: url)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
@@ -195,15 +195,15 @@ public class NaiveHTTP {
                 json = JSON(data: data!)
             }
             
-            success!(responseJSON: json!)
+            success!(responseJSON: json!, response: response!)
             }.resume()
     }
     
-    public func post(uri uri:String, postObject: AnyObject?, additionalHeaders: [String:String]?, success: ((responseJSON: JSON)->())?, failure:((postError: NSError)->())?) {
+    public func post(uri uri:String, postObject: AnyObject?, additionalHeaders: [String:String]?, success: ((responseJSON: JSON, response: NSURLResponse)->())?, failure:((postError: NSError)->())?) {
         post(uri: uri, postObject: postObject, preFilter: nil, additionalHeaders: additionalHeaders, success: success, failure: failure)
     }
     
-    public func post(uri uri:String, postObject: AnyObject?, success: ((responseJSON: JSON)->Void)?, failure:( (postError: NSError)->Void )?) {
+    public func post(uri uri:String, postObject: AnyObject?, success: ((responseJSON: JSON, response: NSURLResponse)->Void)?, failure:( (postError: NSError)->Void )?) {
         post(uri: uri, postObject: postObject, additionalHeaders: nil, success: success, failure: failure)
     }
     
