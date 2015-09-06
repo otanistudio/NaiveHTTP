@@ -148,7 +148,7 @@ class ExternalTests: XCTestCase {
         let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
     
-        naive.get(uri: uri!, params: nil, responseFilter:prefixFilter, success: { (json, response) -> () in
+        naive.GET(uri: uri!, params: nil, responseFilter:prefixFilter, successJSON: { (json, response) -> () in
                 XCTAssertEqual(JSON(["feh":"bleh"]), json)
                 self.networkExpectation!.fulfill()
             }) { (error) -> Void in
