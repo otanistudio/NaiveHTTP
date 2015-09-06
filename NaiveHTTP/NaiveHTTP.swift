@@ -28,7 +28,7 @@ public class NaiveHTTP {
         urlSession.invalidateAndCancel()
     }
     
-    public class func normalizedURL(uri uri:String, params:[String: String]?) -> NSURL {
+    public class func normalizedURL(uri:String, params:[String: String]?) -> NSURL {
         // Deal with any query params already in the URI String
         let urlComponents = NSURLComponents(string: uri)
         var queryItems: [NSURLQueryItem]? = urlComponents?.queryItems
@@ -69,7 +69,7 @@ public class NaiveHTTP {
     
     public func GET(uri:String, params:[String: String]?, success:((data: NSData, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
         
-        let url: NSURL =  NaiveHTTP.normalizedURL(uri: uri, params: params)
+        let url: NSURL =  NaiveHTTP.normalizedURL(uri, params: params)
         
         urlSession.dataTaskWithURL(url) { [weak self](responseData: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
             
