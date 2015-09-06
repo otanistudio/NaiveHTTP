@@ -87,7 +87,7 @@ class ExternalTests: XCTestCase {
         let postObject = ["herp":"derp"];
         let additionalHeaders = ["X-Some-Custom-Header":"hey-hi-ho"]
         
-        naive.POST(uri: "https://httpbin.org/post", postObject: postObject, additionalHeaders: additionalHeaders, success: { (responseJSON, response) -> Void in
+        naive.POST("https://httpbin.org/post", postObject: postObject, additionalHeaders: additionalHeaders, success: { (responseJSON, response) -> Void in
                 XCTAssertEqual("hey-hi-ho", responseJSON["headers"]["X-Some-Custom-Header"].string)
                 self.networkExpectation!.fulfill()
             }) { (error) -> Void in
@@ -102,7 +102,7 @@ class ExternalTests: XCTestCase {
         let postObject = ["herp":"derp"];
         let expectedResponseJSON = JSON(postObject)
         
-        naive.POST(uri: "https://httpbin.org/post", postObject: postObject, success: { (responseJSON, response) -> Void in
+        naive.POST("https://httpbin.org/post", postObject: postObject, success: { (responseJSON, response) -> Void in
                 XCTAssertEqual(expectedResponseJSON, responseJSON.dictionary!["json"])
                 let httpResp = response as! NSHTTPURLResponse
                 XCTAssertEqual("https://httpbin.org/post", httpResp.URL!.absoluteString)
@@ -117,7 +117,7 @@ class ExternalTests: XCTestCase {
     func testPOSTWithNilPostBody() {
         let naive = NaiveHTTP(configuration: nil)
         
-        naive.POST(uri: "https://httpbin.org/post", postObject: nil, success: { (responseJSON, response) -> Void in
+        naive.POST("https://httpbin.org/post", postObject: nil, success: { (responseJSON, response) -> Void in
                 XCTAssertEqual(JSON(NSNull()), responseJSON["json"])
                 self.networkExpectation!.fulfill()
             }) { (error) -> Void in
@@ -131,7 +131,7 @@ class ExternalTests: XCTestCase {
         let naive = NaiveHTTP(configuration: nil)
         let postObject = ["herp":"derp"];
         
-        naive.POST(uri: "http://httpbin.org/status/500", postObject: postObject, success: { (responseJSON) -> Void in
+        naive.POST("http://httpbin.org/status/500", postObject: postObject, success: { (responseJSON) -> Void in
                 XCTFail()
                 self.networkExpectation!.fulfill()
             }) { (error) -> Void in
@@ -165,7 +165,7 @@ class ExternalTests: XCTestCase {
         let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
         
-        naive.POST(uri: uri!, postObject: nil, preFilter: prefixFilter, additionalHeaders: nil, success: { (responseJSON, response) -> () in
+        naive.POST(uri!, postObject: nil, preFilter: prefixFilter, additionalHeaders: nil, success: { (responseJSON, response) -> () in
                 XCTAssertEqual(JSON(["feh":"bleh"]), responseJSON)
                 self.networkExpectation!.fulfill()
             }) { (postError) -> () in

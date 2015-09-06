@@ -148,7 +148,7 @@ public class NaiveHTTP {
         return json!
     }
     
-    public func POST(uri uri:String, postObject: AnyObject?, preFilter: String?, additionalHeaders: [String: String]?, success: ((responseJSON: JSON, response: NSURLResponse)->())?, failure:((postError: NSError)->())?) {
+    public func POST(uri:String, postObject: AnyObject?, preFilter: String?, additionalHeaders: [String: String]?, success: ((responseJSON: JSON, response: NSURLResponse)->())?, failure:((postError: NSError)->())?) {
         let url = NSURL(string: uri)!
         let request = NSMutableURLRequest(URL: url)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
@@ -196,12 +196,12 @@ public class NaiveHTTP {
             }.resume()
     }
     
-    public func POST(uri uri:String, postObject: AnyObject?, additionalHeaders: [String:String]?, success: ((responseJSON: JSON, response: NSURLResponse)->())?, failure:((postError: NSError)->())?) {
-        POST(uri: uri, postObject: postObject, preFilter: nil, additionalHeaders: additionalHeaders, success: success, failure: failure)
+    public func POST(uri:String, postObject: AnyObject?, additionalHeaders: [String:String]?, success: ((responseJSON: JSON, response: NSURLResponse)->())?, failure:((postError: NSError)->())?) {
+        POST(uri, postObject: postObject, preFilter: nil, additionalHeaders: additionalHeaders, success: success, failure: failure)
     }
     
-    public func POST(uri uri:String, postObject: AnyObject?, success: ((responseJSON: JSON, response: NSURLResponse)->Void)?, failure:( (postError: NSError)->Void )?) {
-        POST(uri: uri, postObject: postObject, additionalHeaders: nil, success: success, failure: failure)
+    public func POST(uri:String, postObject: AnyObject?, success: ((responseJSON: JSON, response: NSURLResponse)->Void)?, failure:( (postError: NSError)->Void )?) {
+        POST(uri, postObject: postObject, additionalHeaders: nil, success: success, failure: failure)
     }
     
     
