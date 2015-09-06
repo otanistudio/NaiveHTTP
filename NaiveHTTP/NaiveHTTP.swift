@@ -106,7 +106,7 @@ public class NaiveHTTP {
             }, failure: failure)
     }
     
-    public func GET(uri uri:String, params:[String: String]?, responseFilter: String?, successJSON:((json: JSON, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
+    public func GET(uri:String, params:[String: String]?, responseFilter: String?, successJSON:((json: JSON, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
         GET(uri, params: params, success: { [weak self](data, response) -> () in
             
             let json: JSON?

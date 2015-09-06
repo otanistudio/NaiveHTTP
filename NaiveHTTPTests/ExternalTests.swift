@@ -80,7 +80,8 @@ class ExternalTests: XCTestCase {
                 self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)    }
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
     
     func testPostWithAdditionalHeaders() {
         let naive = NaiveHTTP(configuration: nil)
@@ -148,7 +149,7 @@ class ExternalTests: XCTestCase {
         let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
     
-        naive.GET(uri: uri!, params: nil, responseFilter:prefixFilter, successJSON: { (json, response) -> () in
+        naive.GET(uri!, params: nil, responseFilter:prefixFilter, successJSON: { (json, response) -> () in
                 XCTAssertEqual(JSON(["feh":"bleh"]), json)
                 self.networkExpectation!.fulfill()
             }) { (error) -> Void in
