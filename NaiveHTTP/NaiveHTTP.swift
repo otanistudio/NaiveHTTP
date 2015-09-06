@@ -61,13 +61,13 @@ public class NaiveHTTP {
         let request = NSMutableURLRequest(URL: url)
         request.setValue("image/png,image/jpg,image/jpeg,image/tiff,image/gif", forHTTPHeaderField: "Accept")
         
-        dataGET(uri: uri, params: nil, success: { (imageData, response) -> () in
+        GET(uri: uri, params: nil, success: { (imageData, response) -> () in
             let image = UIImage(data: imageData)
             successImage!(image: image, response: response)
             }, failure: failure)
     }
     
-    public func dataGET(uri uri:String, params:[String: String]?, success:((data: NSData, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
+    public func GET(uri uri:String, params:[String: String]?, success:((data: NSData, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
         
         let url: NSURL =  NaiveHTTP.normalizedURL(uri: uri, params: params)
         
@@ -92,7 +92,7 @@ public class NaiveHTTP {
     }
     
     public func jsonGET(uri uri:String, params:[String: String]?, success:((json: JSON, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
-        dataGET(uri: uri, params: params, success: { (data, response) -> () in
+        GET(uri: uri, params: params, success: { (data, response) -> () in
             let json = JSON(data: data)
             
             if let error = json.error {
@@ -107,7 +107,7 @@ public class NaiveHTTP {
     }
     
     public func get(uri uri:String, params:[String: String]?, responseFilter: String?, success:((json: JSON, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
-        dataGET(uri: uri, params: params, success: { [weak self](data, response) -> () in
+        GET(uri: uri, params: params, success: { [weak self](data, response) -> () in
             
             let json: JSON?
             
