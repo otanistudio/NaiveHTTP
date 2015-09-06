@@ -27,7 +27,7 @@ class ExternalTests: XCTestCase {
         let naive = NaiveHTTP(configuration: nil)
         let testURI = "https://httpbin.org/get"
         let params = ["herp":"derp"]
-        
+
         naive.GET(testURI, params: params, successJSON: { (json, response) -> () in
                 XCTAssertNil(json.error)
                 XCTAssertEqual("derp", json["args"]["herp"])

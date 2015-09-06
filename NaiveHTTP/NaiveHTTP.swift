@@ -30,6 +30,16 @@ public extension NaiveHTTPProtocol {
     }
 }
 
+public extension NaiveHTTPProtocol {
+    public func POST(uri:String, postObject: AnyObject?, success: ((responseJSON: JSON, response: NSURLResponse)->Void)?, failure:( (postError: NSError)->Void )?) {
+        POST(uri, postObject: postObject, additionalHeaders: nil, success: success, failure: failure)
+    }
+    
+    public func POST(uri:String, postObject: AnyObject?, additionalHeaders: [String:String]?, success: ((responseJSON: JSON, response: NSURLResponse)->())?, failure:((postError: NSError)->())?) {
+        POST(uri, postObject: postObject, preFilter: nil, additionalHeaders: additionalHeaders, success: success, failure: failure)
+    }
+}
+
 public class NaiveHTTP: NaiveHTTPProtocol {
     let _urlSession: NSURLSession!
     let _configuration: NSURLSessionConfiguration!
@@ -211,14 +221,6 @@ public class NaiveHTTP: NaiveHTTPProtocol {
             
             success!(responseJSON: json!, response: response!)
             }.resume()
-    }
-    
-    public func POST(uri:String, postObject: AnyObject?, additionalHeaders: [String:String]?, success: ((responseJSON: JSON, response: NSURLResponse)->())?, failure:((postError: NSError)->())?) {
-        POST(uri, postObject: postObject, preFilter: nil, additionalHeaders: additionalHeaders, success: success, failure: failure)
-    }
-    
-    public func POST(uri:String, postObject: AnyObject?, success: ((responseJSON: JSON, response: NSURLResponse)->Void)?, failure:( (postError: NSError)->Void )?) {
-        POST(uri, postObject: postObject, additionalHeaders: nil, success: success, failure: failure)
     }
     
     
