@@ -45,7 +45,7 @@ class ExternalTests: XCTestCase {
         
         let networkExpectation = self.expectationWithDescription("naive network expectation")
         
-        naive.jsonGET(uri: testURI, params: params, success: { (json, response) -> () in
+        naive.GET(uri: testURI, params: params, successJSON: { (json, response) -> () in
             XCTAssertNil(json.error)
             XCTAssertEqual("derp", json["args"]["herp"])
             let httpResp = response as! NSHTTPURLResponse

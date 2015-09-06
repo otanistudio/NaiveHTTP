@@ -91,7 +91,7 @@ public class NaiveHTTP {
             }.resume()
     }
     
-    public func jsonGET(uri uri:String, params:[String: String]?, success:((json: JSON, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
+    public func GET(uri uri:String, params:[String: String]?, successJSON:((json: JSON, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
         GET(uri: uri, params: params, success: { (data, response) -> () in
             let json = JSON(data: data)
             
@@ -101,7 +101,7 @@ public class NaiveHTTP {
                 return
             }
             
-            success!(json: json, response: response)
+            successJSON!(json: json, response: response)
             
             }, failure: failure)
     }
