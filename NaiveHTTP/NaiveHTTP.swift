@@ -9,11 +9,25 @@
 import Foundation
 import UIKit
 
-protocol NaiveHTTPProtocol {
+public protocol NaiveHTTPProtocol {
     var urlSession: NSURLSession { get }
     var configuration: NSURLSessionConfiguration { get }
     func GET(uri:String, params:[String: String]?, success:((data: NSData, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?)
     func POST(uri:String, postObject: AnyObject?, preFilter: String?, additionalHeaders: [String: String]?, success: ((responseJSON: JSON, response: NSURLResponse)->())?, failure:((postError: NSError)->())?)
+}
+
+public extension NaiveHTTPProtocol {
+    func GET(uri:String, successImage:((image: UIImage?, response: NSURLResponse)->())?, failure:((error: NSError)->())?) {
+        
+        let url = NSURL(string: uri)!
+        let request = NSMutableURLRequest(URL: url)
+        request.setValue("image/png,image/jpg,image/jpeg,image/tiff,image/gif", forHTTPHeaderField: "Accept")
+        
+        GET(uri, params: nil, success: { (imageData, response) -> () in
+            let image = UIImage(data: imageData)
+            successImage!(image: image, response: response)
+            }, failure: failure)
+    }
 }
 
 public class NaiveHTTP: NaiveHTTPProtocol {
@@ -21,11 +35,11 @@ public class NaiveHTTP: NaiveHTTPProtocol {
     let _configuration: NSURLSessionConfiguration!
     let errorDomain = "com.otanistudio.NaiveHTTP.error"
     
-    var urlSession: NSURLSession {
+    public var urlSession: NSURLSession {
         return _urlSession
     }
     
-    var configuration: NSURLSessionConfiguration {
+    public var configuration: NSURLSessionConfiguration {
         return _configuration
     }
     
@@ -68,18 +82,6 @@ public class NaiveHTTP: NaiveHTTPProtocol {
         }
         
         return NSURL(string: (urlComponents?.string)!)!
-    }
-    
-    public func GET(uri:String, successImage:((image: UIImage?, response: NSURLResponse)->())?, failure:((error: NSError)->())?) {
-        
-        let url = NSURL(string: uri)!
-        let request = NSMutableURLRequest(URL: url)
-        request.setValue("image/png,image/jpg,image/jpeg,image/tiff,image/gif", forHTTPHeaderField: "Accept")
-        
-        GET(uri, params: nil, success: { (imageData, response) -> () in
-            let image = UIImage(data: imageData)
-            successImage!(image: image, response: response)
-            }, failure: failure)
     }
     
     public func GET(uri:String, params:[String: String]?, success:((data: NSData, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
