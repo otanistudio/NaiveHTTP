@@ -9,23 +9,38 @@
 import Foundation
 import UIKit
 
-public class NaiveHTTP {
-    let urlSession: NSURLSession!
-    public let configuration: NSURLSessionConfiguration!
+protocol NaiveHTTPProtocol {
+    var urlSession: NSURLSession { get }
+    var configuration: NSURLSessionConfiguration { get }
+    func GET(uri:String, params:[String: String]?, success:((data: NSData, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?)
+    func POST(uri:String, postObject: AnyObject?, preFilter: String?, additionalHeaders: [String: String]?, success: ((responseJSON: JSON, response: NSURLResponse)->())?, failure:((postError: NSError)->())?)
+}
+
+public class NaiveHTTP: NaiveHTTPProtocol {
+    let _urlSession: NSURLSession!
+    let _configuration: NSURLSessionConfiguration!
     let errorDomain = "com.otanistudio.NaiveHTTP.error"
+    
+    var urlSession: NSURLSession {
+        return _urlSession
+    }
+    
+    var configuration: NSURLSessionConfiguration {
+        return _configuration
+    }
     
     required public init(configuration: NSURLSessionConfiguration?) {
         if let config = configuration {
-            self.configuration = config
-            urlSession = NSURLSession(configuration: config)
+            self._configuration = config
+            _urlSession = NSURLSession(configuration: config)
         } else {
-            self.configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-            urlSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+            self._configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+            _urlSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
         }
     }
     
     deinit {
-        urlSession.invalidateAndCancel()
+        _urlSession.invalidateAndCancel()
     }
     
     public class func normalizedURL(uri:String, params:[String: String]?) -> NSURL {
