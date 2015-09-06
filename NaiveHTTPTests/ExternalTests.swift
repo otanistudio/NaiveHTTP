@@ -28,7 +28,7 @@ class ExternalTests: XCTestCase {
         let testURI = "https://httpbin.org/get"
         let params = ["herp":"derp"]
         
-        naive.GET(uri: testURI, params: params, successJSON: { (json, response) -> () in
+        naive.GET(testURI, params: params, successJSON: { (json, response) -> () in
                 XCTAssertNil(json.error)
                 XCTAssertEqual("derp", json["args"]["herp"])
                 let httpResp = response as! NSHTTPURLResponse
@@ -45,7 +45,7 @@ class ExternalTests: XCTestCase {
     func testBadImageGET() {
         let naive = NaiveHTTP(configuration: nil)
 
-        naive.GET(uri: "http://httpbin.org/image/webp", successImage: { (image, response) -> () in
+        naive.GET("http://httpbin.org/image/webp", successImage: { (image, response) -> () in
                 XCTAssertNil(image)
                self.networkExpectation!.fulfill()
             }) { (error) -> () in
@@ -58,7 +58,7 @@ class ExternalTests: XCTestCase {
     func testPNGImageGET() {
         let naive = NaiveHTTP(configuration: nil)
         
-        naive.GET(uri: "http://httpbin.org/image/png", successImage: { (image, response) -> () in
+        naive.GET("http://httpbin.org/image/png", successImage: { (image, response) -> () in
                 XCTAssertNotNil(image)
                 self.networkExpectation!.fulfill()
             }) { (error) -> () in
@@ -72,7 +72,7 @@ class ExternalTests: XCTestCase {
     func testImage404() {
         let naive = NaiveHTTP(configuration: nil)
         
-        naive.GET(uri: "http://httpbin.org/status/404", successImage: { (image, response) -> () in
+        naive.GET("http://httpbin.org/status/404", successImage: { (image, response) -> () in
             XCTFail()
             self.networkExpectation!.fulfill()
             }) { (error) -> () in

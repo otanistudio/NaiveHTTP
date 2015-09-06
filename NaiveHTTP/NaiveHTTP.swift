@@ -55,7 +55,7 @@ public class NaiveHTTP {
         return NSURL(string: (urlComponents?.string)!)!
     }
     
-    public func GET(uri uri:String, successImage:((image: UIImage?, response: NSURLResponse)->())?, failure:((error: NSError)->())?) {
+    public func GET(uri:String, successImage:((image: UIImage?, response: NSURLResponse)->())?, failure:((error: NSError)->())?) {
         
         let url = NSURL(string: uri)!
         let request = NSMutableURLRequest(URL: url)
