@@ -12,9 +12,11 @@ import NaiveHTTP
 class ExternalTests: XCTestCase {
     
     let networkTimeout = 2.0
+    var networkExpectation: XCTestExpectation?
     
     override func setUp() {
         super.setUp()
+        networkExpectation = self.expectationWithDescription("naive network expectation")
     }
     
     override func tearDown() {
@@ -26,17 +28,15 @@ class ExternalTests: XCTestCase {
         let testURI = "https://httpbin.org/get"
         let params = ["herp":"derp"]
         
-        let networkExpectation = self.expectationWithDescription("naive network expectation")
-        
         naive.GET(uri: testURI, params: params, successJSON: { (json, response) -> () in
             XCTAssertNil(json.error)
             XCTAssertEqual("derp", json["args"]["herp"])
             let httpResp = response as! NSHTTPURLResponse
             XCTAssertEqual(testURI+"?herp=derp", httpResp.URL!.absoluteString)
-            networkExpectation.fulfill()
+            self.networkExpectation!.fulfill()
             }) { (error) -> Void in
                 XCTFail()
-                networkExpectation.fulfill()
+                self.networkExpectation!.fulfill()
         }
         
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
@@ -44,15 +44,13 @@ class ExternalTests: XCTestCase {
     
     func testBadImageGET() {
         let naive = NaiveHTTP(configuration: nil)
-        
-        let networkExpectation = self.expectationWithDescription("naive network expectation")
 
         naive.GET(uri: "http://httpbin.org/image/webp", successImage: { (image, response) -> () in
-            XCTAssertNil(image)
-            networkExpectation.fulfill()
+                XCTAssertNil(image)
+               self.networkExpectation!.fulfill()
             }) { (error) -> () in
                 XCTFail()
-                networkExpectation.fulfill()
+                self.networkExpectation!.fulfill()
         }
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
@@ -60,14 +58,12 @@ class ExternalTests: XCTestCase {
     func testPNGImageGET() {
         let naive = NaiveHTTP(configuration: nil)
         
-        let networkExpectation = self.expectationWithDescription("naive network expectation")
-        
         naive.GET(uri: "http://httpbin.org/image/png", successImage: { (image, response) -> () in
-            XCTAssertNotNil(image)
-            networkExpectation.fulfill()
+                XCTAssertNotNil(image)
+                self.networkExpectation!.fulfill()
             }) { (error) -> () in
                 XCTFail()
-                networkExpectation.fulfill()
+                self.networkExpectation!.fulfill()
         }
         
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
@@ -75,23 +71,21 @@ class ExternalTests: XCTestCase {
     
     func testPostWithAdditionalHeaders() {
         let naive = NaiveHTTP(configuration: nil)
-        let networkExpectation = self.expectationWithDescription("naive network expectation")
         let postObject = ["herp":"derp"];
         let additionalHeaders = ["X-Some-Custom-Header":"hey-hi-ho"]
         
         naive.POST(uri: "https://httpbin.org/post", postObject: postObject, additionalHeaders: additionalHeaders, success: { (responseJSON, response) -> Void in
             XCTAssertEqual("hey-hi-ho", responseJSON["headers"]["X-Some-Custom-Header"].string)
-            networkExpectation.fulfill()
+            self.networkExpectation!.fulfill()
             }) { (error) -> Void in
                 XCTFail()
-                networkExpectation.fulfill()
+                self.networkExpectation!.fulfill()
         }
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
     func testPOST() {
         let naive = NaiveHTTP(configuration: nil)
-        let networkExpectation = self.expectationWithDescription("naive network expectation")
         let postObject = ["herp":"derp"];
         let expectedResponseJSON = JSON(postObject)
         
@@ -99,57 +93,54 @@ class ExternalTests: XCTestCase {
             XCTAssertEqual(expectedResponseJSON, responseJSON.dictionary!["json"])
             let httpResp = response as! NSHTTPURLResponse
             XCTAssertEqual("https://httpbin.org/post", httpResp.URL!.absoluteString)
-            networkExpectation.fulfill()
+            self.networkExpectation!.fulfill()
             }) { (error) -> Void in
                 XCTFail()
-                networkExpectation.fulfill()
+                self.networkExpectation!.fulfill()
         }
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
     func testPOSTWithNilPostBody() {
         let naive = NaiveHTTP(configuration: nil)
-        let networkExpectation = self.expectationWithDescription("naive network expectation")
         
         naive.POST(uri: "https://httpbin.org/post", postObject: nil, success: { (responseJSON, response) -> Void in
             XCTAssertEqual(JSON(NSNull()), responseJSON["json"])
-            networkExpectation.fulfill()
+            self.networkExpectation!.fulfill()
             }) { (error) -> Void in
                 XCTFail()
-                networkExpectation.fulfill()
+                self.networkExpectation!.fulfill()
         }
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
     func testPOSTError() {
         let naive = NaiveHTTP(configuration: nil)
-        let networkExpectation = self.expectationWithDescription("naive network expectation")
         let postObject = ["herp":"derp"];
         
         naive.POST(uri: "http://httpbin.org/status/500", postObject: postObject, success: { (responseJSON) -> Void in
             XCTFail()
-            networkExpectation.fulfill()
+            self.networkExpectation!.fulfill()
             }) { (error) -> Void in
                 XCTAssertEqual(error.code, 400)
                 XCTAssertEqual("HTTP Error 500", error.userInfo[NSLocalizedDescriptionKey] as? String)
-                networkExpectation.fulfill()
+                self.networkExpectation!.fulfill()
         }
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
     func testGETWithPreFilter() {
         let naive = NaiveHTTP(configuration: nil)
-        let networkExpectation = self.expectationWithDescription("naive network expectation")
         let prefixFilter = "while(1);</x>"
         let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
     
         naive.get(uri: uri!, params: nil, responseFilter:prefixFilter, success: { (json, response) -> () in
                 XCTAssertEqual(JSON(["feh":"bleh"]), json)
-                networkExpectation.fulfill()
+                self.networkExpectation!.fulfill()
             }) { (error) -> Void in
                 XCTFail(error.description)
-                networkExpectation.fulfill()
+                self.networkExpectation!.fulfill()
         }
         
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
@@ -157,7 +148,6 @@ class ExternalTests: XCTestCase {
     
     func testPOSTWithPreFilter() {
         let naive = NaiveHTTP(configuration: nil)
-        let networkExpectation = self.expectationWithDescription("naive network expectation")
         let prefixFilter = "while(1);</x>"
         let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
@@ -165,10 +155,10 @@ class ExternalTests: XCTestCase {
         naive.POST(uri: uri!, postObject: nil, preFilter: prefixFilter, additionalHeaders: nil
             , success: { (responseJSON, response) -> () in
                 XCTAssertEqual(JSON(["feh":"bleh"]), responseJSON)
-                networkExpectation.fulfill()
+                self.networkExpectation!.fulfill()
             }) { (postError) -> () in
                 XCTFail(postError.description)
-                networkExpectation.fulfill()
+                self.networkExpectation!.fulfill()
         }
         
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
