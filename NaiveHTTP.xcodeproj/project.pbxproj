@@ -15,6 +15,7 @@
 		5C65BA261B3B66FF005B4DCE /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C65BA241B3B4CF1005B4DCE /* SwiftyJSON.swift */; };
 		5C65BA281B3B67D6005B4DCE /* ExternalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C65BA271B3B67D6005B4DCE /* ExternalTests.swift */; };
 		5C871B241B98E9A9006FC22F /* hijack_guarded.json in Resources */ = {isa = PBXBuildFile; fileRef = 5C871B231B98E9A9006FC22F /* hijack_guarded.json */; settings = {ASSET_TAGS = (); }; };
+		5CC389B71B9CC7DA0058CE06 /* NormalizedURLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389B61B9CC7DA0058CE06 /* NormalizedURLTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,7 @@
 		5C65BA241B3B4CF1005B4DCE /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftyJSON.swift; path = SwiftyJSON/Source/SwiftyJSON.swift; sourceTree = "<group>"; };
 		5C65BA271B3B67D6005B4DCE /* ExternalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExternalTests.swift; sourceTree = "<group>"; };
 		5C871B231B98E9A9006FC22F /* hijack_guarded.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = hijack_guarded.json; sourceTree = "<group>"; };
+		5CC389B61B9CC7DA0058CE06 /* NormalizedURLTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NormalizedURLTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +95,7 @@
 				5C65BA271B3B67D6005B4DCE /* ExternalTests.swift */,
 				5C2660BF1B3B30A1004DF6E7 /* Info.plist */,
 				5C871B231B98E9A9006FC22F /* hijack_guarded.json */,
+				5CC389B61B9CC7DA0058CE06 /* NormalizedURLTests.swift */,
 			);
 			path = NaiveHTTPTests;
 			sourceTree = "<group>";
@@ -233,6 +236,7 @@
 			files = (
 				5C65BA281B3B67D6005B4DCE /* ExternalTests.swift in Sources */,
 				5C65BA261B3B66FF005B4DCE /* SwiftyJSON.swift in Sources */,
+				5CC389B71B9CC7DA0058CE06 /* NormalizedURLTests.swift in Sources */,
 				5C2660CA1B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
