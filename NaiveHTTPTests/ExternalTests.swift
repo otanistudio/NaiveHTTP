@@ -29,11 +29,11 @@ class ExternalTests: XCTestCase {
         let params = ["herp":"derp"]
         
         naive.GET(uri: testURI, params: params, successJSON: { (json, response) -> () in
-            XCTAssertNil(json.error)
-            XCTAssertEqual("derp", json["args"]["herp"])
-            let httpResp = response as! NSHTTPURLResponse
-            XCTAssertEqual(testURI+"?herp=derp", httpResp.URL!.absoluteString)
-            self.networkExpectation!.fulfill()
+                XCTAssertNil(json.error)
+                XCTAssertEqual("derp", json["args"]["herp"])
+                let httpResp = response as! NSHTTPURLResponse
+                XCTAssertEqual(testURI+"?herp=derp", httpResp.URL!.absoluteString)
+                self.networkExpectation!.fulfill()
             }) { (error) -> Void in
                 XCTFail()
                 self.networkExpectation!.fulfill()
@@ -75,8 +75,8 @@ class ExternalTests: XCTestCase {
         let additionalHeaders = ["X-Some-Custom-Header":"hey-hi-ho"]
         
         naive.POST(uri: "https://httpbin.org/post", postObject: postObject, additionalHeaders: additionalHeaders, success: { (responseJSON, response) -> Void in
-            XCTAssertEqual("hey-hi-ho", responseJSON["headers"]["X-Some-Custom-Header"].string)
-            self.networkExpectation!.fulfill()
+                XCTAssertEqual("hey-hi-ho", responseJSON["headers"]["X-Some-Custom-Header"].string)
+                self.networkExpectation!.fulfill()
             }) { (error) -> Void in
                 XCTFail()
                 self.networkExpectation!.fulfill()
@@ -90,10 +90,10 @@ class ExternalTests: XCTestCase {
         let expectedResponseJSON = JSON(postObject)
         
         naive.POST(uri: "https://httpbin.org/post", postObject: postObject, success: { (responseJSON, response) -> Void in
-            XCTAssertEqual(expectedResponseJSON, responseJSON.dictionary!["json"])
-            let httpResp = response as! NSHTTPURLResponse
-            XCTAssertEqual("https://httpbin.org/post", httpResp.URL!.absoluteString)
-            self.networkExpectation!.fulfill()
+                XCTAssertEqual(expectedResponseJSON, responseJSON.dictionary!["json"])
+                let httpResp = response as! NSHTTPURLResponse
+                XCTAssertEqual("https://httpbin.org/post", httpResp.URL!.absoluteString)
+                self.networkExpectation!.fulfill()
             }) { (error) -> Void in
                 XCTFail()
                 self.networkExpectation!.fulfill()
@@ -105,8 +105,8 @@ class ExternalTests: XCTestCase {
         let naive = NaiveHTTP(configuration: nil)
         
         naive.POST(uri: "https://httpbin.org/post", postObject: nil, success: { (responseJSON, response) -> Void in
-            XCTAssertEqual(JSON(NSNull()), responseJSON["json"])
-            self.networkExpectation!.fulfill()
+                XCTAssertEqual(JSON(NSNull()), responseJSON["json"])
+                self.networkExpectation!.fulfill()
             }) { (error) -> Void in
                 XCTFail()
                 self.networkExpectation!.fulfill()
@@ -119,8 +119,8 @@ class ExternalTests: XCTestCase {
         let postObject = ["herp":"derp"];
         
         naive.POST(uri: "http://httpbin.org/status/500", postObject: postObject, success: { (responseJSON) -> Void in
-            XCTFail()
-            self.networkExpectation!.fulfill()
+                XCTFail()
+                self.networkExpectation!.fulfill()
             }) { (error) -> Void in
                 XCTAssertEqual(error.code, 400)
                 XCTAssertEqual("HTTP Error 500", error.userInfo[NSLocalizedDescriptionKey] as? String)
@@ -152,8 +152,7 @@ class ExternalTests: XCTestCase {
         let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
         
-        naive.POST(uri: uri!, postObject: nil, preFilter: prefixFilter, additionalHeaders: nil
-            , success: { (responseJSON, response) -> () in
+        naive.POST(uri: uri!, postObject: nil, preFilter: prefixFilter, additionalHeaders: nil, success: { (responseJSON, response) -> () in
                 XCTAssertEqual(JSON(["feh":"bleh"]), responseJSON)
                 self.networkExpectation!.fulfill()
             }) { (postError) -> () in
