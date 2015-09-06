@@ -64,10 +64,10 @@ class ExternalTests: XCTestCase {
         
         let networkExpectation = self.expectationWithDescription("naive network expectation")
 
-        naive.GET(uri: "http://httpbin.org/image/webp", successImage: { (image) -> () in
+        naive.GET(uri: "http://httpbin.org/image/webp", successImage: { (image, response) -> () in
             XCTAssertNil(image)
             networkExpectation.fulfill()
-            }) { () -> () in
+            }) { (error) -> () in
                 XCTFail()
                 networkExpectation.fulfill()
         }
@@ -79,10 +79,10 @@ class ExternalTests: XCTestCase {
         
         let networkExpectation = self.expectationWithDescription("naive network expectation")
         
-        naive.GET(uri: "http://httpbin.org/image/png", successImage: { (image) -> () in
+        naive.GET(uri: "http://httpbin.org/image/png", successImage: { (image, response) -> () in
             XCTAssertNotNil(image)
             networkExpectation.fulfill()
-            }) { () -> () in
+            }) { (error) -> () in
                 XCTFail()
                 networkExpectation.fulfill()
         }

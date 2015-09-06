@@ -55,19 +55,16 @@ public class NaiveHTTP {
         return NSURL(string: (urlComponents?.string)!)!
     }
     
-    public func GET(uri uri:String, successImage:((image: UIImage?)->())?, failure:(()->())?) {
+    public func GET(uri uri:String, successImage:((image: UIImage?, response: NSURLResponse)->())?, failure:((error: NSError)->())?) {
         
         let url = NSURL(string: uri)!
         let request = NSMutableURLRequest(URL: url)
         request.setValue("image/png,image/jpg,image/jpeg,image/tiff,image/gif", forHTTPHeaderField: "Accept")
         
-        urlSession.dataTaskWithRequest(request) { (imageData: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
-            
-            let image = UIImage(data: imageData!)
-            successImage!(image: image)
-            
-            }.resume()
-        
+        dataGET(uri: uri, params: nil, success: { (imageData, response) -> () in
+            let image = UIImage(data: imageData)
+            successImage!(image: image, response: response)
+            }, failure: failure)
     }
     
     public func dataGET(uri uri:String, params:[String: String]?, success:((data: NSData, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
