@@ -55,7 +55,7 @@ public class NaiveHTTP {
         return NSURL(string: (urlComponents?.string)!)!
     }
     
-    public func imageGET(uri uri:String, success:((image: UIImage?)->())?, failure:(()->())?) {
+    public func GET(uri uri:String, successImage:((image: UIImage?)->())?, failure:(()->())?) {
         
         let url = NSURL(string: uri)!
         let request = NSMutableURLRequest(URL: url)
@@ -64,7 +64,7 @@ public class NaiveHTTP {
         urlSession.dataTaskWithRequest(request) { (imageData: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
             
             let image = UIImage(data: imageData!)
-            success!(image: image)
+            successImage!(image: image)
             
             }.resume()
         
