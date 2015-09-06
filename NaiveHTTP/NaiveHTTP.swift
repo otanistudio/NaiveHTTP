@@ -80,11 +80,11 @@ public class NaiveHTTP {
             
             if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
                 if (httpResponse.statusCode > 400) {
-                    let responseError = NSError(domain: self!.errorDomain, code: 400, userInfo: nil)
+                    let responseError = NSError(domain: self!.errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
                     failure!(error: responseError)
                     return
                 }
-            }            
+            }
             
             success!(data: responseData!, response: response!)
             
@@ -178,7 +178,7 @@ public class NaiveHTTP {
             
             if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
                 if (httpResponse.statusCode > 400) {
-                    let responseError = NSError(domain: self!.errorDomain, code: 400, userInfo: [NSLocalizedFailureReasonErrorKey: "400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
+                    let responseError = NSError(domain: self!.errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
                     failure!(postError: responseError)
                     return
                 }

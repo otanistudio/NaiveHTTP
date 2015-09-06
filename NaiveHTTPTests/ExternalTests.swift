@@ -69,6 +69,19 @@ class ExternalTests: XCTestCase {
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
+    func testImage404() {
+        let naive = NaiveHTTP(configuration: nil)
+        
+        naive.GET(uri: "http://httpbin.org/status/404", successImage: { (image, response) -> () in
+            XCTFail()
+            self.networkExpectation!.fulfill()
+            }) { (error) -> () in
+                XCTAssertEqual(404, error.code)
+                self.networkExpectation!.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)    }
+    
     func testPostWithAdditionalHeaders() {
         let naive = NaiveHTTP(configuration: nil)
         let postObject = ["herp":"derp"];
@@ -122,7 +135,7 @@ class ExternalTests: XCTestCase {
                 XCTFail()
                 self.networkExpectation!.fulfill()
             }) { (error) -> Void in
-                XCTAssertEqual(error.code, 400)
+                XCTAssertEqual(error.code, 500)
                 XCTAssertEqual("HTTP Error 500", error.userInfo[NSLocalizedDescriptionKey] as? String)
                 self.networkExpectation!.fulfill()
         }
