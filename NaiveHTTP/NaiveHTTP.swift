@@ -9,16 +9,30 @@
 import Foundation
 import UIKit
 
+private let errorDomain = "com.otanistudio.NaiveHTTP.error"
+
 public protocol NaiveHTTPProtocol {
     var urlSession: NSURLSession { get }
     var configuration: NSURLSessionConfiguration { get }
-    func GET(uri:String, params:[String: String]?, success:((data: NSData, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?)
-    func POST(uri:String, postObject: AnyObject?, preFilter: String?, additionalHeaders: [String: String]?, success: ((responseJSON: JSON, response: NSURLResponse)->())?, failure:((postError: NSError)->())?)
+    
+    func GET(
+        uri:String,
+        params:[String: String]?,
+        success:((data: NSData, response: NSURLResponse)->())?,
+        failure:((error: NSError)->Void)?
+    )
+    
+    func POST(
+        uri:String,
+        postObject: AnyObject?,
+        additionalHeaders: [String: String]?,
+        success: ((responseData: NSData, response: NSURLResponse)->())?,
+        failure:((postError: NSError)->())?
+    )
 }
 
 public extension NaiveHTTPProtocol {
     func GET(uri:String, successImage:((image: UIImage?, response: NSURLResponse)->())?, failure:((error: NSError)->())?) {
-        
         let url = NSURL(string: uri)!
         let request = NSMutableURLRequest(URL: url)
         request.setValue("image/png,image/jpg,image/jpeg,image/tiff,image/gif", forHTTPHeaderField: "Accept")
@@ -31,19 +45,56 @@ public extension NaiveHTTPProtocol {
 }
 
 public extension NaiveHTTPProtocol {
-    public func POST(uri:String, postObject: AnyObject?, success: ((responseJSON: JSON, response: NSURLResponse)->Void)?, failure:( (postError: NSError)->Void )?) {
-        POST(uri, postObject: postObject, additionalHeaders: nil, success: success, failure: failure)
+    public func POST(uri:String, postObject: AnyObject?, preFilter: String?, additionalHeaders: [String: String]?, successJSON: ((responseJSON: JSON, response: NSURLResponse)->())?, failure:((postError: NSError)->())?) {
+        
+        POST(uri, postObject: postObject, additionalHeaders: additionalHeaders, success: { (responseData, response) -> () in
+            
+            let json: JSON?
+            if preFilter != nil {
+                json = self.preFilterResponseData(preFilter!, data: responseData)
+            } else {
+                json = JSON(data: responseData)
+            }
+            
+            successJSON!(responseJSON: json!, response: response)
+            
+            }) { (postError) -> () in
+                failure!(postError: postError)
+        }
     }
     
-    public func POST(uri:String, postObject: AnyObject?, additionalHeaders: [String:String]?, success: ((responseJSON: JSON, response: NSURLResponse)->())?, failure:((postError: NSError)->())?) {
-        POST(uri, postObject: postObject, preFilter: nil, additionalHeaders: additionalHeaders, success: success, failure: failure)
+    public func POST(uri:String, postObject: AnyObject?, success: ((responseJSON: JSON, response: NSURLResponse)->Void)?, failure:( (postError: NSError)->Void )?) {
+        POST(uri, postObject: postObject, additionalHeaders: nil, successJSON: success, failure: failure)
+    }
+    
+    public func POST(uri:String, postObject: AnyObject?, additionalHeaders: [String:String]?, successJSON: ((responseJSON: JSON, response: NSURLResponse)->())?, failure:((postError: NSError)->())?) {
+        POST(uri, postObject: postObject, preFilter: nil, additionalHeaders: additionalHeaders, successJSON: successJSON, failure: failure)
+    }
+    
+    private func preFilterResponseData(prefixFilter: String, data: NSData?) -> JSON {
+        let json: JSON?
+        
+        if let unfilteredJSONStr = NSString(data: data!, encoding: NSUTF8StringEncoding) {
+            if unfilteredJSONStr.hasPrefix(prefixFilter) {
+                let range = unfilteredJSONStr.rangeOfString(prefixFilter, options: .LiteralSearch)
+                let filteredStr = unfilteredJSONStr.substringFromIndex(range.length)
+                let filteredData = filteredStr.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+                json = JSON(data: filteredData!)
+            } else {
+                let filteredData = unfilteredJSONStr.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+                json = JSON(data: filteredData!)
+            }
+        } else {
+            json = JSON(NSNull())
+        }
+        
+        return json!
     }
 }
 
 public class NaiveHTTP: NaiveHTTPProtocol {
     let _urlSession: NSURLSession!
     let _configuration: NSURLSessionConfiguration!
-    let errorDomain = "com.otanistudio.NaiveHTTP.error"
     
     public var urlSession: NSURLSession {
         return _urlSession
@@ -93,12 +144,13 @@ public class NaiveHTTP: NaiveHTTPProtocol {
         
         return NSURL(string: (urlComponents?.string)!)!
     }
-    
+
+
     public func GET(uri:String, params:[String: String]?, success:((data: NSData, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
         
-        let url: NSURL =  NaiveHTTP.normalizedURL(uri, params: params)
+        let url: NSURL =  self.dynamicType.normalizedURL(uri, params: params)
         
-        urlSession.dataTaskWithURL(url) { [weak self](responseData: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
+        urlSession.dataTaskWithURL(url) { (responseData: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
             
             if (error != nil) {
                 failure!(error: error!)
@@ -107,7 +159,7 @@ public class NaiveHTTP: NaiveHTTPProtocol {
             
             if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
                 if (httpResponse.statusCode > 400) {
-                    let responseError = NSError(domain: self!.errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
+                    let responseError = NSError(domain: errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
                     failure!(error: responseError)
                     return
                 }
@@ -155,73 +207,51 @@ public class NaiveHTTP: NaiveHTTPProtocol {
             }, failure: failure)
     }
     
-    private func preFilterResponseData(prefixFilter: String, data: NSData?) -> JSON {
-        let json: JSON?
-
-        if let unfilteredJSONStr = NSString(data: data!, encoding: NSUTF8StringEncoding) {
-            if unfilteredJSONStr.hasPrefix(prefixFilter) {
-                let range = unfilteredJSONStr.rangeOfString(prefixFilter, options: .LiteralSearch)
-                let filteredStr = unfilteredJSONStr.substringFromIndex(range.length)
-                let filteredData = filteredStr.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-                json = JSON(data: filteredData!)
-            } else {
-                let filteredData = unfilteredJSONStr.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-                json = JSON(data: filteredData!)
-            }
-        } else {
-            json = JSON(NSNull())
-        }
-        
-        return json!
-    }
-    
-    public func POST(uri:String, postObject: AnyObject?, preFilter: String?, additionalHeaders: [String: String]?, success: ((responseJSON: JSON, response: NSURLResponse)->())?, failure:((postError: NSError)->())?) {
-        let url = NSURL(string: uri)!
-        let request = NSMutableURLRequest(URL: url)
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.HTTPMethod = "POST"
-        
-        if let headers = additionalHeaders {
-            for (k, v) in headers {
-                request.setValue(v, forHTTPHeaderField: k)
-            }
-        }
-        
-        if postObject != nil {
-            do {
-                try request.HTTPBody = JSON(postObject!).rawData()
-            } catch {
-                let postObjectError = NSError(domain: self.errorDomain, code: -1, userInfo: [NSLocalizedFailureReasonErrorKey: "failed to convert postObject to JSON"])
-                failure!(postError: postObjectError)
-            }
-        }
-        
-        urlSession.dataTaskWithRequest(request) { [weak self](data, response, error) -> Void in
-            if error != nil {
-                failure!(postError: error!)
-                return
-            }
+    public func POST(
+        uri:String,
+        postObject: AnyObject?,
+        additionalHeaders: [String: String]?,
+        success: ((responseData: NSData, response: NSURLResponse)->())?,
+        failure:((postError: NSError)->())?) {
             
-            if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
-                if (httpResponse.statusCode > 400) {
-                    let responseError = NSError(domain: self!.errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
-                    failure!(postError: responseError)
-                    return
+            let url = NSURL(string: uri)!
+            let request = NSMutableURLRequest(URL: url)
+            request.setValue("application/json", forHTTPHeaderField: "Accept")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.HTTPMethod = "POST"
+            
+            if let headers = additionalHeaders {
+                for (k, v) in headers {
+                    request.setValue(v, forHTTPHeaderField: k)
                 }
             }
             
-            let json: JSON?
-            
-            if preFilter != nil {
-                json = self!.preFilterResponseData(preFilter!, data: data)
-            } else {
-                json = JSON(data: data!)
+            if postObject != nil {
+                do {
+                    try request.HTTPBody = JSON(postObject!).rawData()
+                } catch {
+                    let postObjectError = NSError(domain: errorDomain, code: -1, userInfo: [NSLocalizedFailureReasonErrorKey: "failed to convert postObject to JSON"])
+                    failure!(postError: postObjectError)
+                }
             }
             
-            success!(responseJSON: json!, response: response!)
+            urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
+                if error != nil {
+                    failure!(postError: error!)
+                    return
+                }
+                
+                if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
+                    if (httpResponse.statusCode > 400) {
+                        let responseError = NSError(domain: errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
+                        failure!(postError: responseError)
+                        return
+                    }
+                }
+                
+                success!(responseData: data!, response: response!)
             }.resume()
     }
-    
+
     
 }

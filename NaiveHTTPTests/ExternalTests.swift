@@ -88,7 +88,7 @@ class ExternalTests: XCTestCase {
         let postObject = ["herp":"derp"];
         let additionalHeaders = ["X-Some-Custom-Header":"hey-hi-ho"]
         
-        naive.POST("https://httpbin.org/post", postObject: postObject, additionalHeaders: additionalHeaders, success: { (responseJSON, response) -> Void in
+        naive.POST("https://httpbin.org/post", postObject: postObject, additionalHeaders: additionalHeaders, successJSON: { (responseJSON, response) -> Void in
                 XCTAssertEqual("hey-hi-ho", responseJSON["headers"]["X-Some-Custom-Header"].string)
                 self.networkExpectation!.fulfill()
             }) { (error) -> Void in
@@ -166,7 +166,7 @@ class ExternalTests: XCTestCase {
         let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
         
-        naive.POST(uri!, postObject: nil, preFilter: prefixFilter, additionalHeaders: nil, success: { (responseJSON, response) -> () in
+        naive.POST(uri!, postObject: nil, preFilter: prefixFilter, additionalHeaders: nil, successJSON: { (responseJSON, response) -> () in
                 XCTAssertEqual(JSON(["feh":"bleh"]), responseJSON)
                 self.networkExpectation!.fulfill()
             }) { (postError) -> () in
