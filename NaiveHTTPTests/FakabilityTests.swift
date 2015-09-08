@@ -23,10 +23,10 @@ class FakeTests: XCTestCase {
             success:((data: NSData, response: NSURLResponse)->())?,
             failure:((error: NSError)->())?) {
                 
-                let s = NSString(string: "derp")
-                let data = s.dataUsingEncoding(NSUTF8StringEncoding)
-                let resp = NSURLResponse()
-                success!(data: data!, response: resp)
+            let s = NSString(string: "derp")
+            let data = s.dataUsingEncoding(NSUTF8StringEncoding)
+            let resp = NSURLResponse()
+            success!(data: data!, response: resp)
         }
         
         func GET(uri: String, params: [String : String]?, success: ((data: NSData, response: NSURLResponse) -> ())?, failure: ((error: NSError) -> Void)?) {
