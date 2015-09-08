@@ -10,6 +10,7 @@ import XCTest
 
 class FakeTests: XCTestCase {
     
+    
     struct FakeNaive: NaiveHTTPProtocol {
         var urlSession: NSURLSession {
             return NSURLSession(configuration: configuration)
@@ -19,11 +20,13 @@ class FakeTests: XCTestCase {
             return NSURLSessionConfiguration.ephemeralSessionConfiguration()
         }
         
+        let commonJSONString = "{\"somekey\":\"somevalue\"}"
+        
         private func fakeAsync(
             success:((data: NSData, response: NSURLResponse)->())?,
             failure:((error: NSError)->())?) {
                 
-            let s = NSString(string: "derp")
+            let s = NSString(string: commonJSONString)
             let data = s.dataUsingEncoding(NSUTF8StringEncoding)
             let resp = NSURLResponse()
             success!(data: data!, response: resp)
@@ -48,7 +51,7 @@ class FakeTests: XCTestCase {
         
         fakeNaive.GET("http://example.com", params: nil, success: { [asyncExpectation](data, response) -> () in
             let resultString = NSString(data: data, encoding: NSUTF8StringEncoding)
-            XCTAssertEqual("derp", resultString)
+            XCTAssertEqual(fakeNaive.commonJSONString, resultString)
             asyncExpectation.fulfill()
         }) { (error) -> Void in
             XCTFail()
@@ -57,6 +60,22 @@ class FakeTests: XCTestCase {
         
         self.waitForExpectationsWithTimeout(1.0, handler: nil)
         
+    }
+    
+    func testJSONGET() {
+        // This is nice because we only needed to write one struct, and we inherit
+        // expected behavior from the other protocol extensions
+        let fakeNaive = FakeNaive()
+        let asyncExpectation = self.expectationWithDescription("async expectation")
+        fakeNaive.GET("http://example.com/whatever", params: nil, successJSON: { (json, response) -> () in
+            XCTAssertEqual("somevalue", json["somekey"].stringValue)
+            asyncExpectation.fulfill()
+        }) { (error) -> Void in
+            XCTFail()
+            asyncExpectation.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(1.0, handler: nil)
     }
     
 }
