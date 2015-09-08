@@ -31,6 +31,31 @@ public protocol NaiveHTTPProtocol {
     )
 }
 
+extension NaiveHTTPProtocol {
+    private func performRequest(
+        req: NSURLRequest,
+        success:((data: NSData, response: NSURLResponse)->())?,
+        failure:((error: NSError)->())?) {
+            
+        urlSession.dataTaskWithRequest(req) { (data, response, error) -> Void in
+            if error != nil {
+                failure!(error: error!)
+                return
+            }
+            
+            if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
+                if (httpResponse.statusCode > 400) {
+                    let responseError = NSError(domain: errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
+                    failure!(error: responseError)
+                    return
+                }
+            }
+            
+            success!(data: data!, response: response!)
+            }.resume()
+    }
+}
+
 public class NaiveHTTP: NaiveHTTPProtocol {
     let _urlSession: NSURLSession!
     let _configuration: NSURLSessionConfiguration!
@@ -113,22 +138,8 @@ public class NaiveHTTP: NaiveHTTPProtocol {
                 }
             }
             
-            urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
-                if error != nil {
-                    failure!(postError: error!)
-                    return
-                }
-                
-                if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
-                    if (httpResponse.statusCode > 400) {
-                        let responseError = NSError(domain: errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
-                        failure!(postError: responseError)
-                        return
-                    }
-                }
-                
-                success!(responseData: data!, response: response!)
-            }.resume()
+            performRequest(request, success:success, failure: failure)
+            
     }
 
     
