@@ -16,25 +16,25 @@ public extension NaiveHTTPProtocol {
         successJSON:((json: JSON, response: NSURLResponse)->())?,
         failure:((error: NSError)->Void)?) {
             
-            GET(uri, params: params, success: { (data, response) -> () in
-                
-                let json: JSON?
-                
-                if responseFilter != nil {
-                    json = self.preFilterResponseData(responseFilter!, data: data)
-                } else {
-                    json = JSON(data: data)
-                }
-                
-                if let error = json!.error {
-                    debugPrint(error)
-                    failure!(error: error)
-                    return
-                }
-                
-                successJSON!(json: json!, response: response)
-                
-                }, failure: failure)
+        GET(uri, params: params, success: { (data, response) -> () in
+            
+            let json: JSON?
+            
+            if responseFilter != nil {
+                json = self.preFilterResponseData(responseFilter!, data: data)
+            } else {
+                json = JSON(data: data)
+            }
+            
+            if let error = json!.error {
+                debugPrint(error)
+                failure!(error: error)
+                return
+            }
+            
+            successJSON!(json: json!, response: response)
+            
+            }, failure: failure)
     }
     
     public func GET(
@@ -43,17 +43,17 @@ public extension NaiveHTTPProtocol {
         successJSON:((json: JSON, response: NSURLResponse)->())?,
         failure:((error: NSError)->Void)?) {
             
-            GET(uri, params: params, success: { (data, response) -> () in
-                let json = JSON(data: data)
-                
-                if let error = json.error {
-                    debugPrint(error)
-                    failure!(error: error)
-                    return
-                }
-                
-                successJSON!(json: json, response: response)
-                
-                }, failure: failure)
+        GET(uri, params: params, success: { (data, response) -> () in
+            let json = JSON(data: data)
+            
+            if let error = json.error {
+                debugPrint(error)
+                failure!(error: error)
+                return
+            }
+            
+            successJSON!(json: json, response: response)
+            
+            }, failure: failure)
     }
 }
