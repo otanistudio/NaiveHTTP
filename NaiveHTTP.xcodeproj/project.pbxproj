@@ -22,6 +22,8 @@
 		5CC389BD1B9E82070058CE06 /* NaiveHTTP.Image.GET.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389BB1B9E82070058CE06 /* NaiveHTTP.Image.GET.swift */; };
 		5CC389BF1B9E82BB0058CE06 /* NaiveHTTP.JSON.POST.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389BE1B9E82BB0058CE06 /* NaiveHTTP.JSON.POST.swift */; };
 		5CC389C01B9E82BB0058CE06 /* NaiveHTTP.JSON.POST.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389BE1B9E82BB0058CE06 /* NaiveHTTP.JSON.POST.swift */; };
+		5CC389C21B9E83390058CE06 /* NaiveHTTP.Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389C11B9E83390058CE06 /* NaiveHTTP.Utility.swift */; };
+		5CC389C31B9E83390058CE06 /* NaiveHTTP.Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389C11B9E83390058CE06 /* NaiveHTTP.Utility.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +50,7 @@
 		5CC389B81B9E7FCA0058CE06 /* NaiveHTTP.JSON.GET.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaiveHTTP.JSON.GET.swift; sourceTree = "<group>"; };
 		5CC389BB1B9E82070058CE06 /* NaiveHTTP.Image.GET.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaiveHTTP.Image.GET.swift; sourceTree = "<group>"; };
 		5CC389BE1B9E82BB0058CE06 /* NaiveHTTP.JSON.POST.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaiveHTTP.JSON.POST.swift; sourceTree = "<group>"; };
+		5CC389C11B9E83390058CE06 /* NaiveHTTP.Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaiveHTTP.Utility.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +100,7 @@
 				5CC389BB1B9E82070058CE06 /* NaiveHTTP.Image.GET.swift */,
 				5CC389B81B9E7FCA0058CE06 /* NaiveHTTP.JSON.GET.swift */,
 				5CC389BE1B9E82BB0058CE06 /* NaiveHTTP.JSON.POST.swift */,
+				5CC389C11B9E83390058CE06 /* NaiveHTTP.Utility.swift */,
 			);
 			path = NaiveHTTP;
 			sourceTree = "<group>";
@@ -238,6 +242,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5C2660C91B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */,
+				5CC389C21B9E83390058CE06 /* NaiveHTTP.Utility.swift in Sources */,
 				5CC389BF1B9E82BB0058CE06 /* NaiveHTTP.JSON.POST.swift in Sources */,
 				5C65BA251B3B4CF1005B4DCE /* SwiftyJSON.swift in Sources */,
 				5CC389BC1B9E82070058CE06 /* NaiveHTTP.Image.GET.swift in Sources */,
@@ -256,6 +261,7 @@
 				5CC389BD1B9E82070058CE06 /* NaiveHTTP.Image.GET.swift in Sources */,
 				5C2660CA1B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */,
 				5CC389C01B9E82BB0058CE06 /* NaiveHTTP.JSON.POST.swift in Sources */,
+				5CC389C31B9E83390058CE06 /* NaiveHTTP.Utility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
