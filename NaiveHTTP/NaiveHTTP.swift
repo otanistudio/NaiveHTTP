@@ -89,25 +89,8 @@ public class NaiveHTTP: NaiveHTTPProtocol {
         failure:((error: NSError)->Void)?) {
         
         let url: NSURL =  self.dynamicType.normalizedURL(uri, params: params)
-        
-        urlSession.dataTaskWithURL(url) { (responseData: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
-            
-            if (error != nil) {
-                failure!(error: error!)
-                return
-            }
-            
-            if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
-                if (httpResponse.statusCode > 400) {
-                    let responseError = NSError(domain: errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
-                    failure!(error: responseError)
-                    return
-                }
-            }
-            
-            success!(data: responseData!, response: response!)
-            
-            }.resume()
+        let request = NSURLRequest(URL: url)
+        performRequest(request, success: success, failure: failure)
     }
     
     public func POST(
