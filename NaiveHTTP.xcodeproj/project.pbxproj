@@ -16,6 +16,8 @@
 		5C65BA281B3B67D6005B4DCE /* ExternalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C65BA271B3B67D6005B4DCE /* ExternalTests.swift */; };
 		5C871B241B98E9A9006FC22F /* hijack_guarded.json in Resources */ = {isa = PBXBuildFile; fileRef = 5C871B231B98E9A9006FC22F /* hijack_guarded.json */; settings = {ASSET_TAGS = (); }; };
 		5CC389B71B9CC7DA0058CE06 /* NormalizedURLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389B61B9CC7DA0058CE06 /* NormalizedURLTests.swift */; };
+		5CC389B91B9E7FCA0058CE06 /* NaiveHTTP.JSON.GET.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389B81B9E7FCA0058CE06 /* NaiveHTTP.JSON.GET.swift */; };
+		5CC389BA1B9E80800058CE06 /* NaiveHTTP.JSON.GET.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389B81B9E7FCA0058CE06 /* NaiveHTTP.JSON.GET.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +41,7 @@
 		5C65BA271B3B67D6005B4DCE /* ExternalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExternalTests.swift; sourceTree = "<group>"; };
 		5C871B231B98E9A9006FC22F /* hijack_guarded.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = hijack_guarded.json; sourceTree = "<group>"; };
 		5CC389B61B9CC7DA0058CE06 /* NormalizedURLTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NormalizedURLTests.swift; sourceTree = "<group>"; };
+		5CC389B81B9E7FCA0058CE06 /* NaiveHTTP.JSON.GET.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaiveHTTP.JSON.GET.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +88,7 @@
 				5C2660B11B3B30A1004DF6E7 /* NaiveHTTP.h */,
 				5C2660B31B3B30A1004DF6E7 /* Info.plist */,
 				5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */,
+				5CC389B81B9E7FCA0058CE06 /* NaiveHTTP.JSON.GET.swift */,
 			);
 			path = NaiveHTTP;
 			sourceTree = "<group>";
@@ -227,6 +231,7 @@
 			files = (
 				5C2660C91B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */,
 				5C65BA251B3B4CF1005B4DCE /* SwiftyJSON.swift in Sources */,
+				5CC389B91B9E7FCA0058CE06 /* NaiveHTTP.JSON.GET.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,6 +242,7 @@
 				5C65BA281B3B67D6005B4DCE /* ExternalTests.swift in Sources */,
 				5C65BA261B3B66FF005B4DCE /* SwiftyJSON.swift in Sources */,
 				5CC389B71B9CC7DA0058CE06 /* NormalizedURLTests.swift in Sources */,
+				5CC389BA1B9E80800058CE06 /* NaiveHTTP.JSON.GET.swift in Sources */,
 				5C2660CA1B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

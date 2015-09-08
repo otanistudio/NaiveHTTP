@@ -32,7 +32,7 @@ public protocol NaiveHTTPProtocol {
 }
 
 public extension NaiveHTTPProtocol {
-    private func preFilterResponseData(prefixFilter: String, data: NSData?) -> JSON {
+    internal func preFilterResponseData(prefixFilter: String, data: NSData?) -> JSON {
         let json: JSON?
         
         if let unfilteredJSONStr = NSString(data: data!, encoding: NSUTF8StringEncoding) {
@@ -191,54 +191,6 @@ public class NaiveHTTP: NaiveHTTPProtocol {
             success!(data: responseData!, response: response!)
             
             }.resume()
-    }
-    
-    public func GET(
-        uri:String,
-        params:[String: String]?,
-        successJSON:((json: JSON, response: NSURLResponse)->())?,
-        failure:((error: NSError)->Void)?) {
-            
-        GET(uri, params: params, success: { (data, response) -> () in
-            let json = JSON(data: data)
-            
-            if let error = json.error {
-                debugPrint(error)
-                failure!(error: error)
-                return
-            }
-            
-            successJSON!(json: json, response: response)
-            
-            }, failure: failure)
-    }
-    
-    public func GET(
-        uri:String,
-        params:[String: String]?,
-        responseFilter: String?,
-        successJSON:((json: JSON, response: NSURLResponse)->())?,
-        failure:((error: NSError)->Void)?) {
-            
-        GET(uri, params: params, success: { [weak self](data, response) -> () in
-            
-            let json: JSON?
-            
-            if responseFilter != nil {
-                json = self!.preFilterResponseData(responseFilter!, data: data)
-            } else {
-                json = JSON(data: data)
-            }
-            
-            if let error = json!.error {
-                debugPrint(error)
-                failure!(error: error)
-                return
-            }
-            
-            successJSON!(json: json!, response: response)
-            
-            }, failure: failure)
     }
     
     public func POST(
