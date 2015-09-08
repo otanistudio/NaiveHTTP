@@ -10,7 +10,6 @@ import XCTest
 
 class FakeTests: XCTestCase {
     
-    
     struct FakeNaive: NaiveHTTPProtocol {
         var urlSession: NSURLSession {
             return NSURLSession(configuration: configuration)
@@ -32,11 +31,22 @@ class FakeTests: XCTestCase {
             success!(data: data!, response: resp)
         }
         
-        func GET(uri: String, params: [String : String]?, success: ((data: NSData, response: NSURLResponse) -> ())?, failure: ((error: NSError) -> Void)?) {
+        func GET(
+            uri: String,
+            params: [String : String]?,
+            success: ((data: NSData, response: NSURLResponse) -> ())?,
+            failure: ((error: NSError) -> Void)?) {
+                
             fakeAsync(success, failure: failure)
         }
         
-        func POST(uri: String, postObject: AnyObject?, additionalHeaders: [String : String]?, success: ((responseData: NSData, response: NSURLResponse) -> ())?, failure: ((postError: NSError) -> ())?) {
+        func POST(
+            uri: String,
+            postObject: AnyObject?,
+            additionalHeaders: [String : String]?,
+            success: ((responseData: NSData, response: NSURLResponse) -> ())?,
+            failure: ((postError: NSError) -> ())?) {
+                
             fakeAsync(success, failure: failure)
         }
     }
