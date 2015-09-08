@@ -8,35 +8,35 @@
 
 import XCTest
 
-struct FakeNaive: NaiveHTTPProtocol {
-    var urlSession: NSURLSession {
-        return NSURLSession(configuration: configuration)
-    }
-    
-    var configuration: NSURLSessionConfiguration {
-        return NSURLSessionConfiguration.ephemeralSessionConfiguration()
-    }
-    
-    private func fakeAsync(
-        success:((data: NSData, response: NSURLResponse)->())?,
-        failure:((error: NSError)->())?) {
-            
-        let s = NSString(string: "derp")
-        let data = s.dataUsingEncoding(NSUTF8StringEncoding)
-        let resp = NSURLResponse()
-        success!(data: data!, response: resp)
-    }
-    
-    func GET(uri: String, params: [String : String]?, success: ((data: NSData, response: NSURLResponse) -> ())?, failure: ((error: NSError) -> Void)?) {
-        fakeAsync(success, failure: failure)
-    }
-    
-    func POST(uri: String, postObject: AnyObject?, additionalHeaders: [String : String]?, success: ((responseData: NSData, response: NSURLResponse) -> ())?, failure: ((postError: NSError) -> ())?) {
-        fakeAsync(success, failure: failure)
-    }
-}
-
 class FakeTests: XCTestCase {
+    
+    struct FakeNaive: NaiveHTTPProtocol {
+        var urlSession: NSURLSession {
+            return NSURLSession(configuration: configuration)
+        }
+        
+        var configuration: NSURLSessionConfiguration {
+            return NSURLSessionConfiguration.ephemeralSessionConfiguration()
+        }
+        
+        private func fakeAsync(
+            success:((data: NSData, response: NSURLResponse)->())?,
+            failure:((error: NSError)->())?) {
+                
+                let s = NSString(string: "derp")
+                let data = s.dataUsingEncoding(NSUTF8StringEncoding)
+                let resp = NSURLResponse()
+                success!(data: data!, response: resp)
+        }
+        
+        func GET(uri: String, params: [String : String]?, success: ((data: NSData, response: NSURLResponse) -> ())?, failure: ((error: NSError) -> Void)?) {
+            fakeAsync(success, failure: failure)
+        }
+        
+        func POST(uri: String, postObject: AnyObject?, additionalHeaders: [String : String]?, success: ((responseData: NSData, response: NSURLResponse) -> ())?, failure: ((postError: NSError) -> ())?) {
+            fakeAsync(success, failure: failure)
+        }
+    }
     
     override func setUp() {
         super.setUp()
