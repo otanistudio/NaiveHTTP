@@ -45,7 +45,13 @@ public extension NaiveHTTPProtocol {
 }
 
 public extension NaiveHTTPProtocol {
-    public func POST(uri:String, postObject: AnyObject?, preFilter: String?, additionalHeaders: [String: String]?, successJSON: ((responseJSON: JSON, response: NSURLResponse)->())?, failure:((postError: NSError)->())?) {
+    public func POST(
+        uri:String,
+        postObject: AnyObject?,
+        preFilter: String?,
+        additionalHeaders: [String: String]?,
+        successJSON: ((responseJSON: JSON, response: NSURLResponse)->())?,
+        failure:((postError: NSError)->())?) {
         
         POST(uri, postObject: postObject, additionalHeaders: additionalHeaders, success: { (responseData, response) -> () in
             
@@ -63,11 +69,22 @@ public extension NaiveHTTPProtocol {
         }
     }
     
-    public func POST(uri:String, postObject: AnyObject?, success: ((responseJSON: JSON, response: NSURLResponse)->Void)?, failure:( (postError: NSError)->Void )?) {
-        POST(uri, postObject: postObject, additionalHeaders: nil, successJSON: success, failure: failure)
+    public func POST(
+        uri:String,
+        postObject: AnyObject?,
+        successJSON: ((responseJSON: JSON, response: NSURLResponse)->Void)?,
+        failure:( (postError: NSError)->Void )?) {
+            
+        POST(uri, postObject: postObject, additionalHeaders: nil, successJSON: successJSON, failure: failure)
     }
     
-    public func POST(uri:String, postObject: AnyObject?, additionalHeaders: [String:String]?, successJSON: ((responseJSON: JSON, response: NSURLResponse)->())?, failure:((postError: NSError)->())?) {
+    public func POST(
+        uri:String,
+        postObject: AnyObject?,
+        additionalHeaders: [String:String]?,
+        successJSON: ((responseJSON: JSON, response: NSURLResponse)->())?,
+        failure:((postError: NSError)->())?) {
+            
         POST(uri, postObject: postObject, preFilter: nil, additionalHeaders: additionalHeaders, successJSON: successJSON, failure: failure)
     }
     
@@ -146,7 +163,11 @@ public class NaiveHTTP: NaiveHTTPProtocol {
     }
 
 
-    public func GET(uri:String, params:[String: String]?, success:((data: NSData, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
+    public func GET(
+        uri:String,
+        params:[String: String]?,
+        success:((data: NSData, response: NSURLResponse)->())?,
+        failure:((error: NSError)->Void)?) {
         
         let url: NSURL =  self.dynamicType.normalizedURL(uri, params: params)
         
@@ -170,7 +191,12 @@ public class NaiveHTTP: NaiveHTTPProtocol {
             }.resume()
     }
     
-    public func GET(uri:String, params:[String: String]?, successJSON:((json: JSON, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
+    public func GET(
+        uri:String,
+        params:[String: String]?,
+        successJSON:((json: JSON, response: NSURLResponse)->())?,
+        failure:((error: NSError)->Void)?) {
+            
         GET(uri, params: params, success: { (data, response) -> () in
             let json = JSON(data: data)
             
@@ -185,7 +211,13 @@ public class NaiveHTTP: NaiveHTTPProtocol {
             }, failure: failure)
     }
     
-    public func GET(uri:String, params:[String: String]?, responseFilter: String?, successJSON:((json: JSON, response: NSURLResponse)->())?, failure:((error: NSError)->Void)?) {
+    public func GET(
+        uri:String,
+        params:[String: String]?,
+        responseFilter: String?,
+        successJSON:((json: JSON, response: NSURLResponse)->())?,
+        failure:((error: NSError)->Void)?) {
+            
         GET(uri, params: params, success: { [weak self](data, response) -> () in
             
             let json: JSON?
