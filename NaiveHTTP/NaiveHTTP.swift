@@ -81,19 +81,6 @@ public extension NaiveHTTPProtocol {
 }
 
 public extension NaiveHTTPProtocol {
-    func GET(uri:String, successImage:((image: UIImage?, response: NSURLResponse)->())?, failure:((error: NSError)->())?) {
-        let url = NSURL(string: uri)!
-        let request = NSMutableURLRequest(URL: url)
-        request.setValue("image/png,image/jpg,image/jpeg,image/tiff,image/gif", forHTTPHeaderField: "Accept")
-        
-        GET(uri, params: nil, success: { (imageData, response) -> () in
-            let image = UIImage(data: imageData)
-            successImage!(image: image, response: response)
-            }, failure: failure)
-    }
-}
-
-public extension NaiveHTTPProtocol {
 
     public func POST(
         uri:String,
