@@ -45,6 +45,27 @@ public extension NaiveHTTPProtocol {
 }
 
 public extension NaiveHTTPProtocol {
+    
+    private func preFilterResponseData(prefixFilter: String, data: NSData?) -> JSON {
+        let json: JSON?
+        
+        if let unfilteredJSONStr = NSString(data: data!, encoding: NSUTF8StringEncoding) {
+            if unfilteredJSONStr.hasPrefix(prefixFilter) {
+                let range = unfilteredJSONStr.rangeOfString(prefixFilter, options: .LiteralSearch)
+                let filteredStr = unfilteredJSONStr.substringFromIndex(range.length)
+                let filteredData = filteredStr.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+                json = JSON(data: filteredData!)
+            } else {
+                let filteredData = unfilteredJSONStr.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+                json = JSON(data: filteredData!)
+            }
+        } else {
+            json = JSON(NSNull())
+        }
+        
+        return json!
+    }
+    
     public func POST(
         uri:String,
         postObject: AnyObject?,
@@ -86,26 +107,6 @@ public extension NaiveHTTPProtocol {
         failure:((postError: NSError)->())?) {
             
         POST(uri, postObject: postObject, preFilter: nil, additionalHeaders: additionalHeaders, successJSON: successJSON, failure: failure)
-    }
-    
-    private func preFilterResponseData(prefixFilter: String, data: NSData?) -> JSON {
-        let json: JSON?
-        
-        if let unfilteredJSONStr = NSString(data: data!, encoding: NSUTF8StringEncoding) {
-            if unfilteredJSONStr.hasPrefix(prefixFilter) {
-                let range = unfilteredJSONStr.rangeOfString(prefixFilter, options: .LiteralSearch)
-                let filteredStr = unfilteredJSONStr.substringFromIndex(range.length)
-                let filteredData = filteredStr.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-                json = JSON(data: filteredData!)
-            } else {
-                let filteredData = unfilteredJSONStr.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-                json = JSON(data: filteredData!)
-            }
-        } else {
-            json = JSON(NSNull())
-        }
-        
-        return json!
     }
 }
 
