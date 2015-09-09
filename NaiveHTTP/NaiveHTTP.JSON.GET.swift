@@ -13,10 +13,11 @@ public extension NaiveHTTPProtocol {
         uri:String,
         params:[String: String]?,
         responseFilter: String?,
+        additionalHeaders: [String:String]?,
         successJSON:((json: JSON, response: NSURLResponse)->())?,
         failure:((error: NSError)->Void)?) {
             
-        GET(uri, params: params, success: { (data, response) -> () in
+        GET(uri, params: params, additionalHeaders: additionalHeaders, success: { (data, response) -> () in
             
             let json: JSON?
             
@@ -43,7 +44,7 @@ public extension NaiveHTTPProtocol {
         successJSON:((json: JSON, response: NSURLResponse)->())?,
         failure:((error: NSError)->Void)?) {
             
-        GET(uri, params: params, success: { (data, response) -> () in
+        GET(uri, params: params, additionalHeaders: nil, success: { (data, response) -> () in
             let json = JSON(data: data)
             
             if let error = json.error {

@@ -16,6 +16,7 @@ public protocol NaiveHTTPProtocol {
     func GET(
         uri:String,
         params:[String: String]?,
+        additionalHeaders: [String: String]?,
         success:((data: NSData, response: NSURLResponse)->())?,
         failure:((error: NSError)->Void)?
     )

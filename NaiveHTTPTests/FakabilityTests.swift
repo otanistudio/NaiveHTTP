@@ -34,6 +34,7 @@ class FakeTests: XCTestCase {
         func GET(
             uri: String,
             params: [String : String]?,
+            additionalHeaders:[String: String]?,
             success: ((data: NSData, response: NSURLResponse) -> ())?,
             failure: ((error: NSError) -> Void)?) {
                 
@@ -59,7 +60,7 @@ class FakeTests: XCTestCase {
         let fakeNaive = FakeNaive()
         let asyncExpectation = self.expectationWithDescription("async expectation")
         
-        fakeNaive.GET("http://example.com", params: nil, success: { [asyncExpectation](data, response) -> () in
+        fakeNaive.GET("http://example.com", params: nil, additionalHeaders: nil, success: { [asyncExpectation](data, response) -> () in
             let resultString = NSString(data: data, encoding: NSUTF8StringEncoding)
             XCTAssertEqual(fakeNaive.commonJSONString, resultString)
             asyncExpectation.fulfill()

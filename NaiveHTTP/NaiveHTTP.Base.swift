@@ -13,12 +13,20 @@ private let errorDomain = "com.otanistudio.NaiveHTTP.error"
 public extension NaiveHTTPProtocol {
     public func GET(
         uri:String,
-        params:[String: String]?,
+        params: [String: String]?,
+        additionalHeaders: [String: String]?,
         success:((data: NSData, response: NSURLResponse)->())?,
         failure:((error: NSError)->Void)?) {
             
         let url: NSURL =  self.dynamicType.normalizedURL(uri, params: params)
-        let request = NSURLRequest(URL: url)
+        let request = NSMutableURLRequest(URL: url)
+            
+        if let headers = additionalHeaders {
+            for (k, v) in headers {
+                request.setValue(v, forHTTPHeaderField: k)
+            }
+        }
+            
         performRequest(request, success: success, failure: failure)
     }
     
