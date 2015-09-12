@@ -26,7 +26,7 @@ public extension NaiveHTTPProtocol {
             }
         }
 
-        performRequest(request, callback: completion)
+        performRequest(request, completion: completion)
     }
     
     public func POST(
@@ -57,7 +57,7 @@ public extension NaiveHTTPProtocol {
                 }
             }
             
-            performRequest(request, callback: completion)
+            performRequest(request, completion: completion)
     }
 
 }
@@ -65,23 +65,23 @@ public extension NaiveHTTPProtocol {
 public extension NaiveHTTPProtocol {
     public func performRequest(
         req: NSURLRequest,
-        callback:((data: NSData?, response: NSURLResponse?, error: NSError?)->())?) {
+        completion:((data: NSData?, response: NSURLResponse?, error: NSError?)->())?) {
             
         urlSession.dataTaskWithRequest(req) { (data, response, error) -> Void in
             guard error == nil else {
-                callback?(data: data, response: response, error: error)
+                completion?(data: data, response: response, error: error)
                 return
             }
             
             if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
                 if (httpResponse.statusCode > 400) {
                     let responseError = NSError(domain: errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
-                    callback?(data: data, response: response, error: responseError)
+                    completion?(data: data, response: response, error: responseError)
                     return
                 }
             }
             
-            callback?(data: data, response: response, error: error)
+            completion?(data: data, response: response, error: error)
             
             }.resume()
         

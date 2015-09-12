@@ -29,7 +29,7 @@ public protocol NaiveHTTPProtocol {
     
     func performRequest(
         req: NSURLRequest,
-        callback:((data: NSData?, response: NSURLResponse?, error: NSError?)->())?)
+        completion:((data: NSData?, response: NSURLResponse?, error: NSError?)->())?)
 }
 
 public class NaiveHTTP: NaiveHTTPProtocol {
