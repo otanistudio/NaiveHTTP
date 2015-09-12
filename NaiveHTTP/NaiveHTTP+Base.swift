@@ -8,7 +8,7 @@
 
 import Foundation
 
-private let errorDomain = "com.otanistudio.NaiveHTTP.error"
+internal let errorDomain = "com.otanistudio.NaiveHTTP.error"
 
 public extension NaiveHTTPProtocol {
     public func GET(
@@ -63,6 +63,30 @@ public extension NaiveHTTPProtocol {
 }
 
 public extension NaiveHTTPProtocol {
+    public func performRequest(
+        req: NSURLRequest,
+        callback:((data: NSData?, response: NSURLResponse?, error: NSError?)->())?) {
+            
+        urlSession.dataTaskWithRequest(req) { (data, response, error) -> Void in
+            guard error == nil else {
+                callback?(data: data, response: response, error: error)
+                return
+            }
+            
+            if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
+                if (httpResponse.statusCode > 400) {
+                    let responseError = NSError(domain: errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
+                    callback?(data: data, response: response, error: responseError)
+                    return
+                }
+            }
+            
+            callback?(data: data, response: response, error: error)
+            
+            }.resume()
+        
+    }
+    
     public func performRequest(
         req: NSURLRequest,
         success:((data: NSData, response: NSURLResponse)->())?,

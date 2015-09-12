@@ -51,12 +51,12 @@ class ExternalTests: XCTestCase {
     func testBadImageGET() {
         let naive = NaiveHTTP(configuration: nil)
 
-        naive.GET("http://httpbin.org/image/webp", successImage: { (image, response) -> () in
+        naive.GET("http://httpbin.org/image/webp") { (image, response, error) -> () in
+            XCTAssertEqual("nil UIImage", error?.userInfo[NSLocalizedFailureReasonErrorKey] as? String)
             XCTAssertNil(image)
-           self.networkExpectation!.fulfill()
-        }) { (error) -> () in
-            XCTFail()
+            XCTAssertNotNil(response)
             self.networkExpectation!.fulfill()
+
         }
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
@@ -64,11 +64,10 @@ class ExternalTests: XCTestCase {
     func testPNGImageGET() {
         let naive = NaiveHTTP(configuration: nil)
         
-        naive.GET("http://httpbin.org/image/png", successImage: { (image, response) -> () in
+        naive.GET("http://httpbin.org/image/png") { (image, response, error) -> () in
             XCTAssertNotNil(image)
-            self.networkExpectation!.fulfill()
-        }) { (error) -> () in
-            XCTFail()
+            XCTAssertNotNil(response)
+            XCTAssertNil(error)
             self.networkExpectation!.fulfill()
         }
         
@@ -78,11 +77,10 @@ class ExternalTests: XCTestCase {
     func testImage404() {
         let naive = NaiveHTTP(configuration: nil)
         
-        naive.GET("http://httpbin.org/status/404", successImage: { (image, response) -> () in
-            XCTFail()
-            self.networkExpectation!.fulfill()
-        }) { (error) -> () in
-            XCTAssertEqual(404, error.code)
+        naive.GET("http://httpbin.org/status/404") { (image, response, error) -> () in
+            XCTAssertEqual(404, error!.code)
+            XCTAssertNil(image)
+            XCTAssertNotNil(response)
             self.networkExpectation!.fulfill()
         }
         
