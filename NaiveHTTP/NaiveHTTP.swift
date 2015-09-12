@@ -28,6 +28,11 @@ public protocol NaiveHTTPProtocol {
         success: ((responseData: NSData, response: NSURLResponse)->())?,
         failure:((postError: NSError)->())?
     )
+    
+    func performRequest(
+        req: NSURLRequest,
+        success:((data: NSData, response: NSURLResponse)->())?,
+        failure:((error: NSError)->())?)
 }
 
 public class NaiveHTTP: NaiveHTTPProtocol {
