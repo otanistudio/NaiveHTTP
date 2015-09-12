@@ -34,11 +34,15 @@ class FakeTests: XCTestCase {
         func GET(
             uri: String,
             params: [String : String]?,
-            additionalHeaders:[String: String]?,
-            success: ((data: NSData, response: NSURLResponse) -> ())?,
-            failure: ((error: NSError) -> Void)?) {
+            additionalHeaders: [String : String]?,
+            completion: ((data: NSData?, response: NSURLResponse?, error: NSError?) -> ())?) {
+            
+            fakeAsync({ (data, response) -> () in
+                completion!(data: data, response: response, error: nil)
+            }) { (error) -> () in
+                completion!(data: nil, response: nil, error: error)
+            }
                 
-            fakeAsync(success, failure: failure)
         }
         
         func POST(
@@ -60,12 +64,10 @@ class FakeTests: XCTestCase {
         let fakeNaive = FakeNaive()
         let asyncExpectation = self.expectationWithDescription("async expectation")
         
-        fakeNaive.GET("http://example.com", params: nil, additionalHeaders: nil, success: { [asyncExpectation](data, response) -> () in
-            let resultString = NSString(data: data, encoding: NSUTF8StringEncoding)
+        fakeNaive.GET("http://example.com", params: nil, additionalHeaders: nil) { [asyncExpectation](data, response, error) -> () in
+            XCTAssertNil(error)
+            let resultString = NSString(data: data!, encoding: NSUTF8StringEncoding)
             XCTAssertEqual(fakeNaive.commonJSONString, resultString)
-            asyncExpectation.fulfill()
-        }) { (error) -> Void in
-            XCTFail()
             asyncExpectation.fulfill()
         }
         
@@ -79,11 +81,9 @@ class FakeTests: XCTestCase {
         let fakeNaive = FakeNaive()
         let asyncExpectation = self.expectationWithDescription("async expectation")
 
-        fakeNaive.GET("http://example.com/whatever", params: nil, responseFilter: nil, additionalHeaders: nil, successJSON: { (json, response) -> () in
-            XCTAssertEqual("somevalue", json["somekey"].stringValue)
-            asyncExpectation.fulfill()
-        }) { (error) -> Void in
-            XCTFail()
+        fakeNaive.GET("http://example.com/whatever", params: nil, responseFilter: nil, additionalHeaders: nil) { (json, response, error) -> () in
+            XCTAssertNil(error)
+            XCTAssertEqual("somevalue", json!["somekey"].stringValue)
             asyncExpectation.fulfill()
         }
         

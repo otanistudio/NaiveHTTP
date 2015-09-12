@@ -14,28 +14,30 @@ public extension NaiveHTTPProtocol {
         params:[String: String]?,
         responseFilter: String?,
         additionalHeaders: [String:String]?,
-        successJSON:((json: JSON, response: NSURLResponse)->())?,
-        failure:((error: NSError)->Void)?) {
+        completion:((json: JSON?, response: NSURLResponse?, error: NSError?)->())?) {
+
+        GET(uri,
+            params: params,
+            additionalHeaders: additionalHeaders) { (data, response, error) -> () in
             
-            GET(uri, params: params, additionalHeaders: additionalHeaders, success: { (data, response) -> () in
+                guard error == nil else {
+                    completion?(json: nil, response: response, error: error)
+                    return
+                }
                 
                 let json: JSON?
+                let jsonError: NSError?
                 
                 if responseFilter != nil {
                     json = self.preFilterResponseData(responseFilter!, data: data)
                 } else {
-                    json = JSON(data: data)
+                    json = JSON(data: data!)
                 }
                 
-                if let error = json!.error {
-                    debugPrint(error)
-                    failure!(error: error)
-                    return
-                }
+                jsonError = json!.error
                 
-                successJSON!(json: json!, response: response)
-                
-                }, failure: failure)
+                completion?(json: json, response: response, error: jsonError)
+            }
     }
 }
 

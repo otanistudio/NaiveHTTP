@@ -15,8 +15,7 @@ public extension NaiveHTTPProtocol {
         uri:String,
         params: [String: String]?,
         additionalHeaders: [String: String]?,
-        success:((data: NSData, response: NSURLResponse)->())?,
-        failure:((error: NSError)->Void)?) {
+        completion:((data: NSData?, response: NSURLResponse?, error: NSError?)->())?) {
             
         let url: NSURL =  self.dynamicType.normalizedURL(uri, params: params)
         let request = NSMutableURLRequest(URL: url)
@@ -26,8 +25,8 @@ public extension NaiveHTTPProtocol {
                 request.setValue(v, forHTTPHeaderField: k)
             }
         }
-            
-        performRequest(request, success: success, failure: failure)
+
+        performRequest(request, callback: completion)
     }
     
     public func POST(

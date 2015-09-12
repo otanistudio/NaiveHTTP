@@ -17,8 +17,7 @@ public protocol NaiveHTTPProtocol {
         uri:String,
         params:[String: String]?,
         additionalHeaders: [String: String]?,
-        success:((data: NSData, response: NSURLResponse)->())?,
-        failure:((error: NSError)->Void)?
+        completion:((data: NSData?, response: NSURLResponse?, error: NSError?)->())?
     )
     
     func POST(

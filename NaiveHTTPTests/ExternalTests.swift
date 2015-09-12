@@ -30,18 +30,14 @@ class ExternalTests: XCTestCase {
 
         naive.GET(
             testURI,
-            params: params,
+            params:params,
             responseFilter: nil,
-            additionalHeaders: nil,
-            successJSON: { (json, response) -> () in
+            additionalHeaders: nil) { (json, response, error) -> () in
                 
-            XCTAssertNil(json.error)
-            XCTAssertEqual("derp", json["args"]["herp"])
+            XCTAssertNil(error)
+            XCTAssertEqual("derp", json!["args"]["herp"])
             let httpResp = response as! NSHTTPURLResponse
             XCTAssertEqual(testURI+"?herp=derp", httpResp.URL!.absoluteString)
-            self.networkExpectation!.fulfill()
-        }) { (error) -> Void in
-            XCTFail()
             self.networkExpectation!.fulfill()
         }
         
@@ -152,11 +148,10 @@ class ExternalTests: XCTestCase {
         let prefixFilter = "while(1);</x>"
         let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
-    
-        naive.GET(uri!, params: nil, responseFilter:prefixFilter, additionalHeaders: nil, successJSON: { (json, response) -> () in XCTAssertEqual(JSON(["feh":"bleh"]), json)
-            self.networkExpectation!.fulfill()
-        }) { (error) -> Void in
-            XCTFail(error.description)
+        
+        naive.GET(uri!, params: nil, responseFilter: prefixFilter, additionalHeaders: nil) { (json, response, error) -> () in
+            XCTAssertNil(error)
+            XCTAssertEqual(JSON(["feh":"bleh"]), json)
             self.networkExpectation!.fulfill()
         }
         
