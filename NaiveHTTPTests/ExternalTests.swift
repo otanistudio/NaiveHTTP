@@ -88,58 +88,56 @@ class ExternalTests: XCTestCase {
         let postObject = ["herp":"derp"];
         let additionalHeaders = ["X-Some-Custom-Header":"hey-hi-ho"]
         
-        naive.POST("https://httpbin.org/post", postObject: postObject, preFilter: nil, additionalHeaders: additionalHeaders, successJSON: { (responseJSON, response) -> Void in
-            XCTAssertEqual("hey-hi-ho", responseJSON["headers"]["X-Some-Custom-Header"].string)
-            self.networkExpectation!.fulfill()
-        }) { (error) -> Void in
-            XCTFail()
+        naive.POST("https://httpbin.org/post", postObject: postObject, preFilter: nil, additionalHeaders: additionalHeaders) { (json, response, error) -> () in
+            XCTAssertNil(error)
+            XCTAssertEqual("hey-hi-ho", json!["headers"]["X-Some-Custom-Header"].string)
             self.networkExpectation!.fulfill()
         }
+        
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
-    func testPOST() {
+    func testJSONPOST() {
         let naive = NaiveHTTP(configuration: nil)
         let postObject = ["herp":"derp"];
         let expectedResponseJSON = JSON(postObject)
         
-        naive.POST("https://httpbin.org/post", postObject: postObject, preFilter: nil, additionalHeaders: nil, successJSON: { (responseJSON, response) -> Void in
-            XCTAssertEqual(expectedResponseJSON, responseJSON.dictionary!["json"])
+        naive.POST("https://httpbin.org/post", postObject: postObject, preFilter: nil, additionalHeaders: nil) { (json, response, error) -> () in
+            XCTAssertNil(error)
+            XCTAssertEqual(expectedResponseJSON, json!.dictionary!["json"])
             let httpResp = response as! NSHTTPURLResponse
             XCTAssertEqual("https://httpbin.org/post", httpResp.URL!.absoluteString)
             self.networkExpectation!.fulfill()
-        }) { (error) -> Void in
-            XCTFail()
-            self.networkExpectation!.fulfill()
         }
+        
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
-    func testPOSTWithNilPostBody() {
+    func testJSONPOSTWithNilPostBody() {
         let naive = NaiveHTTP(configuration: nil)
         
-        naive.POST("https://httpbin.org/post", postObject: nil, preFilter: nil, additionalHeaders: nil, successJSON: { (responseJSON, response) -> Void in
-            XCTAssertEqual(JSON(NSNull()), responseJSON["json"])
-            self.networkExpectation!.fulfill()
-        }) { (error) -> Void in
-            XCTFail()
+        naive.POST("https://httpbin.org/post", postObject: nil, preFilter: nil, additionalHeaders: nil) { (json, response, error) -> () in
+            XCTAssertNil(error)
+            XCTAssertEqual(JSON(NSNull()), json!["json"])
             self.networkExpectation!.fulfill()
         }
+        
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
-    func testPOSTError() {
+    func testJSONPOSTError() {
         let naive = NaiveHTTP(configuration: nil)
         let postObject = ["herp":"derp"];
         
-        naive.POST("http://httpbin.org/status/500", postObject: postObject, preFilter: nil, additionalHeaders: nil, successJSON: { (responseJSON) -> Void in
-            XCTFail()
+        naive.POST("http://httpbin.org/status/500", postObject: postObject, preFilter: nil, additionalHeaders: nil) { (json, response, error) -> () in
+            
+            XCTAssertNil(json)
+            XCTAssertEqual(500, error!.code)
+            XCTAssertEqual("HTTP Error 500", error!.userInfo[NSLocalizedDescriptionKey] as? String)
             self.networkExpectation!.fulfill()
-        }) { (error) -> Void in
-            XCTAssertEqual(error.code, 500)
-            XCTAssertEqual("HTTP Error 500", error.userInfo[NSLocalizedDescriptionKey] as? String)
-            self.networkExpectation!.fulfill()
+
         }
+        
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
@@ -158,17 +156,15 @@ class ExternalTests: XCTestCase {
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
-    func testPOSTWithPreFilter() {
+    func testJSONPOSTWithPreFilter() {
         let naive = NaiveHTTP(configuration: nil)
         let prefixFilter = "while(1);</x>"
         let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
         
-        naive.POST(uri!, postObject: nil, preFilter: prefixFilter, additionalHeaders: nil, successJSON: { (responseJSON, response) -> () in
-            XCTAssertEqual(JSON(["feh":"bleh"]), responseJSON)
-            self.networkExpectation!.fulfill()
-        }) { (postError) -> () in
-            XCTFail(postError.description)
+        naive.POST(uri!, postObject: nil, preFilter: prefixFilter, additionalHeaders: nil) { (json, response, error) -> () in
+            XCTAssertNil(error)
+            XCTAssertEqual(JSON(["feh":"bleh"]), json)
             self.networkExpectation!.fulfill()
         }
         

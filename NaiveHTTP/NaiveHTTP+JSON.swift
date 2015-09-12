@@ -48,15 +48,15 @@ public extension NaiveHTTPProtocol {
         postObject: AnyObject?,
         preFilter: String?,
         additionalHeaders: [String: String]?,
-        successJSON: ((responseJSON: JSON, response: NSURLResponse)->())?,
-        failure:((postError: NSError)->())?) {
+        completion:((json: JSON?, response: NSURLResponse?, error: NSError?)->())?) {
             
             POST(uri, postObject: postObject, additionalHeaders: additionalHeaders) { (data, response, error)->() in
                 guard error == nil else {
-                    failure?(postError: error!)
+                    completion?(json: nil, response: response, error: error)
                     return
                 }
                 
+                // TODO: pass any JSON errors into completion function
                 let json: JSON?
                 if preFilter != nil {
                     json = self.preFilterResponseData(preFilter!, data: data)
@@ -64,7 +64,7 @@ public extension NaiveHTTPProtocol {
                     json = JSON(data: data!)
                 }
                 
-                successJSON?(responseJSON: json!, response: response!)
+                completion?(json: json, response: response, error: error)
                 
             }
     }
