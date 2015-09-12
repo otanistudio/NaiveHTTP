@@ -37,24 +37,4 @@ public extension NaiveHTTPProtocol {
             
             }, failure: failure)
     }
-    
-    public func GET(
-        uri:String,
-        params:[String: String]?,
-        successJSON:((json: JSON, response: NSURLResponse)->())?,
-        failure:((error: NSError)->Void)?) {
-            
-        GET(uri, params: params, additionalHeaders: nil, success: { (data, response) -> () in
-            let json = JSON(data: data)
-            
-            if let error = json.error {
-                debugPrint(error)
-                failure!(error: error)
-                return
-            }
-            
-            successJSON!(json: json, response: response)
-            
-            }, failure: failure)
-    }
 }

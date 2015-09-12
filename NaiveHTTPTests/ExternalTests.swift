@@ -28,7 +28,13 @@ class ExternalTests: XCTestCase {
         let testURI = "https://httpbin.org/get"
         let params = ["herp":"derp"]
 
-        naive.GET(testURI, params: params, successJSON: { (json, response) -> () in
+        naive.GET(
+            testURI,
+            params: params,
+            responseFilter: nil,
+            additionalHeaders: nil,
+            successJSON: { (json, response) -> () in
+                
             XCTAssertNil(json.error)
             XCTAssertEqual("derp", json["args"]["herp"])
             let httpResp = response as! NSHTTPURLResponse

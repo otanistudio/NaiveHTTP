@@ -78,7 +78,7 @@ class FakeTests: XCTestCase {
         // expected behavior from the other protocol extensions
         let fakeNaive = FakeNaive()
         let asyncExpectation = self.expectationWithDescription("async expectation")
-        fakeNaive.GET("http://example.com/whatever", params: nil, successJSON: { (json, response) -> () in
+        fakeNaive.GET("http://example.com/whatever", params: nil, responseFilter: nil, additionalHeaders: nil, successJSON: { (json, response) -> () in
             XCTAssertEqual("somevalue", json["somekey"].stringValue)
             asyncExpectation.fulfill()
         }) { (error) -> Void in
