@@ -9,12 +9,14 @@
 import Foundation
 
 public extension NaiveHTTPProtocol {
+    public typealias jsonCompletion = (json: JSON?, response: NSURLResponse?, error: NSError?) -> Void
+    
     public func jsonGET(
         uri:String,
         params:[String: String]?,
         responseFilter: String?,
         additionalHeaders: [String:String]?,
-        completion:((json: JSON?, response: NSURLResponse?, error: NSError?)->())?) {
+        completion: jsonCompletion?) {
 
         GET(uri,
             params: params,
@@ -39,16 +41,13 @@ public extension NaiveHTTPProtocol {
                 completion?(json: json, response: response, error: jsonError)
             }
     }
-}
-
-public extension NaiveHTTPProtocol {
     
     public func jsonPOST(
         uri:String,
         postObject: AnyObject?,
         preFilter: String?,
         additionalHeaders: [String: String]?,
-        completion:((json: JSON?, response: NSURLResponse?, error: NSError?)->())?) {
+        completion: jsonCompletion?) {
             
             POST(uri, postObject: postObject, additionalHeaders: additionalHeaders) { (data, response, error)->() in
                 guard error == nil else {
@@ -68,7 +67,5 @@ public extension NaiveHTTPProtocol {
                 
             }
     }
-
-
 }
 

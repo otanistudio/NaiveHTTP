@@ -11,11 +11,12 @@ import Foundation
 internal let errorDomain = "com.otanistudio.NaiveHTTP.error"
 
 public extension NaiveHTTPProtocol {
+    
     public func GET(
         uri:String,
         params: [String: String]?,
         additionalHeaders: [String: String]?,
-        completion:((data: NSData?, response: NSURLResponse?, error: NSError?)->())?) {
+        completion: completionHandler?) {
             
         let url: NSURL =  self.dynamicType.normalizedURL(uri, params: params)
         let request = NSMutableURLRequest(URL: url)
@@ -33,7 +34,7 @@ public extension NaiveHTTPProtocol {
         uri: String,
         postObject: AnyObject?,
         additionalHeaders: [String : String]?,
-        completion: ((data: NSData?, response: NSURLResponse?, error: NSError?)->())?) {
+        completion: completionHandler?) {
         
             let url = NSURL(string: uri)!
             let request = NSMutableURLRequest(URL: url)
@@ -65,7 +66,7 @@ public extension NaiveHTTPProtocol {
 public extension NaiveHTTPProtocol {
     public func performRequest(
         req: NSURLRequest,
-        completion:((data: NSData?, response: NSURLResponse?, error: NSError?)->())?) {
+        completion: completionHandler?) {
             
         urlSession.dataTaskWithRequest(req) { (data, response, error) -> Void in
             guard error == nil else {

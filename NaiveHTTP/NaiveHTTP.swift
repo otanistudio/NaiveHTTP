@@ -9,27 +9,30 @@
 import Foundation
 import UIKit
 
+public typealias completionHandler = (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void
+
 public protocol NaiveHTTPProtocol {
     var urlSession: NSURLSession { get }
     var configuration: NSURLSessionConfiguration { get }
-    
+
     func GET(
         uri:String,
         params:[String: String]?,
         additionalHeaders: [String: String]?,
-        completion:((data: NSData?, response: NSURLResponse?, error: NSError?)->())?
+        completion: completionHandler?
     )
     
     func POST(
         uri:String,
         postObject: AnyObject?,
         additionalHeaders: [String: String]?,
-        completion:((data: NSData?, response: NSURLResponse?, error: NSError?)->())?
+        completion: completionHandler?
     )
     
     func performRequest(
         req: NSURLRequest,
-        completion:((data: NSData?, response: NSURLResponse?, error: NSError?)->())?)
+        completion: completionHandler?
+    )
 }
 
 public class NaiveHTTP: NaiveHTTPProtocol {
