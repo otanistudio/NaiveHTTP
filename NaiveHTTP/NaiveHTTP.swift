@@ -24,14 +24,12 @@ public protocol NaiveHTTPProtocol {
         uri:String,
         postObject: AnyObject?,
         additionalHeaders: [String: String]?,
-        success: ((responseData: NSData, response: NSURLResponse)->())?,
-        failure:((postError: NSError)->())?
+        completion:((data: NSData?, response: NSURLResponse?, error: NSError?)->())?
     )
     
     func performRequest(
         req: NSURLRequest,
-        success:((data: NSData, response: NSURLResponse)->())?,
-        failure:((error: NSError)->())?)
+        callback:((data: NSData?, response: NSURLResponse?, error: NSError?)->())?)
 }
 
 public class NaiveHTTP: NaiveHTTPProtocol {

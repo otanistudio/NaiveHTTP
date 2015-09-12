@@ -51,19 +51,21 @@ public extension NaiveHTTPProtocol {
         successJSON: ((responseJSON: JSON, response: NSURLResponse)->())?,
         failure:((postError: NSError)->())?) {
             
-            POST(uri, postObject: postObject, additionalHeaders: additionalHeaders, success: { (responseData, response) -> () in
+            POST(uri, postObject: postObject, additionalHeaders: additionalHeaders) { (data, response, error)->() in
+                guard error == nil else {
+                    failure?(postError: error!)
+                    return
+                }
                 
                 let json: JSON?
                 if preFilter != nil {
-                    json = self.preFilterResponseData(preFilter!, data: responseData)
+                    json = self.preFilterResponseData(preFilter!, data: data)
                 } else {
-                    json = JSON(data: responseData)
+                    json = JSON(data: data!)
                 }
                 
-                successJSON!(responseJSON: json!, response: response)
+                successJSON?(responseJSON: json!, response: response!)
                 
-                }) { (postError) -> () in
-                    failure!(postError: postError)
             }
     }
     
