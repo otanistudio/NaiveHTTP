@@ -81,7 +81,7 @@ class FakeTests: XCTestCase {
         let fakeNaive = FakeNaive()
         let asyncExpectation = self.expectationWithDescription("async expectation")
 
-        fakeNaive.GET("http://example.com/whatever", params: nil, responseFilter: nil, additionalHeaders: nil) { (json, response, error) -> () in
+        fakeNaive.jsonGET("http://example.com/whatever", params: nil, responseFilter: nil, additionalHeaders: nil) { (json, response, error) -> () in
             XCTAssertNil(error)
             XCTAssertEqual("somevalue", json!["somekey"].stringValue)
             asyncExpectation.fulfill()

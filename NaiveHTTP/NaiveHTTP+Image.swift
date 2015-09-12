@@ -11,7 +11,7 @@ import UIKit
 
 public extension NaiveHTTPProtocol {
     
-    func GET(uri: String, completion:((image: UIImage?, response: NSURLResponse?, error: NSError?)->())?) {
+    func imageGET(uri: String, completion:((image: UIImage?, response: NSURLResponse?, error: NSError?)->())?) {
         let url = NSURL(string: uri)!
         let request = NSMutableURLRequest(URL: url)
         //TODO: Include all the image formats that are supported by UIImage (and eventually, their extensions)

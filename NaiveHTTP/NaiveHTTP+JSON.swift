@@ -9,7 +9,7 @@
 import Foundation
 
 public extension NaiveHTTPProtocol {
-    public func GET(
+    public func jsonGET(
         uri:String,
         params:[String: String]?,
         responseFilter: String?,
@@ -43,7 +43,7 @@ public extension NaiveHTTPProtocol {
 
 public extension NaiveHTTPProtocol {
     
-    public func POST(
+    public func jsonPOST(
         uri:String,
         postObject: AnyObject?,
         preFilter: String?,
@@ -68,6 +68,7 @@ public extension NaiveHTTPProtocol {
                 
             }
     }
+
 
 }
 
