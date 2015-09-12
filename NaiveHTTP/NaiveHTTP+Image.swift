@@ -11,7 +11,7 @@ import UIKit
 
 public extension NaiveHTTPProtocol {
     
-    func GET(uri: String, callback:((image: UIImage?, response: NSURLResponse?, error: NSError?)->())?) {
+    func GET(uri: String, completion:((image: UIImage?, response: NSURLResponse?, error: NSError?)->())?) {
         let url = NSURL(string: uri)!
         let request = NSMutableURLRequest(URL: url)
         //TODO: Include all the image formats that are supported by UIImage (and eventually, their extensions)
@@ -19,17 +19,17 @@ public extension NaiveHTTPProtocol {
         
         performRequest(request) { (data, response, error) -> () in
             guard error == nil else {
-                callback?(image: nil, response: response, error: error)
+                completion?(image: nil, response: response, error: error)
                 return
             }
             
             guard let image = UIImage(data: data!) else {
                 let imageNilError = NSError(domain: errorDomain, code: -1, userInfo: [NSLocalizedFailureReasonErrorKey: "nil UIImage", NSLocalizedDescriptionKey: "image data retrieved resulted in a nil UIImage"])
-                callback?(image: nil, response: response, error: imageNilError)
+                completion?(image: nil, response: response, error: imageNilError)
                 return
             }
             
-            callback?(image: image, response: response, error: error)
+            completion?(image: image, response: response, error: error)
         }
         
     }
