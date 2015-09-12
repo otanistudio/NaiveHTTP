@@ -1,5 +1,5 @@
 //
-//  NaiveHTTP.JSON.POST.swift
+//  NaiveHTTP+JSON.swift
 //  NaiveHTTP
 //
 //  Created by Robert Otani on 9/7/15.
@@ -7,6 +7,37 @@
 //
 
 import Foundation
+
+public extension NaiveHTTPProtocol {
+    public func GET(
+        uri:String,
+        params:[String: String]?,
+        responseFilter: String?,
+        additionalHeaders: [String:String]?,
+        successJSON:((json: JSON, response: NSURLResponse)->())?,
+        failure:((error: NSError)->Void)?) {
+            
+            GET(uri, params: params, additionalHeaders: additionalHeaders, success: { (data, response) -> () in
+                
+                let json: JSON?
+                
+                if responseFilter != nil {
+                    json = self.preFilterResponseData(responseFilter!, data: data)
+                } else {
+                    json = JSON(data: data)
+                }
+                
+                if let error = json!.error {
+                    debugPrint(error)
+                    failure!(error: error)
+                    return
+                }
+                
+                successJSON!(json: json!, response: response)
+                
+                }, failure: failure)
+    }
+}
 
 public extension NaiveHTTPProtocol {
     
@@ -53,3 +84,4 @@ public extension NaiveHTTPProtocol {
             POST(uri, postObject: postObject, preFilter: nil, additionalHeaders: additionalHeaders, successJSON: successJSON, failure: failure)
     }
 }
+
