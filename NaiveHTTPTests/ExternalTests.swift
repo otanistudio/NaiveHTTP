@@ -88,7 +88,7 @@ class ExternalTests: XCTestCase {
         let postObject = ["herp":"derp"];
         let additionalHeaders = ["X-Some-Custom-Header":"hey-hi-ho"]
         
-        naive.POST("https://httpbin.org/post", postObject: postObject, additionalHeaders: additionalHeaders, successJSON: { (responseJSON, response) -> Void in
+        naive.POST("https://httpbin.org/post", postObject: postObject, preFilter: nil, additionalHeaders: additionalHeaders, successJSON: { (responseJSON, response) -> Void in
             XCTAssertEqual("hey-hi-ho", responseJSON["headers"]["X-Some-Custom-Header"].string)
             self.networkExpectation!.fulfill()
         }) { (error) -> Void in
@@ -103,7 +103,7 @@ class ExternalTests: XCTestCase {
         let postObject = ["herp":"derp"];
         let expectedResponseJSON = JSON(postObject)
         
-        naive.POST("https://httpbin.org/post", postObject: postObject, successJSON: { (responseJSON, response) -> Void in
+        naive.POST("https://httpbin.org/post", postObject: postObject, preFilter: nil, additionalHeaders: nil, successJSON: { (responseJSON, response) -> Void in
             XCTAssertEqual(expectedResponseJSON, responseJSON.dictionary!["json"])
             let httpResp = response as! NSHTTPURLResponse
             XCTAssertEqual("https://httpbin.org/post", httpResp.URL!.absoluteString)
@@ -118,7 +118,7 @@ class ExternalTests: XCTestCase {
     func testPOSTWithNilPostBody() {
         let naive = NaiveHTTP(configuration: nil)
         
-        naive.POST("https://httpbin.org/post", postObject: nil, successJSON: { (responseJSON, response) -> Void in
+        naive.POST("https://httpbin.org/post", postObject: nil, preFilter: nil, additionalHeaders: nil, successJSON: { (responseJSON, response) -> Void in
             XCTAssertEqual(JSON(NSNull()), responseJSON["json"])
             self.networkExpectation!.fulfill()
         }) { (error) -> Void in
@@ -132,7 +132,7 @@ class ExternalTests: XCTestCase {
         let naive = NaiveHTTP(configuration: nil)
         let postObject = ["herp":"derp"];
         
-        naive.POST("http://httpbin.org/status/500", postObject: postObject, successJSON: { (responseJSON) -> Void in
+        naive.POST("http://httpbin.org/status/500", postObject: postObject, preFilter: nil, additionalHeaders: nil, successJSON: { (responseJSON) -> Void in
             XCTFail()
             self.networkExpectation!.fulfill()
         }) { (error) -> Void in

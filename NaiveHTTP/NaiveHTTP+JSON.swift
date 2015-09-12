@@ -68,24 +68,6 @@ public extension NaiveHTTPProtocol {
                 
             }
     }
-    
-    public func POST(
-        uri:String,
-        postObject: AnyObject?,
-        successJSON: ((responseJSON: JSON, response: NSURLResponse)->Void)?,
-        failure:( (postError: NSError)->Void )?) {
-            
-            POST(uri, postObject: postObject, additionalHeaders: nil, successJSON: successJSON, failure: failure)
-    }
-    
-    public func POST(
-        uri:String,
-        postObject: AnyObject?,
-        additionalHeaders: [String:String]?,
-        successJSON: ((responseJSON: JSON, response: NSURLResponse)->())?,
-        failure:((postError: NSError)->())?) {
-            
-            POST(uri, postObject: postObject, preFilter: nil, additionalHeaders: additionalHeaders, successJSON: successJSON, failure: failure)
-    }
+
 }
 
