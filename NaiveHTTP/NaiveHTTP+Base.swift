@@ -1,5 +1,5 @@
 //
-//  NaiveHTTP.Base.swift
+//  NaiveHTTP+Base.swift
 //  NaiveHTTP
 //
 //  Created by Robert Otani on 9/7/15.

@@ -18,14 +18,14 @@
 		5CC389B71B9CC7DA0058CE06 /* NormalizedURLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389B61B9CC7DA0058CE06 /* NormalizedURLTests.swift */; };
 		5CC389B91B9E7FCA0058CE06 /* NaiveHTTP.JSON.GET.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389B81B9E7FCA0058CE06 /* NaiveHTTP.JSON.GET.swift */; };
 		5CC389BA1B9E80800058CE06 /* NaiveHTTP.JSON.GET.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389B81B9E7FCA0058CE06 /* NaiveHTTP.JSON.GET.swift */; };
-		5CC389BC1B9E82070058CE06 /* NaiveHTTP.Image.GET.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389BB1B9E82070058CE06 /* NaiveHTTP.Image.GET.swift */; };
-		5CC389BD1B9E82070058CE06 /* NaiveHTTP.Image.GET.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389BB1B9E82070058CE06 /* NaiveHTTP.Image.GET.swift */; };
+		5CC389BC1B9E82070058CE06 /* NaiveHTTP+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389BB1B9E82070058CE06 /* NaiveHTTP+Image.swift */; };
+		5CC389BD1B9E82070058CE06 /* NaiveHTTP+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389BB1B9E82070058CE06 /* NaiveHTTP+Image.swift */; };
 		5CC389BF1B9E82BB0058CE06 /* NaiveHTTP.JSON.POST.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389BE1B9E82BB0058CE06 /* NaiveHTTP.JSON.POST.swift */; };
 		5CC389C01B9E82BB0058CE06 /* NaiveHTTP.JSON.POST.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389BE1B9E82BB0058CE06 /* NaiveHTTP.JSON.POST.swift */; };
 		5CC389C21B9E83390058CE06 /* NaiveHTTP.Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389C11B9E83390058CE06 /* NaiveHTTP.Utility.swift */; };
 		5CC389C31B9E83390058CE06 /* NaiveHTTP.Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389C11B9E83390058CE06 /* NaiveHTTP.Utility.swift */; };
-		5CC389C51B9E973B0058CE06 /* NaiveHTTP.Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389C41B9E973B0058CE06 /* NaiveHTTP.Base.swift */; };
-		5CC389C61B9E973B0058CE06 /* NaiveHTTP.Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389C41B9E973B0058CE06 /* NaiveHTTP.Base.swift */; };
+		5CC389C51B9E973B0058CE06 /* NaiveHTTP+Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389C41B9E973B0058CE06 /* NaiveHTTP+Base.swift */; };
+		5CC389C61B9E973B0058CE06 /* NaiveHTTP+Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389C41B9E973B0058CE06 /* NaiveHTTP+Base.swift */; };
 		5CC389C91B9EA4D40058CE06 /* FakabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389C71B9EA4D40058CE06 /* FakabilityTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -51,10 +51,10 @@
 		5C871B231B98E9A9006FC22F /* hijack_guarded.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = hijack_guarded.json; sourceTree = "<group>"; };
 		5CC389B61B9CC7DA0058CE06 /* NormalizedURLTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NormalizedURLTests.swift; sourceTree = "<group>"; };
 		5CC389B81B9E7FCA0058CE06 /* NaiveHTTP.JSON.GET.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaiveHTTP.JSON.GET.swift; sourceTree = "<group>"; };
-		5CC389BB1B9E82070058CE06 /* NaiveHTTP.Image.GET.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaiveHTTP.Image.GET.swift; sourceTree = "<group>"; };
+		5CC389BB1B9E82070058CE06 /* NaiveHTTP+Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NaiveHTTP+Image.swift"; sourceTree = "<group>"; };
 		5CC389BE1B9E82BB0058CE06 /* NaiveHTTP.JSON.POST.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaiveHTTP.JSON.POST.swift; sourceTree = "<group>"; };
 		5CC389C11B9E83390058CE06 /* NaiveHTTP.Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaiveHTTP.Utility.swift; sourceTree = "<group>"; };
-		5CC389C41B9E973B0058CE06 /* NaiveHTTP.Base.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaiveHTTP.Base.swift; sourceTree = "<group>"; };
+		5CC389C41B9E973B0058CE06 /* NaiveHTTP+Base.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NaiveHTTP+Base.swift"; sourceTree = "<group>"; };
 		5CC389C71B9EA4D40058CE06 /* FakabilityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakabilityTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -102,8 +102,8 @@
 				5C2660B11B3B30A1004DF6E7 /* NaiveHTTP.h */,
 				5C2660B31B3B30A1004DF6E7 /* Info.plist */,
 				5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */,
-				5CC389C41B9E973B0058CE06 /* NaiveHTTP.Base.swift */,
-				5CC389BB1B9E82070058CE06 /* NaiveHTTP.Image.GET.swift */,
+				5CC389C41B9E973B0058CE06 /* NaiveHTTP+Base.swift */,
+				5CC389BB1B9E82070058CE06 /* NaiveHTTP+Image.swift */,
 				5CC389B81B9E7FCA0058CE06 /* NaiveHTTP.JSON.GET.swift */,
 				5CC389BE1B9E82BB0058CE06 /* NaiveHTTP.JSON.POST.swift */,
 				5CC389C11B9E83390058CE06 /* NaiveHTTP.Utility.swift */,
@@ -251,9 +251,9 @@
 				5C2660C91B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */,
 				5CC389C21B9E83390058CE06 /* NaiveHTTP.Utility.swift in Sources */,
 				5CC389BF1B9E82BB0058CE06 /* NaiveHTTP.JSON.POST.swift in Sources */,
-				5CC389C51B9E973B0058CE06 /* NaiveHTTP.Base.swift in Sources */,
+				5CC389C51B9E973B0058CE06 /* NaiveHTTP+Base.swift in Sources */,
 				5C65BA251B3B4CF1005B4DCE /* SwiftyJSON.swift in Sources */,
-				5CC389BC1B9E82070058CE06 /* NaiveHTTP.Image.GET.swift in Sources */,
+				5CC389BC1B9E82070058CE06 /* NaiveHTTP+Image.swift in Sources */,
 				5CC389B91B9E7FCA0058CE06 /* NaiveHTTP.JSON.GET.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -267,9 +267,9 @@
 				5C65BA261B3B66FF005B4DCE /* SwiftyJSON.swift in Sources */,
 				5CC389B71B9CC7DA0058CE06 /* NormalizedURLTests.swift in Sources */,
 				5CC389BA1B9E80800058CE06 /* NaiveHTTP.JSON.GET.swift in Sources */,
-				5CC389BD1B9E82070058CE06 /* NaiveHTTP.Image.GET.swift in Sources */,
+				5CC389BD1B9E82070058CE06 /* NaiveHTTP+Image.swift in Sources */,
 				5C2660CA1B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */,
-				5CC389C61B9E973B0058CE06 /* NaiveHTTP.Base.swift in Sources */,
+				5CC389C61B9E973B0058CE06 /* NaiveHTTP+Base.swift in Sources */,
 				5CC389C01B9E82BB0058CE06 /* NaiveHTTP.JSON.POST.swift in Sources */,
 				5CC389C31B9E83390058CE06 /* NaiveHTTP.Utility.swift in Sources */,
 			);

@@ -1,5 +1,5 @@
 //
-//  NaiveHTTP.Image.GET.swift
+//  NaiveHTTP+Image.swift
 //  NaiveHTTP
 //
 //  Created by Robert Otani on 9/7/15.
