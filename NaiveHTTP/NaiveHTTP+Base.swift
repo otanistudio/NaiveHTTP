@@ -57,35 +57,32 @@ public extension NaiveHTTPProtocol {
                     return
                 }
             }
-            
+
             performRequest(request, completion: completion)
     }
 
-}
-
-public extension NaiveHTTPProtocol {
     public func performRequest(
         req: NSURLRequest,
         completion: completionHandler?) {
             
-        urlSession.dataTaskWithRequest(req) { (data, response, error) -> Void in
-            guard error == nil else {
-                completion?(data: data, response: response, error: error)
-                return
-            }
-            
-            if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
-                if (httpResponse.statusCode > 400) {
-                    let responseError = NSError(domain: errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
-                    completion?(data: data, response: response, error: responseError)
+            urlSession.dataTaskWithRequest(req) { (data, response, error) -> Void in
+                guard error == nil else {
+                    completion?(data: data, response: response, error: error)
                     return
                 }
-            }
+                
+                if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
+                    if (httpResponse.statusCode > 400) {
+                        let responseError = NSError(domain: errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
+                        completion?(data: data, response: response, error: responseError)
+                        return
+                    }
+                }
+                
+                completion?(data: data, response: response, error: error)
+                
+                }.resume()
             
-            completion?(data: data, response: response, error: error)
-            
-            }.resume()
-        
     }
 }
 
