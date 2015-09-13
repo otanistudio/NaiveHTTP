@@ -44,6 +44,15 @@ class ExternalTests: XCTestCase {
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
+    func testGETWithError() {
+        let naive = NaiveHTTP(configuration: NSURLSessionConfiguration.ephemeralSessionConfiguration())
+        naive.GET("http://httpbin.org/status/400", params: nil, additionalHeaders: nil) { (data, response, error) -> Void in
+            XCTAssertEqual(400, error?.code)
+            self.networkExpectation!.fulfill()
+        }
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
+    
     func testBadImageGET() {
         let naive = NaiveHTTP(configuration: nil)
 

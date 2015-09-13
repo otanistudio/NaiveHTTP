@@ -77,7 +77,7 @@ public extension NaiveHTTPProtocol {
                 }
                 
                 if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
-                    if (httpResponse.statusCode > 400) {
+                    if (httpResponse.statusCode >= 400) {
                         let responseError = NSError(domain: errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
                         completion?(data: data, response: response, error: responseError)
                         return
