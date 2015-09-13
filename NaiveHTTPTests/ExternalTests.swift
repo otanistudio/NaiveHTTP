@@ -83,14 +83,26 @@ class ExternalTests: XCTestCase {
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
-    func testPostWithAdditionalHeaders() {
+    func testPOSTWithAdditionalHeaders() {
         let naive = NaiveHTTP(configuration: nil)
         let postObject = ["herp":"derp"];
         let additionalHeaders = ["X-Some-Custom-Header":"hey-hi-ho"]
         
-        naive.jsonPOST("https://httpbin.org/post", postObject: postObject, preFilter: nil, additionalHeaders: additionalHeaders) { (json, response, error) -> () in
+        naive.jsonPOST("https://httpbin.org/post", postObject: postObject, responseFilter: nil, additionalHeaders: additionalHeaders) { (json, response, error) -> () in
             XCTAssertNil(error)
             XCTAssertEqual("hey-hi-ho", json!["headers"]["X-Some-Custom-Header"].string)
+            self.networkExpectation!.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
+    
+    func testPOSTJSONBadPostObject() {
+        let naive = NaiveHTTP(configuration: nil)
+        let postObject = "....;aksdfj"
+        
+        naive.jsonPOST("https://httpbin.org/post", postObject: postObject, responseFilter: nil, additionalHeaders: nil) { (json, response, error) -> () in
+            XCTAssertNotNil(error)
             self.networkExpectation!.fulfill()
         }
         
@@ -102,7 +114,7 @@ class ExternalTests: XCTestCase {
         let postObject = ["herp":"derp"];
         let expectedResponseJSON = JSON(postObject)
         
-        naive.jsonPOST("https://httpbin.org/post", postObject: postObject, preFilter: nil, additionalHeaders: nil) { (json, response, error) -> () in
+        naive.jsonPOST("https://httpbin.org/post", postObject: postObject, responseFilter: nil, additionalHeaders: nil) { (json, response, error) -> () in
             XCTAssertNil(error)
             XCTAssertEqual(expectedResponseJSON, json!.dictionary!["json"])
             let httpResp = response as! NSHTTPURLResponse
@@ -116,7 +128,7 @@ class ExternalTests: XCTestCase {
     func testJSONPOSTWithNilPostBody() {
         let naive = NaiveHTTP(configuration: nil)
         
-        naive.jsonPOST("https://httpbin.org/post", postObject: nil, preFilter: nil, additionalHeaders: nil) { (json, response, error) -> () in
+        naive.jsonPOST("https://httpbin.org/post", postObject: nil, responseFilter: nil, additionalHeaders: nil) { (json, response, error) -> () in
             XCTAssertNil(error)
             XCTAssertEqual(JSON(NSNull()), json!["json"])
             self.networkExpectation!.fulfill()
@@ -129,7 +141,7 @@ class ExternalTests: XCTestCase {
         let naive = NaiveHTTP(configuration: nil)
         let postObject = ["herp":"derp"];
         
-        naive.jsonPOST("http://httpbin.org/status/500", postObject: postObject, preFilter: nil, additionalHeaders: nil) { (json, response, error) -> () in
+        naive.jsonPOST("http://httpbin.org/status/500", postObject: postObject, responseFilter: nil, additionalHeaders: nil) { (json, response, error) -> () in
             
             XCTAssertNil(json)
             XCTAssertEqual(500, error!.code)
@@ -162,7 +174,7 @@ class ExternalTests: XCTestCase {
         let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
         
-        naive.jsonPOST(uri!, postObject: nil, preFilter: prefixFilter, additionalHeaders: nil) { (json, response, error) -> () in
+        naive.jsonPOST(uri!, postObject: nil, responseFilter: prefixFilter, additionalHeaders: nil) { (json, response, error) -> () in
             XCTAssertNil(error)
             XCTAssertEqual(JSON(["feh":"bleh"]), json)
             self.networkExpectation!.fulfill()

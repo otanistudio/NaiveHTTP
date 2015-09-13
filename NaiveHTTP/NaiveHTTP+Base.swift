@@ -41,7 +41,7 @@ public extension NaiveHTTPProtocol {
             request.setValue("application/json", forHTTPHeaderField: "Accept")
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.HTTPMethod = "POST"
-            
+
             if let headers = additionalHeaders {
                 for (k, v) in headers {
                     request.setValue(v, forHTTPHeaderField: k)
@@ -50,15 +50,21 @@ public extension NaiveHTTPProtocol {
             
             if postObject != nil {
                 do {
-                    try request.HTTPBody = JSON(postObject!).rawData()
-                } catch {
-                    let postObjectError = NSError(domain: errorDomain, code: -1, userInfo: [NSLocalizedFailureReasonErrorKey: "failed to convert postObject to JSON"])
+                    request.HTTPBody = try JSON(postObject!).rawData()
+                } catch let jsonError as NSError {
+                    let postObjectError = NSError(domain: errorDomain, code: -1,
+                        userInfo: [
+                            NSLocalizedFailureReasonErrorKey: "failed to convert postObject to JSON",
+                            NSLocalizedDescriptionKey: "SwiftyJSON Error: \(jsonError.description)"
+                        ])
+                    
                     completion?(data: nil, response: nil, error: postObjectError)
                     return
                 }
             }
-
+            
             performRequest(request, completion: completion)
+
     }
 
     public func performRequest(
