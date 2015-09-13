@@ -8,7 +8,6 @@
 
 import Foundation
 
-internal let errorDomain = "com.otanistudio.NaiveHTTP.error"
 
 public extension NaiveHTTPProtocol {
     

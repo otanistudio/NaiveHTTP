@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+internal let errorDomain = "com.otanistudio.NaiveHTTP.error"
 public typealias completionHandler = (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void
 
 public protocol NaiveHTTPProtocol {
