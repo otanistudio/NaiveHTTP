@@ -10,7 +10,7 @@ import Foundation
 
 public extension NaiveHTTPProtocol {
     public typealias jsonCompletion = (json: JSON?, response: NSURLResponse?, error: NSError?) -> Void
-    
+
     public func jsonGET(
         uri:String,
         params:[String: String]?,
@@ -45,7 +45,7 @@ public extension NaiveHTTPProtocol {
     public func jsonPOST(
         uri:String,
         postObject: AnyObject?,
-        preFilter: String?,
+        responseFilter: String?,
         additionalHeaders: [String: String]?,
         completion: jsonCompletion?) {
             
@@ -57,8 +57,8 @@ public extension NaiveHTTPProtocol {
                 
                 // TODO: pass any JSON errors into completion function
                 let json: JSON?
-                if preFilter != nil {
-                    json = self.preFilterResponseData(preFilter!, data: data)
+                if responseFilter != nil {
+                    json = self.preFilterResponseData(responseFilter!, data: data)
                 } else {
                     json = JSON(data: data!)
                 }
