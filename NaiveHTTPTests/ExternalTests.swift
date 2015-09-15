@@ -92,6 +92,25 @@ class ExternalTests: XCTestCase {
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
+    func testPOSTFormEncoded() {
+        let naive = NaiveHTTP(configuration: nil)
+        let postString = "blah=blee&hey=this+is+a+string+folks"
+        let formEncodedHeader = [
+            "Content-Type" : "application/x-www-form-urlencoded"
+        ]
+        
+        naive.POST("http://httpbin.org/post", postObject: postString, headers: formEncodedHeader) { (data, response, error) -> Void in
+            XCTAssertNil(error)
+            let parsedResult = JSON(data: data!)
+            let receivedFormInfo = parsedResult["form"]
+            XCTAssertEqual("blee", receivedFormInfo["blah"])
+            XCTAssertEqual("this is a string folks", receivedFormInfo["hey"])
+            self.networkExpectation!.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
+    
     func testPOSTWithAdditionalHeaders() {
         let naive = NaiveHTTP(configuration: nil)
         let postObject = ["herp":"derp"];
@@ -100,18 +119,6 @@ class ExternalTests: XCTestCase {
         naive.jsonPOST("https://httpbin.org/post", postObject: postObject, responseFilter: nil, headers: additionalHeaders) { (json, response, error) -> () in
             XCTAssertNil(error)
             XCTAssertEqual("hey-hi-ho", json!["headers"]["X-Some-Custom-Header"].string)
-            self.networkExpectation!.fulfill()
-        }
-        
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
-    }
-    
-    func testPOSTJSONBadPostObject() {
-        let naive = NaiveHTTP(configuration: nil)
-        let postObject = "....;aksdfj"
-        
-        naive.jsonPOST("https://httpbin.org/post", postObject: postObject, responseFilter: nil, headers: nil) { (json, response, error) -> () in
-            XCTAssertNotNil(error)
             self.networkExpectation!.fulfill()
         }
         

@@ -47,7 +47,12 @@ public extension NaiveHTTPProtocol {
             
             if postObject != nil {
                 do {
-                    request.HTTPBody = try JSON(postObject!).rawData()
+                    let o = JSON(postObject!)
+                    if o.type == .String {
+                        request.HTTPBody = (o.stringValue as NSString).dataUsingEncoding(NSUTF8StringEncoding)
+                    } else {
+                        request.HTTPBody = try o.rawData()
+                    }
                 } catch let jsonError as NSError {
                     let postObjectError = NSError(domain: errorDomain, code: -1,
                         userInfo: [
