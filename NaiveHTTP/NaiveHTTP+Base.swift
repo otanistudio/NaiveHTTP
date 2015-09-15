@@ -14,14 +14,14 @@ public extension NaiveHTTPProtocol {
     public func GET(
         uri:String,
         params: [String: String]?,
-        additionalHeaders: [String: String]?,
+        headers: [String: String]?,
         completion: completionHandler?) {
             
         let url: NSURL =  self.dynamicType.normalizedURL(uri, params: params)
         let request = NSMutableURLRequest(URL: url)
             
-        if let headers = additionalHeaders {
-            for (k, v) in headers {
+        if headers != nil {
+            for (k, v) in headers! {
                 request.setValue(v, forHTTPHeaderField: k)
             }
         }
@@ -32,15 +32,15 @@ public extension NaiveHTTPProtocol {
     public func POST(
         uri: String,
         postObject: AnyObject?,
-        additionalHeaders: [String : String]?,
+        headers: [String : String]?,
         completion: completionHandler?) {
         
             let url = NSURL(string: uri)!
             let request = NSMutableURLRequest(URL: url)
             request.HTTPMethod = "POST"
 
-            if let headers = additionalHeaders {
-                for (k, v) in headers {
+            if headers != nil {
+                for (k, v) in headers! {
                     request.setValue(v, forHTTPHeaderField: k)
                 }
             }

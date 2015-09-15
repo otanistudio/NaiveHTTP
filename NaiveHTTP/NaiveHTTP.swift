@@ -19,14 +19,14 @@ public protocol NaiveHTTPProtocol {
     func GET(
         uri:String,
         params:[String: String]?,
-        additionalHeaders: [String: String]?,
+        headers: [String: String]?,
         completion: completionHandler?
     )
     
     func POST(
         uri:String,
         postObject: AnyObject?,
-        additionalHeaders: [String: String]?,
+        headers: [String: String]?,
         completion: completionHandler?
     )
     

@@ -15,12 +15,12 @@ public extension NaiveHTTPProtocol {
         uri:String,
         params:[String: String]?,
         responseFilter: String?,
-        additionalHeaders: [String:String]?,
+        headers: [String:String]?,
         completion: jsonCompletion?) {
 
         GET(uri,
             params: params,
-            additionalHeaders: self.jsonHeaders(additionalHeaders)) { (data, response, error) -> () in
+            headers: self.jsonHeaders(headers)) { (data, response, error) -> () in
             
                 guard error == nil else {
                     completion?(json: nil, response: response, error: error)
@@ -46,10 +46,10 @@ public extension NaiveHTTPProtocol {
         uri:String,
         postObject: AnyObject?,
         responseFilter: String?,
-        additionalHeaders: [String: String]?,
+        headers: [String: String]?,
         completion: jsonCompletion?) {
             
-            POST(uri, postObject: postObject, additionalHeaders: self.jsonHeaders(additionalHeaders)) { (data, response, error)->() in
+            POST(uri, postObject: postObject, headers: self.jsonHeaders(headers)) { (data, response, error)->() in
                 guard error == nil else {
                     completion?(json: nil, response: response, error: error)
                     return
