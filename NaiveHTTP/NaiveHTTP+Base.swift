@@ -37,8 +37,6 @@ public extension NaiveHTTPProtocol {
         
             let url = NSURL(string: uri)!
             let request = NSMutableURLRequest(URL: url)
-            request.setValue("application/json", forHTTPHeaderField: "Accept")
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.HTTPMethod = "POST"
 
             if let headers = additionalHeaders {
@@ -61,7 +59,7 @@ public extension NaiveHTTPProtocol {
                     return
                 }
             }
-            
+
             performRequest(request, completion: completion)
 
     }

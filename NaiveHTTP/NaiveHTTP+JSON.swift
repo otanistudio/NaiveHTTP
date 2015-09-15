@@ -20,7 +20,7 @@ public extension NaiveHTTPProtocol {
 
         GET(uri,
             params: params,
-            additionalHeaders: additionalHeaders) { (data, response, error) -> () in
+            additionalHeaders: self.jsonHeaders(additionalHeaders)) { (data, response, error) -> () in
             
                 guard error == nil else {
                     completion?(json: nil, response: response, error: error)
@@ -49,7 +49,7 @@ public extension NaiveHTTPProtocol {
         additionalHeaders: [String: String]?,
         completion: jsonCompletion?) {
             
-            POST(uri, postObject: postObject, additionalHeaders: additionalHeaders) { (data, response, error)->() in
+            POST(uri, postObject: postObject, additionalHeaders: self.jsonHeaders(additionalHeaders)) { (data, response, error)->() in
                 guard error == nil else {
                     completion?(json: nil, response: response, error: error)
                     return
@@ -66,6 +66,25 @@ public extension NaiveHTTPProtocol {
                 completion?(json: json, response: response, error: error)
                 
             }
+    }
+    
+    private func jsonHeaders(additionalHeaders: [String : String]?) -> [String : String] {
+        let jsonHeaders: [String : String] = [
+            "Accept" : "application/json",
+            "Content-Type" : "application/json"
+        ]
+        
+        let headers: [String : String]?
+        if let additional = additionalHeaders {
+            headers = additional.reduce(jsonHeaders) { (var dict, pair) in
+                dict[pair.0] = pair.1
+                return dict
+            }
+        } else {
+            headers = jsonHeaders
+        }
+        
+        return headers!
     }
 }
 
