@@ -53,8 +53,8 @@ public class NaiveHTTP: NaiveHTTPProtocol {
             self._configuration = config
             _urlSession = NSURLSession(configuration: config)
         } else {
-            self._configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-            _urlSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+            self._configuration = NSURLSessionConfiguration.ephemeralSessionConfiguration()
+            _urlSession = NSURLSession(configuration: NSURLSessionConfiguration.ephemeralSessionConfiguration())
         }
     }
     
