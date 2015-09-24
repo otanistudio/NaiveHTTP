@@ -125,6 +125,20 @@ class ExternalTests: XCTestCase {
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
+    func testPUT() {
+        let naive = NaiveHTTP(configuration: nil)
+        let putBody = ["put":"this"];
+    
+        naive.PUT("https://httpbin.org/put", body: putBody, headers: nil) { (data, response, error) -> Void in
+            XCTAssertNil(error)
+            let parsedResult = JSON(data: data!)
+            XCTAssertEqual("this", parsedResult["json"]["put"])
+            self.networkExpectation!.fulfill()
+        }
+    
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
+    
     func testJSONPOST() {
         let naive = NaiveHTTP(configuration: nil)
         let postObject = ["herp":"derp"];

@@ -29,6 +29,15 @@ public extension NaiveHTTPProtocol {
         performRequest(.POST, uri: uri, body: postObject, headers: headers, completion: completion)
     }
     
+    public func PUT(
+        uri: String,
+        body: AnyObject?,
+        headers: [String : String]?,
+        completion: completionHandler?) {
+            
+        performRequest(.PUT, uri: uri, body: body, headers: headers, completion: completion)
+    }
+    
     public func performRequest(
         method: Method,
         uri: String,
