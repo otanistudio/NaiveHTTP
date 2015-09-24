@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 public extension NaiveHTTPProtocol {
     
     public func GET(
@@ -18,15 +17,7 @@ public extension NaiveHTTPProtocol {
         completion: completionHandler?) {
             
         let url: NSURL =  self.dynamicType.normalizedURL(uri, params: params)
-        let request = NSMutableURLRequest(URL: url)
-            
-        if headers != nil {
-            for (k, v) in headers! {
-                request.setValue(v, forHTTPHeaderField: k)
-            }
-        }
-
-        performRequest(request, completion: completion)
+        performRequest(.GET, uri:url.absoluteString, body: nil, headers: headers, completion: completion)
     }
     
     public func POST(
@@ -34,44 +25,58 @@ public extension NaiveHTTPProtocol {
         postObject: AnyObject?,
         headers: [String : String]?,
         completion: completionHandler?) {
-        
-            let url = NSURL(string: uri)!
-            let request = NSMutableURLRequest(URL: url)
-            request.HTTPMethod = "POST"
-
+            
+        performRequest(.POST, uri: uri, body: postObject, headers: headers, completion: completion)
+    }
+    
+    public func PUT(
+        uri: String,
+        body: AnyObject?,
+        headers: [String : String]?,
+        completion: completionHandler?) {
+            
+        performRequest(.PUT, uri: uri, body: body, headers: headers, completion: completion)
+    }
+    
+    public func performRequest(
+        method: Method,
+        uri: String,
+        body: AnyObject?,
+        headers: [String : String]?,
+        completion: completionHandler?) {
+            
+            let url = NSURL(string: uri)
+            let req = NSMutableURLRequest(URL: url!)
+            req.HTTPMethod = "\(method)"
+            
             if headers != nil {
                 for (k, v) in headers! {
-                    request.setValue(v, forHTTPHeaderField: k)
+                    req.setValue(v, forHTTPHeaderField: k)
                 }
             }
             
-            if postObject != nil {
-                do {
-                    let o = JSON(postObject!)
-                    if o.type == .String {
-                        request.HTTPBody = (o.stringValue as NSString).dataUsingEncoding(NSUTF8StringEncoding)
-                    } else {
-                        request.HTTPBody = try o.rawData()
+            if method == .POST || method == .PUT {
+                if body != nil {
+                    do {
+                        let o = JSON(body!)
+                        if o.type == .String {
+                            req.HTTPBody = (o.stringValue as NSString).dataUsingEncoding(NSUTF8StringEncoding)
+                        } else {
+                            req.HTTPBody = try o.rawData()
+                        }
+                    } catch let jsonError as NSError {
+                        let bodyError = NSError(domain: errorDomain, code: -1,
+                            userInfo: [
+                                NSLocalizedFailureReasonErrorKey: "failed to convert body to appropriate format",
+                                NSLocalizedDescriptionKey: "SwiftyJSON Error: \(jsonError.description)"
+                            ])
+                        
+                        completion?(data: nil, response: nil, error: bodyError)
+                        return
                     }
-                } catch let jsonError as NSError {
-                    let postObjectError = NSError(domain: errorDomain, code: -1,
-                        userInfo: [
-                            NSLocalizedFailureReasonErrorKey: "failed to convert postObject to JSON",
-                            NSLocalizedDescriptionKey: "SwiftyJSON Error: \(jsonError.description)"
-                        ])
-                    
-                    completion?(data: nil, response: nil, error: postObjectError)
-                    return
                 }
             }
-
-            performRequest(request, completion: completion)
-
-    }
-
-    public func performRequest(
-        req: NSURLRequest,
-        completion: completionHandler?) {
+            
             
             urlSession.dataTaskWithRequest(req) { (data, response, error) -> Void in
                 guard error == nil else {
