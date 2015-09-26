@@ -75,7 +75,7 @@ public extension NaiveHTTPProtocol {
         headers: [String : String]?,
         completion: jsonCompletion?) {
         
-        PUT(uri, body: body, headers: headers) { (data, response, error) -> Void in
+        PUT(uri, body: body, headers: self.jsonHeaders(headers)) { (data, response, error) -> Void in
             guard error == nil else {
                 completion?(json: nil, response: response, error: error)
                 return
