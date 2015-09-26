@@ -18,6 +18,7 @@ DerivedData
 *.hmap
 *.xccheckout
 *.ipa
+WorkspaceSettings.xcsettings
 
 #CocoaPods
 Pods
