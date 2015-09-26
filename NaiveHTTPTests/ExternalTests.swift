@@ -9,7 +9,15 @@
 import XCTest
 import NaiveHTTP
 
+let localServerURI = (NSProcessInfo.processInfo().environment["NAIVEHTTP_EXTERNAL_TEST_SERVER"] != nil) ? NSProcessInfo.processInfo().environment["NAIVEHTTP_EXTERNAL_TEST_SERVER"]! : "https://httpbin.org"
+
 class ExternalTests: XCTestCase {
+
+    struct URI {
+        static func loc(path: String) -> String {
+            return "\(localServerURI)/\(path)"
+        }
+    }
     
     let networkTimeout = 2.0
     var networkExpectation: XCTestExpectation?
@@ -25,11 +33,11 @@ class ExternalTests: XCTestCase {
     
     func testJSONGETWithParams() {
         let naive = NaiveHTTP(configuration: nil)
-        let testURI = "https://httpbin.org/get"
         let params = ["herp":"derp"]
-
+        let uri = URI.loc("get")
+        
         naive.jsonGET(
-            testURI,
+            uri,
             params:params,
             responseFilter: nil,
             headers: nil) { (json, response, error) -> () in
@@ -37,7 +45,7 @@ class ExternalTests: XCTestCase {
             XCTAssertNil(error)
             XCTAssertEqual("derp", json!["args"]["herp"])
             let httpResp = response as! NSHTTPURLResponse
-            XCTAssertEqual(testURI+"?herp=derp", httpResp.URL!.absoluteString)
+            XCTAssertEqual(uri+"?herp=derp", httpResp.URL!.absoluteString)
             self.networkExpectation!.fulfill()
         }
         
@@ -46,7 +54,7 @@ class ExternalTests: XCTestCase {
     
     func testGETWithError() {
         let naive = NaiveHTTP(configuration: NSURLSessionConfiguration.ephemeralSessionConfiguration())
-        naive.GET("http://httpbin.org/status/400", params: nil, headers: nil) { (data, response, error) -> Void in
+        naive.GET(URI.loc("status/400"), params: nil, headers: nil) { (data, response, error) -> Void in
             XCTAssertEqual(400, error?.code)
             self.networkExpectation!.fulfill()
         }
@@ -56,7 +64,7 @@ class ExternalTests: XCTestCase {
     func testBadImageGET() {
         let naive = NaiveHTTP(configuration: nil)
 
-        naive.imageGET("http://httpbin.org/image/webp") { (image, response, error) -> () in
+        naive.imageGET(URI.loc("image/webp")) { (image, response, error) -> () in
             XCTAssertEqual("nil UIImage", error?.userInfo[NSLocalizedFailureReasonErrorKey] as? String)
             XCTAssertNil(image)
             XCTAssertNotNil(response)
@@ -69,7 +77,7 @@ class ExternalTests: XCTestCase {
     func testPNGImageGET() {
         let naive = NaiveHTTP(configuration: nil)
         
-        naive.imageGET("http://httpbin.org/image/png") { (image, response, error) -> () in
+        naive.imageGET(URI.loc("image/png")) { (image, response, error) -> () in
             XCTAssertNotNil(image)
             XCTAssertNotNil(response)
             XCTAssertNil(error)
@@ -82,7 +90,7 @@ class ExternalTests: XCTestCase {
     func testImage404() {
         let naive = NaiveHTTP(configuration: nil)
         
-        naive.imageGET("http://httpbin.org/status/404") { (image, response, error) -> () in
+        naive.imageGET(URI.loc("status/404")) { (image, response, error) -> () in
             XCTAssertEqual(404, error!.code)
             XCTAssertNil(image)
             XCTAssertNotNil(response)
@@ -99,7 +107,7 @@ class ExternalTests: XCTestCase {
             "Content-Type" : "application/x-www-form-urlencoded"
         ]
         
-        naive.POST("http://httpbin.org/post", postObject: postString, headers: formEncodedHeader) { (data, response, error) -> Void in
+        naive.POST(URI.loc("post"), postObject: postString, headers: formEncodedHeader) { (data, response, error) -> Void in
             XCTAssertNil(error)
             let parsedResult = JSON(data: data!)
             let receivedFormInfo = parsedResult["form"]
@@ -116,7 +124,7 @@ class ExternalTests: XCTestCase {
         let postObject = ["herp":"derp"];
         let additionalHeaders = ["X-Some-Custom-Header":"hey-hi-ho"]
         
-        naive.jsonPOST("https://httpbin.org/post", postObject: postObject, responseFilter: nil, headers: additionalHeaders) { (json, response, error) -> () in
+        naive.jsonPOST(URI.loc("post"), postObject: postObject, responseFilter: nil, headers: additionalHeaders) { (json, response, error) -> () in
             XCTAssertNil(error)
             XCTAssertEqual("hey-hi-ho", json!["headers"]["X-Some-Custom-Header"].string)
             self.networkExpectation!.fulfill()
@@ -129,7 +137,7 @@ class ExternalTests: XCTestCase {
         let naive = NaiveHTTP(configuration: nil)
         let putBody = ["put":"this"];
     
-        naive.PUT("https://httpbin.org/put", body: putBody, headers: nil) { (data, response, error) -> Void in
+        naive.PUT(URI.loc("put"), body: putBody, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
             let parsedResult = JSON(data: data!)
             XCTAssertEqual("this", parsedResult["json"]["put"])
@@ -143,7 +151,7 @@ class ExternalTests: XCTestCase {
         let naive = NaiveHTTP(configuration: nil)
         let putBody = ["put":"this"];
         
-        naive.jsonPUT("https://httpbin.org/put", body: putBody, responseFilter: nil, headers: nil) { (json, response, error) -> Void in
+        naive.jsonPUT(URI.loc("put"), body: putBody, responseFilter: nil, headers: nil) { (json, response, error) -> Void in
             XCTAssertNil(error)
             XCTAssertEqual("this", json!.dictionary!["json"]!["put"])
             self.networkExpectation!.fulfill()
@@ -156,11 +164,11 @@ class ExternalTests: XCTestCase {
         let postObject = ["herp":"derp"];
         let expectedResponseJSON = JSON(postObject)
         
-        naive.jsonPOST("https://httpbin.org/post", postObject: postObject, responseFilter: nil, headers: nil) { (json, response, error) -> () in
+        naive.jsonPOST(URI.loc("post"), postObject: postObject, responseFilter: nil, headers: nil) { (json, response, error) -> () in
             XCTAssertNil(error)
             XCTAssertEqual(expectedResponseJSON, json!.dictionary!["json"])
             let httpResp = response as! NSHTTPURLResponse
-            XCTAssertEqual("https://httpbin.org/post", httpResp.URL!.absoluteString)
+            XCTAssertEqual(URI.loc("post"), httpResp.URL!.absoluteString)
             self.networkExpectation!.fulfill()
         }
         
@@ -170,7 +178,7 @@ class ExternalTests: XCTestCase {
     func testJSONPOSTWithNilPostBody() {
         let naive = NaiveHTTP(configuration: nil)
         
-        naive.jsonPOST("https://httpbin.org/post", postObject: nil, responseFilter: nil, headers: nil) { (json, response, error) -> () in
+        naive.jsonPOST(URI.loc("post"), postObject: nil, responseFilter: nil, headers: nil) { (json, response, error) -> () in
             XCTAssertNil(error)
             XCTAssertEqual(JSON(NSNull()), json!["json"])
             self.networkExpectation!.fulfill()
@@ -183,7 +191,7 @@ class ExternalTests: XCTestCase {
         let naive = NaiveHTTP(configuration: nil)
         let postObject = ["herp":"derp"];
         
-        naive.jsonPOST("http://httpbin.org/status/500", postObject: postObject, responseFilter: nil, headers: nil) { (json, response, error) -> () in
+        naive.jsonPOST(URI.loc("status/500"), postObject: postObject, responseFilter: nil, headers: nil) { (json, response, error) -> () in
             
             XCTAssertNil(json)
             XCTAssertEqual(500, error!.code)
