@@ -17,8 +17,7 @@ naive.GET(
     "http://example.org/thing", 
     params: query,
     headers: customHeaders) { (data, response, error) -> Void in
-        XCTAssertEqual(400, error?.code)
-        self.networkExpectation!.fulfill()
+        // Do stuff with the callback values
     }
 ```
 
