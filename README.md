@@ -29,7 +29,7 @@ This project is taking on some shape with respect to use of Protocols, which has
 
 ## Tests
 
-The main suite runs against <http://httpbin.org> but is configurable to run against your own local instance of it. Check the `NAIVEHTTP_EXTERNAL_TEST_SERVER` and set it to the appropriate value.
+The main suite runs against <http://httpbin.org> but is configurable to run against your own local instance of it. Check the `NAIVEHTTP_EXTERNAL_TEST_SERVER` environment variable under the Test section in the NaiveHTTP scheme and set it to the appropriate value.
 
 If you want to run your own local `httpbin` you can use Python and PIP:
 
