@@ -1,6 +1,6 @@
 # NaiveHTTP
 
-Work-in-progress at a focused `NSURLSession` simplification wrapper.
+Work-in-progress at a focused `NSURLSession` simplification wrapper that is also my learning exercise for [Protocol-Oriented Programming](https://developer.apple.com/videos/wwdc/2015/?id=408).
 
 ## Usage
 
