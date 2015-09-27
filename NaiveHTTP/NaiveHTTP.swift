@@ -22,20 +22,6 @@ public enum Method: String {
 public protocol NaiveHTTPProtocol {
     var urlSession: NSURLSession { get }
     var configuration: NSURLSessionConfiguration { get }
-
-    func GET(
-        uri:String,
-        params:[String : String]?,
-        headers: [String : String]?,
-        completion: completionHandler?
-    )
-    
-    func POST(
-        uri:String,
-        postObject: AnyObject?,
-        headers: [String : String]?,
-        completion: completionHandler?
-    )
     
     func performRequest(
         method: Method,

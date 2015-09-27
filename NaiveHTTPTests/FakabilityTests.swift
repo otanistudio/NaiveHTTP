@@ -31,28 +31,13 @@ class FakeTests: XCTestCase {
             success!(data: data!, response: resp)
         }
         
-        func GET(
-            uri: String,
-            params: [String : String]?,
-            headers: [String : String]?,
-            completion: ((data: NSData?, response: NSURLResponse?, error: NSError?) -> ())?) {
+        func performRequest(method: Method, uri: String, body: AnyObject?, headers: [String : String]?, completion: completionHandler?) {
             
             fakeAsync({ (data, response) -> () in
                 completion!(data: data, response: response, error: nil)
             }) { (error) -> () in
                 completion!(data: nil, response: nil, error: error)
             }
-                
-        }
-        
-        func POST(
-            uri: String,
-            postObject: AnyObject?,
-            headers: [String : String]?,
-            success: ((responseData: NSData, response: NSURLResponse) -> ())?,
-            failure: ((postError: NSError) -> ())?) {
-                
-            fakeAsync(success, failure: failure)
         }
     }
     
