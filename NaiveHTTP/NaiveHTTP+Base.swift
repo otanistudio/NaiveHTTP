@@ -16,8 +16,8 @@ public extension NaiveHTTPProtocol {
         headers: [String: String]?,
         completion: completionHandler?) {
             
-        let url: NSURL =  Utility.normalizedURL(uri, params: params)
-        performRequest(.GET, uri:url.absoluteString, body: nil, headers: headers, completion: completion)
+        let url: NSURL =  NSURL(string: uri, params: params)
+        performRequest(.GET, uri: url.absoluteString, body: nil, headers: headers, completion: completion)
     }
     
     public func POST(

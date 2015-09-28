@@ -9,6 +9,15 @@
 import Foundation
 
 public class Utility {
+    /// A convenience function for services that returns a string response prepended with
+    /// with an anti-hijacking string.
+    ///
+    /// Some services return a string, like `while(1);` pre-pended to their JSON string, which can
+    /// break the normal decoding dance.
+    /// 
+    /// - parameter prefixFilter: The string to remove from the beginning of the response
+    /// - parameter data: The data, usually the response data from of your `NSURLSession` or `NSURLConnection` request
+    /// - returns: a valid `SwiftyJSON` object
     public static func filteredJSON(prefixFilter: String, data: NSData?) -> JSON {
         let json: JSON?
         
@@ -28,10 +37,22 @@ public class Utility {
         
         return json!
     }
-    
-    public static func normalizedURL(uri:String, params:[String: String]?) -> NSURL {
+}
+
+internal extension NSURL {
+    /// Returns an NSURL with alphabetized query paramters. 
+    ///
+    /// This covers the use case where `http://example.com?a=1&b=2` is always returned
+    /// even if the string given was `http://example.com?b=2&a=1`
+    ///
+    /// - parameter string: The string to use to create the URL, e.g.: http://example.com or file://something
+    ///
+    /// - parameter params: a `Dictionary<String, String>` that contains the name/value pairs for the parameters
+    ///
+    /// - returns: An NSURL that guarantees query parameters sorted in ascending alphabetic order.
+    convenience init(string: String, params: [String : String]?) {
         // Deal with any query params already in the URI String
-        let urlComponents = NSURLComponents(string: uri)
+        let urlComponents = NSURLComponents(string: string)
         var queryItems: [NSURLQueryItem]? = urlComponents?.queryItems
         
         if queryItems == nil {
@@ -53,6 +74,6 @@ public class Utility {
             urlComponents?.queryItems = queryItems
         }
         
-        return NSURL(string: (urlComponents?.string)!)!
+        self.init(string: (urlComponents?.string)!)!
     }
 }
