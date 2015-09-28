@@ -16,7 +16,7 @@ public extension NaiveHTTPProtocol {
         headers: [String: String]?,
         completion: completionHandler?) {
             
-        let url: NSURL =  self.dynamicType.normalizedURL(uri, params: params)
+        let url: NSURL =  Utility.normalizedURL(uri, params: params)
         performRequest(.GET, uri:url.absoluteString, body: nil, headers: headers, completion: completion)
     }
     

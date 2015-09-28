@@ -31,7 +31,7 @@ public extension NaiveHTTPProtocol {
                 let jsonError: NSError?
                 
                 if responseFilter != nil {
-                    json = self.preFilterResponseData(responseFilter!, data: data)
+                    json = Utility.filteredJSON(responseFilter!, data: data)
                 } else {
                     json = JSON(data: data!)
                 }
@@ -58,7 +58,7 @@ public extension NaiveHTTPProtocol {
                 // TODO: pass any JSON errors into completion function
                 let json: JSON?
                 if responseFilter != nil {
-                    json = self.preFilterResponseData(responseFilter!, data: data)
+                    json = Utility.filteredJSON(responseFilter!, data: data)
                 } else {
                     json = JSON(data: data!)
                 }
@@ -84,7 +84,7 @@ public extension NaiveHTTPProtocol {
             // TODO: pass any JSON errors into completion function
             let json: JSON?
             if responseFilter != nil {
-                json = self.preFilterResponseData(responseFilter!, data: data)
+                json = Utility.filteredJSON(responseFilter!, data: data)
             } else {
                 json = JSON(data: data!)
             }

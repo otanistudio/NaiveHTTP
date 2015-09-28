@@ -1,5 +1,5 @@
 //
-//  NaiveHTTP.Utility.swift
+//  Utility.swift
 //  NaiveHTTP
 //
 //  Created by Robert Otani on 9/7/15.
@@ -8,8 +8,8 @@
 
 import Foundation
 
-public extension NaiveHTTPProtocol {
-    internal func preFilterResponseData(prefixFilter: String, data: NSData?) -> JSON {
+public class Utility {
+    public static func filteredJSON(prefixFilter: String, data: NSData?) -> JSON {
         let json: JSON?
         
         if let unfilteredJSONStr = NSString(data: data!, encoding: NSUTF8StringEncoding) {
