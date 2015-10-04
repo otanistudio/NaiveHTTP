@@ -31,13 +31,15 @@ class FakeTests: XCTestCase {
             success!(data: data!, response: resp)
         }
         
-        func performRequest(method: Method, uri: String, body: AnyObject?, headers: [String : String]?, completion: completionHandler?) {
+        func performRequest(method: Method, uri: String, body: AnyObject?, headers: [String : String]?, completion: completionHandler?) -> FakeNaive {
             
             fakeAsync({ (data, response) -> () in
                 completion!(data: data, response: response, error: nil)
             }) { (error) -> () in
                 completion!(data: nil, response: nil, error: error)
             }
+            
+            return self
         }
     }
     
@@ -73,6 +75,27 @@ class FakeTests: XCTestCase {
         }
         
         self.waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+    
+    func testChainable() {
+        let fakeNaive = FakeNaive()
+        let asyncExpectation = self.expectationWithDescription("async expectation")
+        var resultArray = [NSData]()
+        
+        fakeNaive.performRequest(.GET, uri: "http://example.com/fake/whatever", body: nil, headers: nil) { (data, response, error) -> Void in
+            resultArray.append(data!)
+            XCTAssertNil(error)
+        }.performRequest(.GET, uri: "http://example.com/another/fake/location", body: nil, headers: nil) { (data, response, error) -> Void in
+            XCTAssertNil(error)
+            resultArray.append(data!)
+            
+            // This assert+fulfill tests that the first link in the chain executed before the second
+            XCTAssertEqual(2, resultArray.count)
+            asyncExpectation.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(1.0, handler: nil)
+    
     }
     
 }

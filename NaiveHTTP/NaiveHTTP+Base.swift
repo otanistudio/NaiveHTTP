@@ -14,28 +14,28 @@ public extension NaiveHTTPProtocol {
         uri:String,
         params: [String: String]?,
         headers: [String: String]?,
-        completion: completionHandler?) {
+        completion: completionHandler?) -> Self {
             
         let url: NSURL =  NSURL(string: uri, params: params)
-        performRequest(.GET, uri: url.absoluteString, body: nil, headers: headers, completion: completion)
+        return performRequest(.GET, uri: url.absoluteString, body: nil, headers: headers, completion: completion)
     }
     
     public func POST(
         uri: String,
         postObject: AnyObject?,
         headers: [String : String]?,
-        completion: completionHandler?) {
+        completion: completionHandler?) -> Self {
             
-        performRequest(.POST, uri: uri, body: postObject, headers: headers, completion: completion)
+        return performRequest(.POST, uri: uri, body: postObject, headers: headers, completion: completion)
     }
     
     public func PUT(
         uri: String,
         body: AnyObject?,
         headers: [String : String]?,
-        completion: completionHandler?) {
+        completion: completionHandler?) -> Self {
             
-        performRequest(.PUT, uri: uri, body: body, headers: headers, completion: completion)
+        return performRequest(.PUT, uri: uri, body: body, headers: headers, completion: completion)
     }
     
 }

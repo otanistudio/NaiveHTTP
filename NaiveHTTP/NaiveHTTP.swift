@@ -28,8 +28,7 @@ public protocol NaiveHTTPProtocol {
         uri: String,
         body: AnyObject?,
         headers: [String : String]?,
-        completion: completionHandler?
-    )
+        completion: completionHandler?) -> Self
 }
 
 final public class NaiveHTTP: NaiveHTTPProtocol {
@@ -63,7 +62,7 @@ final public class NaiveHTTP: NaiveHTTPProtocol {
         uri: String,
         body: AnyObject?,
         headers: [String : String]?,
-        completion: completionHandler?) {
+        completion: completionHandler?) -> Self {
             
             let url = NSURL(string: uri)
             let req = NSMutableURLRequest(URL: url!)
@@ -92,7 +91,7 @@ final public class NaiveHTTP: NaiveHTTPProtocol {
                             ])
                         
                         completion?(data: nil, response: nil, error: bodyError)
-                        return
+                        return self
                     }
                 }
             }
@@ -116,5 +115,6 @@ final public class NaiveHTTP: NaiveHTTPProtocol {
                 
                 }.resume()
             
+            return self
     }
 }
