@@ -2,11 +2,17 @@
 
 Work-in-progress at a focused `NSURLSession` simplification wrapper that is also my learning exercise for [Protocol-Oriented Programming](https://developer.apple.com/videos/wwdc/2015/?id=408).
 
-## Usage
+## Installation
 
 This is a framework, so you can either build it as such or include it as a submodule/subproject and link it to your binary in Build Phases.
 
+> Don't forget to `git submodule update --init` to download other dependencies.
+
+## Usage
+
 ```swift
+import NaiveHTTP
+
 let sessionConfig = NSURLSessionConfiguration.ephemeralSessionConfiguration()
 let naive = NaiveHTTP(configuration: sessionConfig)
 
