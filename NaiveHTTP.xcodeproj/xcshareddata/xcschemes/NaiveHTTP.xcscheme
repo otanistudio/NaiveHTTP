@@ -52,7 +52,7 @@
          <EnvironmentVariable
             key = "NAIVEHTTP_EXTERNAL_TEST_SERVER"
             value = "http://localhost:5000"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
