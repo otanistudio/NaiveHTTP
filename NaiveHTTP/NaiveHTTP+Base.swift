@@ -37,6 +37,14 @@ public extension NaiveHTTPProtocol {
             
         performRequest(.PUT, uri: uri, body: body, headers: headers, completion: completion)
     }
-    
+
+    public func DELETE(
+        uri: String,
+        body: AnyObject?,
+        headers: [String : String]?,
+        completion: completionHandler?) {
+
+        performRequest(.DELETE, uri: uri, body: body, headers: headers, completion: completion)
+    }
 }
 

@@ -75,7 +75,7 @@ final public class NaiveHTTP: NaiveHTTPProtocol {
                 }
             }
             
-            if method == .POST || method == .PUT {
+            if method == .POST || method == .PUT || method == .DELETE {
                 if body != nil {
                     do {
                         let o = JSON(body!)

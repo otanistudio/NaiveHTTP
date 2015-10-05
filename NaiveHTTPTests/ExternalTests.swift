@@ -157,7 +157,8 @@ class ExternalTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)    }
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
     
     func testJSONPOST() {
         let naive = NaiveHTTP(configuration: nil)
@@ -230,6 +231,33 @@ class ExternalTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
+
+    func testDELETE() {
+        let naive = NaiveHTTP(configuration: nil)
+        let deleteBody = ["delete":"this"];
+
+        naive.DELETE(URI.loc("delete"), body: deleteBody, headers: nil) { (data, response, error) -> Void in
+            XCTAssertNil(error)
+            let parsedResult = JSON(data: data!)
+            XCTAssertEqual("this", parsedResult["json"]["delete"])
+            self.networkExpectation!.fulfill()
+        }
+
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
+
+    func testJSONDELETE() {
+        let naive = NaiveHTTP(configuration: nil)
+        let deleteBody = ["delete":"this"];
+
+        naive.jsonDELETE(URI.loc("delete"), body: deleteBody, responseFilter: nil, headers: nil) { (json, response, error) -> Void in
+            XCTAssertNil(error)
+            XCTAssertEqual("this", json!.dictionary!["json"]!["delete"])
+            self.networkExpectation!.fulfill()
+        }
+
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
 }
