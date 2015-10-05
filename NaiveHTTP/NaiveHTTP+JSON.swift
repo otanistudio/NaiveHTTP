@@ -93,7 +93,33 @@ public extension NaiveHTTPProtocol {
         }
             
     }
-    
+
+    public func jsonDELETE(
+        uri: String,
+        body: AnyObject?,
+        responseFilter: String?,
+        headers: [String : String]?,
+        completion: jsonCompletion?) {
+
+        DELETE(uri, body: body, headers: self.jsonHeaders(headers)) { (data, response, error) -> Void in
+            guard error == nil else {
+                completion?(json: nil, response: response, error: error)
+                return
+            }
+
+            // TODO: pass any JSON errors into completion function
+            let json: JSON?
+            if responseFilter != nil {
+                json = Utility.filteredJSON(responseFilter!, data: data)
+            } else {
+                json = JSON(data: data!)
+            }
+
+            completion?(json: json, response: response, error: error)
+        }
+
+    }
+
     private func jsonHeaders(additionalHeaders: [String : String]?) -> [String : String] {
         let jsonHeaders: [String : String] = [
             "Accept" : "application/json",
