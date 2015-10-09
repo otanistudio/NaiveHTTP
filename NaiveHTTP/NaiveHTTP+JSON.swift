@@ -16,9 +16,9 @@ public extension NaiveHTTPProtocol {
         params:[String: String]?,
         responseFilter: String?,
         headers: [String:String]?,
-        completion: jsonCompletion?) {
+        completion: jsonCompletion?) -> NSURLSessionDataTask? {
 
-        GET(uri,
+        return GET(uri,
             params: params,
             headers: self.jsonHeaders(headers)) { (data, response, error) -> () in
             
@@ -47,9 +47,9 @@ public extension NaiveHTTPProtocol {
         postObject: AnyObject?,
         responseFilter: String?,
         headers: [String : String]?,
-        completion: jsonCompletion?) {
+        completion: jsonCompletion?) -> NSURLSessionDataTask? {
             
-            POST(uri, postObject: postObject, headers: self.jsonHeaders(headers)) { (data, response, error)->() in
+            return POST(uri, postObject: postObject, headers: self.jsonHeaders(headers)) { (data, response, error)->() in
                 guard error == nil else {
                     completion?(json: nil, response: response, error: error)
                     return
@@ -73,9 +73,9 @@ public extension NaiveHTTPProtocol {
         body: AnyObject?,
         responseFilter: String?,
         headers: [String : String]?,
-        completion: jsonCompletion?) {
+        completion: jsonCompletion?) -> NSURLSessionDataTask? {
         
-        PUT(uri, body: body, headers: self.jsonHeaders(headers)) { (data, response, error) -> Void in
+        return PUT(uri, body: body, headers: self.jsonHeaders(headers)) { (data, response, error) -> Void in
             guard error == nil else {
                 completion?(json: nil, response: response, error: error)
                 return
@@ -99,9 +99,9 @@ public extension NaiveHTTPProtocol {
         body: AnyObject?,
         responseFilter: String?,
         headers: [String : String]?,
-        completion: jsonCompletion?) {
+        completion: jsonCompletion?) -> NSURLSessionDataTask? {
 
-        DELETE(uri, body: body, headers: self.jsonHeaders(headers)) { (data, response, error) -> Void in
+        return DELETE(uri, body: body, headers: self.jsonHeaders(headers)) { (data, response, error) -> Void in
             guard error == nil else {
                 completion?(json: nil, response: response, error: error)
                 return

@@ -52,6 +52,15 @@ class ExternalTests: XCTestCase {
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
+    func testDataTask() {
+        let naive = NaiveHTTP(configuration: nil)
+        let task = naive.performRequest(.GET, uri: URI.loc("get") + "?task=data", body: nil, headers: nil) { (data, response, error) -> Void in
+            self.networkExpectation!.fulfill()
+        }
+        XCTAssertEqual(URI.loc("get") + "?task=data", task?.originalRequest!.URL?.absoluteString)
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
+    
     func testGETWithError() {
         let naive = NaiveHTTP(configuration: NSURLSessionConfiguration.ephemeralSessionConfiguration())
         naive.GET(URI.loc("status/400"), params: nil, headers: nil) { (data, response, error) -> Void in

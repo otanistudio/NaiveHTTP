@@ -29,7 +29,7 @@ public protocol NaiveHTTPProtocol {
         body: AnyObject?,
         headers: [String : String]?,
         completion: completionHandler?
-    )
+    ) -> NSURLSessionDataTask?
 }
 
 final public class NaiveHTTP: NaiveHTTPProtocol {
@@ -63,7 +63,7 @@ final public class NaiveHTTP: NaiveHTTPProtocol {
         uri: String,
         body: AnyObject?,
         headers: [String : String]?,
-        completion: completionHandler?) {
+        completion: completionHandler?) -> NSURLSessionDataTask? {
             
             let url = NSURL(string: uri)
             let req = NSMutableURLRequest(URL: url!)
@@ -92,13 +92,12 @@ final public class NaiveHTTP: NaiveHTTPProtocol {
                             ])
                         
                         completion?(data: nil, response: nil, error: bodyError)
-                        return
+                        return nil
                     }
                 }
             }
             
-            
-            urlSession.dataTaskWithRequest(req) { (data, response, error) -> Void in
+            let task = urlSession.dataTaskWithRequest(req) { (data, response, error) -> Void in
                 guard error == nil else {
                     completion?(data: data, response: response, error: error)
                     return
@@ -114,7 +113,10 @@ final public class NaiveHTTP: NaiveHTTPProtocol {
                 
                 completion?(data: data, response: response, error: error)
                 
-                }.resume()
+                }
+            
+            task.resume()
+            return task
             
     }
 }

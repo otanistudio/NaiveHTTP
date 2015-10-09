@@ -11,40 +11,40 @@ import Foundation
 public extension NaiveHTTPProtocol {
     
     public func GET(
-        uri:String,
+        uri: String,
         params: [String: String]?,
         headers: [String: String]?,
-        completion: completionHandler?) {
+        completion: completionHandler?) -> NSURLSessionDataTask? {
             
         let url: NSURL =  NSURL(string: uri, params: params)
-        performRequest(.GET, uri: url.absoluteString, body: nil, headers: headers, completion: completion)
+        return performRequest(.GET, uri: url.absoluteString, body: nil, headers: headers, completion: completion)
     }
     
     public func POST(
         uri: String,
         postObject: AnyObject?,
         headers: [String : String]?,
-        completion: completionHandler?) {
+        completion: completionHandler?) -> NSURLSessionDataTask? {
             
-        performRequest(.POST, uri: uri, body: postObject, headers: headers, completion: completion)
+        return performRequest(.POST, uri: uri, body: postObject, headers: headers, completion: completion)
     }
     
     public func PUT(
         uri: String,
         body: AnyObject?,
         headers: [String : String]?,
-        completion: completionHandler?) {
+        completion: completionHandler?) -> NSURLSessionDataTask? {
             
-        performRequest(.PUT, uri: uri, body: body, headers: headers, completion: completion)
+        return performRequest(.PUT, uri: uri, body: body, headers: headers, completion: completion)
     }
 
     public func DELETE(
         uri: String,
         body: AnyObject?,
         headers: [String : String]?,
-        completion: completionHandler?) {
+        completion: completionHandler?) -> NSURLSessionDataTask? {
 
-        performRequest(.DELETE, uri: uri, body: body, headers: headers, completion: completion)
+        return performRequest(.DELETE, uri: uri, body: body, headers: headers, completion: completion)
     }
 }
 

@@ -23,17 +23,19 @@ class FakeTests: XCTestCase {
         
         private func fakeAsync(
             success:((data: NSData, response: NSURLResponse)->())?,
-            failure:((error: NSError)->())?) {
+            failure:((error: NSError)->())?) -> NSURLSessionDataTask? {
                 
             let s = NSString(string: commonJSONString)
             let data = s.dataUsingEncoding(NSUTF8StringEncoding)
             let resp = NSURLResponse()
             success!(data: data!, response: resp)
+            
+            return nil
         }
         
-        func performRequest(method: Method, uri: String, body: AnyObject?, headers: [String : String]?, completion: completionHandler?) {
+        func performRequest(method: Method, uri: String, body: AnyObject?, headers: [String : String]?, completion: completionHandler?)  -> NSURLSessionDataTask? {
             
-            fakeAsync({ (data, response) -> () in
+            return fakeAsync({ (data, response) -> () in
                 completion!(data: data, response: response, error: nil)
             }) { (error) -> () in
                 completion!(data: nil, response: nil, error: error)
