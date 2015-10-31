@@ -8,6 +8,11 @@
 
 import Foundation
 
+public enum NaiveHTTPSwiftyJSONError: ErrorType {
+    case HTTPBodyDataConversion
+    case SwiftyJSONInternal
+}
+
 public extension NaiveHTTPProtocol {
     public typealias jsonCompletion = (json: JSON?, response: NSURLResponse?, error: NSError?) -> Void
 
@@ -49,7 +54,17 @@ public extension NaiveHTTPProtocol {
         headers: [String : String]?,
         completion: jsonCompletion?) -> NSURLSessionDataTask? {
             
-            return POST(uri, postObject: postObject, headers: self.jsonHeaders(headers)) { (data, response, error)->() in
+            var body: NSData? = nil
+            if postObject != nil {
+                do {
+                    body = try jsonData(postObject!)
+                } catch {
+                    completion?(json: nil, response: nil, error: naiveHTTPSwiftyJSONError)
+                    return nil
+                }
+            }
+            
+            return POST(uri, body: body, headers: self.jsonHeaders(headers)) { (data, response, error)->() in
                 guard error == nil else {
                     completion?(json: nil, response: response, error: error)
                     return
@@ -75,7 +90,18 @@ public extension NaiveHTTPProtocol {
         headers: [String : String]?,
         completion: jsonCompletion?) -> NSURLSessionDataTask? {
         
-        return PUT(uri, body: body, headers: self.jsonHeaders(headers)) { (data, response, error) -> Void in
+        var putBody: NSData? = nil
+            
+        if body != nil {
+            do {
+                putBody = try jsonData(body!)
+            } catch {
+                completion?(json: nil, response: nil, error: naiveHTTPSwiftyJSONError)
+                return nil
+            }
+        }
+            
+        return PUT(uri, body: putBody, headers: self.jsonHeaders(headers)) { (data, response, error) -> Void in
             guard error == nil else {
                 completion?(json: nil, response: response, error: error)
                 return
@@ -101,7 +127,17 @@ public extension NaiveHTTPProtocol {
         headers: [String : String]?,
         completion: jsonCompletion?) -> NSURLSessionDataTask? {
 
-        return DELETE(uri, body: body, headers: self.jsonHeaders(headers)) { (data, response, error) -> Void in
+        var deleteBody: NSData? = nil
+        if body != nil {
+            do {
+                deleteBody = try jsonData(body!)
+            } catch {
+                completion?(json: nil, response: nil, error: naiveHTTPSwiftyJSONError)
+                return nil
+            }
+        }
+            
+        return DELETE(uri, body: deleteBody, headers: self.jsonHeaders(headers)) { (data, response, error) -> Void in
             guard error == nil else {
                 completion?(json: nil, response: response, error: error)
                 return
@@ -118,6 +154,34 @@ public extension NaiveHTTPProtocol {
             completion?(json: json, response: response, error: error)
         }
 
+    }
+    
+    private var naiveHTTPSwiftyJSONError: NSError {
+       return NSError(
+        domain: errorDomain,
+        code: -3,
+        userInfo: [
+            NSLocalizedFailureReasonErrorKey : "SwiftyJSON Error",
+            NSLocalizedDescriptionKey: "Error while processing objects to SwiftyJSON data"
+        ])
+    }
+    
+    private func jsonData(object: AnyObject) throws -> NSData {
+        do {
+            let o = JSON(object)
+            if o.type == .String {
+                if let jsonData: NSData = (o.stringValue as NSString).dataUsingEncoding(NSUTF8StringEncoding) {
+                    return jsonData
+                } else {
+                    throw NaiveHTTPSwiftyJSONError.HTTPBodyDataConversion
+                }
+            } else {
+                return try o.rawData()
+            }
+        } catch let jsonError as NSError {
+            debugPrint("NaiveHTTP+JSON: \(jsonError)")
+            throw NaiveHTTPSwiftyJSONError.SwiftyJSONInternal
+        }
     }
 
     private func jsonHeaders(additionalHeaders: [String : String]?) -> [String : String] {

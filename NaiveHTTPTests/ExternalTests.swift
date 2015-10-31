@@ -116,7 +116,7 @@ class ExternalTests: XCTestCase {
             "Content-Type" : "application/x-www-form-urlencoded"
         ]
         
-        naive.POST(URI.loc("post"), postObject: postString, headers: formEncodedHeader) { (data, response, error) -> Void in
+        naive.POST(URI.loc("post"), body: postString.dataUsingEncoding(NSUTF8StringEncoding), headers: formEncodedHeader) { (data, response, error) -> Void in
             XCTAssertNil(error)
             let parsedResult = JSON(data: data!)
             let receivedFormInfo = parsedResult["form"]
@@ -145,8 +145,8 @@ class ExternalTests: XCTestCase {
     func testPUT() {
         let naive = NaiveHTTP(configuration: nil)
         let putBody = ["put":"this"];
-    
-        naive.PUT(URI.loc("put"), body: putBody, headers: nil) { (data, response, error) -> Void in
+        let data = try! NSJSONSerialization.dataWithJSONObject(putBody, options: .PrettyPrinted)
+        naive.PUT(URI.loc("put"), body: data, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
             let parsedResult = JSON(data: data!)
             XCTAssertEqual("this", parsedResult["json"]["put"])
@@ -246,8 +246,8 @@ class ExternalTests: XCTestCase {
     func testDELETE() {
         let naive = NaiveHTTP(configuration: nil)
         let deleteBody = ["delete":"this"];
-
-        naive.DELETE(URI.loc("delete"), body: deleteBody, headers: nil) { (data, response, error) -> Void in
+        let data = try! NSJSONSerialization.dataWithJSONObject(deleteBody, options: .PrettyPrinted)
+        naive.DELETE(URI.loc("delete"), body: data, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
             let parsedResult = JSON(data: data!)
             XCTAssertEqual("this", parsedResult["json"]["delete"])

@@ -26,7 +26,7 @@ public protocol NaiveHTTPProtocol {
     func performRequest(
         method: Method,
         uri: String,
-        body: AnyObject?,
+        body: NSData?,
         headers: [String : String]?,
         completion: completionHandler?
     ) -> NSURLSessionDataTask?
@@ -61,7 +61,7 @@ final public class NaiveHTTP: NaiveHTTPProtocol {
     public func performRequest(
         method: Method,
         uri: String,
-        body: AnyObject?,
+        body: NSData?,
         headers: [String : String]?,
         completion: completionHandler?) -> NSURLSessionDataTask? {
             
@@ -76,25 +76,7 @@ final public class NaiveHTTP: NaiveHTTPProtocol {
             }
             
             if method == .POST || method == .PUT || method == .DELETE {
-                if body != nil {
-                    do {
-                        let o = JSON(body!)
-                        if o.type == .String {
-                            req.HTTPBody = (o.stringValue as NSString).dataUsingEncoding(NSUTF8StringEncoding)
-                        } else {
-                            req.HTTPBody = try o.rawData()
-                        }
-                    } catch let jsonError as NSError {
-                        let bodyError = NSError(domain: errorDomain, code: -1,
-                            userInfo: [
-                                NSLocalizedFailureReasonErrorKey: "failed to convert body to appropriate format",
-                                NSLocalizedDescriptionKey: "SwiftyJSON Error: \(jsonError.description)"
-                            ])
-                        
-                        completion?(data: nil, response: nil, error: bodyError)
-                        return nil
-                    }
-                }
+                req.HTTPBody = body
             }
             
             let task = urlSession.dataTaskWithRequest(req) { (data, response, error) -> Void in

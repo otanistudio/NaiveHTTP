@@ -33,7 +33,7 @@ class FakeTests: XCTestCase {
             return nil
         }
         
-        func performRequest(method: Method, uri: String, body: AnyObject?, headers: [String : String]?, completion: completionHandler?)  -> NSURLSessionDataTask? {
+        func performRequest(method: Method, uri: String, body: NSData?, headers: [String : String]?, completion: completionHandler?)  -> NSURLSessionDataTask? {
             
             return fakeAsync({ (data, response) -> () in
                 completion!(data: data, response: response, error: nil)
