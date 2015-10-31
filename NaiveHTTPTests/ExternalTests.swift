@@ -32,7 +32,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testJSONGETWithParams() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         let params = ["herp":"derp"]
         let uri = URI.loc("get")
         
@@ -53,7 +53,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testDataTask() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         let task = naive.performRequest(.GET, uri: URI.loc("get") + "?task=data", body: nil, headers: nil) { (data, response, error) -> Void in
             self.networkExpectation!.fulfill()
         }
@@ -62,7 +62,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testGETWithError() {
-        let naive = NaiveHTTP(configuration: NSURLSessionConfiguration.ephemeralSessionConfiguration())
+        let naive = NaiveHTTP()
         naive.GET(URI.loc("status/400"), params: nil, headers: nil) { (data, response, error) -> Void in
             XCTAssertEqual(400, error?.code)
             self.networkExpectation!.fulfill()
@@ -71,7 +71,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testBadImageGET() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
 
         naive.imageGET(URI.loc("image/webp")) { (image, response, error) -> () in
             XCTAssertEqual("nil UIImage", error?.userInfo[NSLocalizedFailureReasonErrorKey] as? String)
@@ -84,7 +84,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testPNGImageGET() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         
         naive.imageGET(URI.loc("image/png")) { (image, response, error) -> () in
             XCTAssertNotNil(image)
@@ -97,7 +97,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testImage404() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         
         naive.imageGET(URI.loc("status/404")) { (image, response, error) -> () in
             XCTAssertEqual(404, error!.code)
@@ -110,7 +110,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testPOSTFormEncoded() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         let postString = "blah=blee&hey=this+is+a+string+folks"
         let formEncodedHeader = [
             "Content-Type" : "application/x-www-form-urlencoded"
@@ -129,7 +129,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testPOSTWithAdditionalHeaders() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         let postObject = ["herp":"derp"];
         let additionalHeaders = ["X-Some-Custom-Header":"hey-hi-ho"]
         
@@ -143,7 +143,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testPUT() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         let putBody = ["put":"this"];
         let data = try! NSJSONSerialization.dataWithJSONObject(putBody, options: .PrettyPrinted)
         naive.PUT(URI.loc("put"), body: data, headers: nil) { (data, response, error) -> Void in
@@ -157,7 +157,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testJSONPUT() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         let putBody = ["put":"this"];
         
         naive.jsonPUT(URI.loc("put"), body: putBody, responseFilter: nil, headers: nil) { (json, response, error) -> Void in
@@ -170,7 +170,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testJSONPOST() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         let postObject = ["herp":"derp"];
         let expectedResponseJSON = JSON(postObject)
         
@@ -186,7 +186,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testJSONPOSTWithNilPostBody() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         
         naive.jsonPOST(URI.loc("post"), postObject: nil, responseFilter: nil, headers: nil) { (json, response, error) -> () in
             XCTAssertNil(error)
@@ -198,7 +198,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testJSONPOSTError() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         let postObject = ["herp":"derp"];
         
         naive.jsonPOST(URI.loc("status/500"), postObject: postObject, responseFilter: nil, headers: nil) { (json, response, error) -> () in
@@ -214,7 +214,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testGETWithPreFilter() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         let prefixFilter = "while(1);</x>"
         let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
@@ -229,7 +229,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testJSONPOSTWithPreFilter() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         let prefixFilter = "while(1);</x>"
         let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
@@ -244,7 +244,7 @@ class ExternalTests: XCTestCase {
     }
 
     func testDELETE() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         let deleteBody = ["delete":"this"];
         let data = try! NSJSONSerialization.dataWithJSONObject(deleteBody, options: .PrettyPrinted)
         naive.DELETE(URI.loc("delete"), body: data, headers: nil) { (data, response, error) -> Void in
@@ -258,7 +258,7 @@ class ExternalTests: XCTestCase {
     }
 
     func testJSONDELETE() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         let deleteBody = ["delete":"this"];
 
         naive.jsonDELETE(URI.loc("delete"), body: deleteBody, responseFilter: nil, headers: nil) { (json, response, error) -> Void in

@@ -44,7 +44,7 @@ final public class NaiveHTTP: NaiveHTTPProtocol {
         return _configuration
     }
     
-    required public init(configuration: NSURLSessionConfiguration?) {
+    required public init(_ configuration: NSURLSessionConfiguration? = nil) {
         if let config = configuration {
             self._configuration = config
             _urlSession = NSURLSession(configuration: config)
