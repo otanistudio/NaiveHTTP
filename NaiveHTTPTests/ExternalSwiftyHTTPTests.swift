@@ -1,5 +1,5 @@
 //
-//  ExternalSwiftyJSONTests.swift
+//  ExternalSwiftyHTTPTests.swift
 //  NaiveHTTP
 //
 //  Created by Robert Otani on 10/31/15.
@@ -8,7 +8,7 @@
 
 import XCTest
 
-class ExternalSwiftyJSONTests: XCTestCase {
+class ExternalSwiftyHTTPTests: XCTestCase {
     struct URI {
         static func loc(path: String) -> String {
             return "\(localServerURI)/\(path)"
