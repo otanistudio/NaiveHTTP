@@ -14,14 +14,14 @@ public enum NaiveHTTPSwiftyJSONError: ErrorType {
 }
 
 public extension NaiveHTTPProtocol {
-    public typealias jsonCompletion = (json: JSON?, response: NSURLResponse?, error: NSError?) -> Void
-
+    public typealias swiftyCompletion = (json: JSON?, response: NSURLResponse?, error: NSError?) -> Void
+    
     public func jsonGET(
         uri:String,
         params:[String: String]?,
         responseFilter: String?,
         headers: [String:String]?,
-        completion: jsonCompletion?) -> NSURLSessionDataTask? {
+        completion: swiftyCompletion?) -> NSURLSessionDataTask? {
 
         return GET(uri,
             params: params,
@@ -36,7 +36,7 @@ public extension NaiveHTTPProtocol {
                 let jsonError: NSError?
                 
                 if responseFilter != nil {
-                    json = Utility.filteredJSON(responseFilter!, data: data)
+                    json = self.dynamicType.filteredJSON(responseFilter!, data: data)
                 } else {
                     json = JSON(data: data!)
                 }
@@ -52,7 +52,7 @@ public extension NaiveHTTPProtocol {
         postObject: AnyObject?,
         responseFilter: String?,
         headers: [String : String]?,
-        completion: jsonCompletion?) -> NSURLSessionDataTask? {
+        completion: swiftyCompletion?) -> NSURLSessionDataTask? {
             
             var body: NSData? = nil
             if postObject != nil {
@@ -73,7 +73,7 @@ public extension NaiveHTTPProtocol {
                 // TODO: pass any JSON errors into completion function
                 let json: JSON?
                 if responseFilter != nil {
-                    json = Utility.filteredJSON(responseFilter!, data: data)
+                    json = self.dynamicType.filteredJSON(responseFilter!, data: data)
                 } else {
                     json = JSON(data: data!)
                 }
@@ -88,7 +88,7 @@ public extension NaiveHTTPProtocol {
         body: AnyObject?,
         responseFilter: String?,
         headers: [String : String]?,
-        completion: jsonCompletion?) -> NSURLSessionDataTask? {
+        completion: swiftyCompletion?) -> NSURLSessionDataTask? {
         
         var putBody: NSData? = nil
             
@@ -110,7 +110,7 @@ public extension NaiveHTTPProtocol {
             // TODO: pass any JSON errors into completion function
             let json: JSON?
             if responseFilter != nil {
-                json = Utility.filteredJSON(responseFilter!, data: data)
+                json = self.dynamicType.filteredJSON(responseFilter!, data: data)
             } else {
                 json = JSON(data: data!)
             }
@@ -125,7 +125,7 @@ public extension NaiveHTTPProtocol {
         body: AnyObject?,
         responseFilter: String?,
         headers: [String : String]?,
-        completion: jsonCompletion?) -> NSURLSessionDataTask? {
+        completion: swiftyCompletion?) -> NSURLSessionDataTask? {
 
         var deleteBody: NSData? = nil
         if body != nil {
@@ -146,7 +146,7 @@ public extension NaiveHTTPProtocol {
             // TODO: pass any JSON errors into completion function
             let json: JSON?
             if responseFilter != nil {
-                json = Utility.filteredJSON(responseFilter!, data: data)
+                json = self.dynamicType.filteredJSON(responseFilter!, data: data)
             } else {
                 json = JSON(data: data!)
             }
@@ -154,6 +154,35 @@ public extension NaiveHTTPProtocol {
             completion?(json: json, response: response, error: error)
         }
 
+    }
+    
+    /// A convenience function for services that returns a string response prepended with
+    /// with an anti-hijacking string.
+    ///
+    /// Some services return a string, like `while(1);` pre-pended to their JSON string, which can
+    /// break the normal decoding dance.
+    ///
+    /// - parameter prefixFilter: The string to remove from the beginning of the response
+    /// - parameter data: The data, usually the response data from of your `NSURLSession` or `NSURLConnection` request
+    /// - returns: a valid `SwiftyJSON` object
+    public static func filteredJSON(prefixFilter: String, data: NSData?) -> JSON {
+        let json: JSON?
+        
+        if let unfilteredJSONStr = NSString(data: data!, encoding: NSUTF8StringEncoding) {
+            if unfilteredJSONStr.hasPrefix(prefixFilter) {
+                let range = unfilteredJSONStr.rangeOfString(prefixFilter, options: .LiteralSearch)
+                let filteredStr = unfilteredJSONStr.substringFromIndex(range.length)
+                let filteredData = filteredStr.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+                json = JSON(data: filteredData!)
+            } else {
+                let filteredData = unfilteredJSONStr.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+                json = JSON(data: filteredData!)
+            }
+        } else {
+            json = JSON(NSNull())
+        }
+        
+        return json!
     }
     
     private var naiveHTTPSwiftyJSONError: NSError {
