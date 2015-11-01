@@ -1,5 +1,5 @@
 //
-//  NaiveHTTP+SwiftyJSON.swift
+//  SwiftyHTTP.swift
 //  NaiveHTTP
 //
 //  Created by Robert Otani on 9/7/15.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum NaiveHTTPSwiftyJSONError: ErrorType {
+public enum SwiftyHTTPError: ErrorType {
     case HTTPBodyDataConversion
     case SwiftyJSONInternal
 }
@@ -211,14 +211,14 @@ public final class SwiftyHTTP {
                 if let jsonData: NSData = (o.stringValue as NSString).dataUsingEncoding(NSUTF8StringEncoding) {
                     return jsonData
                 } else {
-                    throw NaiveHTTPSwiftyJSONError.HTTPBodyDataConversion
+                    throw SwiftyHTTPError.HTTPBodyDataConversion
                 }
             } else {
                 return try o.rawData()
             }
         } catch let jsonError as NSError {
             debugPrint("NaiveHTTP+JSON: \(jsonError)")
-            throw NaiveHTTPSwiftyJSONError.SwiftyJSONInternal
+            throw SwiftyHTTPError.SwiftyJSONInternal
         }
     }
 
