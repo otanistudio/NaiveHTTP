@@ -145,7 +145,7 @@ class ExternalTests: XCTestCase {
     func testPUT() {
         let naive = NaiveHTTP()
         let putBody = ["put":"this"];
-        let data = try! NSJSONSerialization.dataWithJSONObject(putBody, options: .PrettyPrinted)
+        let data = try! NSJSONSerialization.dataWithJSONObject(putBody, options: NSJSONWritingOptions(rawValue: 0))
         naive.PUT(URI.loc("put"), body: data, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
             let parsedResult = JSON(data: data!)
@@ -246,7 +246,7 @@ class ExternalTests: XCTestCase {
     func testDELETE() {
         let naive = NaiveHTTP()
         let deleteBody = ["delete":"this"];
-        let data = try! NSJSONSerialization.dataWithJSONObject(deleteBody, options: .PrettyPrinted)
+        let data = try! NSJSONSerialization.dataWithJSONObject(deleteBody, options: NSJSONWritingOptions(rawValue: 0))
         naive.DELETE(URI.loc("delete"), body: data, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
             let parsedResult = JSON(data: data!)
