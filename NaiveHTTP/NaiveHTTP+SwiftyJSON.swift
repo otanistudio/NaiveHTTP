@@ -1,5 +1,5 @@
 //
-//  NaiveHTTP+JSON.swift
+//  NaiveHTTP+SwiftyJSON.swift
 //  NaiveHTTP
 //
 //  Created by Robert Otani on 9/7/15.
