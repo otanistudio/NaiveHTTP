@@ -97,8 +97,8 @@ class ExternalTests: XCTestCase {
         
         naive.POST(URI.loc("post"), body: postString.dataUsingEncoding(NSUTF8StringEncoding), headers: formEncodedHeader) { (data, response, error) -> Void in
             XCTAssertNil(error)
-            let parsedResult = JSON(data: data!)
-            let receivedFormInfo = parsedResult["form"]
+            let parsedResult = try! NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
+            let receivedFormInfo = parsedResult["form"]!!
             XCTAssertEqual("blee", receivedFormInfo["blah"])
             XCTAssertEqual("this is a string folks", receivedFormInfo["hey"])
             self.networkExpectation!.fulfill()
@@ -113,9 +113,9 @@ class ExternalTests: XCTestCase {
         let putBody = ["put":"this"];
         let data = try! NSJSONSerialization.dataWithJSONObject(putBody, options: NSJSONWritingOptions(rawValue: 0))
         naive.PUT(URI.loc("put"), body: data, headers: nil) { (data, response, error) -> Void in
-            XCTAssertNil(error)            
-            let parsedResult = JSON(data: data!)
-            XCTAssertEqual("this", parsedResult["json"]["put"])
+            XCTAssertNil(error)
+            let parsed = try! NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
+            XCTAssertEqual("this", parsed["json"]??["put"])
             self.networkExpectation!.fulfill()
         }
     
@@ -129,8 +129,8 @@ class ExternalTests: XCTestCase {
         let data = try! NSJSONSerialization.dataWithJSONObject(deleteBody, options: NSJSONWritingOptions(rawValue: 0))
         naive.DELETE(URI.loc("delete"), body: data, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
-            let parsedResult = JSON(data: data!)
-            XCTAssertEqual("this", parsedResult["json"]["delete"])
+            let parsedResult = try! NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
+            XCTAssertEqual("this", parsedResult["json"]??["delete"])
             self.networkExpectation!.fulfill()
         }
 
