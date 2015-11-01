@@ -28,11 +28,11 @@ class ExternalSwiftyJSONTests: XCTestCase {
     }
     
     func testJSONGETWithParams() {
-        let naive = NaiveHTTP()
+        let swiftyHTTP = SwiftyHTTP()
         let params = ["herp":"derp"]
         let uri = URI.loc("get")
         
-        naive.jsonGET(
+        swiftyHTTP.GET(
             uri,
             params:params,
             responseFilter: nil,
@@ -49,12 +49,12 @@ class ExternalSwiftyJSONTests: XCTestCase {
     }
     
     func testGETWithPreFilter() {
-        let naive = NaiveHTTP()
+        let swiftyHTTP = SwiftyHTTP()
         let prefixFilter = "while(1);</x>"
         let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
         
-        naive.jsonGET(uri!, params: nil, responseFilter: prefixFilter, headers: nil) { (json, response, error) -> () in
+        swiftyHTTP.GET(uri!, params: nil, responseFilter: prefixFilter, headers: nil) { (json, response, error) -> () in
             XCTAssertNil(error)
             XCTAssertEqual(JSON(["feh":"bleh"]), json)
             self.networkExpectation!.fulfill()
@@ -64,11 +64,11 @@ class ExternalSwiftyJSONTests: XCTestCase {
     }
     
     func testJSONPOST() {
-        let naive = NaiveHTTP()
+        let swiftyHTTP = SwiftyHTTP()
         let postObject = ["herp":"derp"];
         let expectedResponseJSON = JSON(postObject)
         
-        naive.jsonPOST(URI.loc("post"), postObject: postObject, responseFilter: nil, headers: nil) { (json, response, error) -> () in
+        swiftyHTTP.POST(URI.loc("post"), postObject: postObject, responseFilter: nil, headers: nil) { (json, response, error) -> () in
             XCTAssertNil(error)
             XCTAssertEqual(expectedResponseJSON, json!.dictionary!["json"])
             let httpResp = response as! NSHTTPURLResponse
@@ -80,11 +80,11 @@ class ExternalSwiftyJSONTests: XCTestCase {
     }
     
     func testJSONPOSTWithAdditionalHeaders() {
-        let naive = NaiveHTTP()
+        let swiftyHTTP = SwiftyHTTP()
         let postObject = ["herp":"derp"];
         let additionalHeaders = ["X-Some-Custom-Header":"hey-hi-ho"]
         
-        naive.jsonPOST(URI.loc("post"), postObject: postObject, responseFilter: nil, headers: additionalHeaders) { (json, response, error) -> () in
+        swiftyHTTP.POST(URI.loc("post"), postObject: postObject, responseFilter: nil, headers: additionalHeaders) { (json, response, error) -> () in
             XCTAssertNil(error)
             XCTAssertEqual("hey-hi-ho", json!["headers"]["X-Some-Custom-Header"].string)
             self.networkExpectation!.fulfill()
@@ -94,9 +94,9 @@ class ExternalSwiftyJSONTests: XCTestCase {
     }
     
     func testJSONPOSTWithNilPostBody() {
-        let naive = NaiveHTTP()
+        let swiftyHTTP = SwiftyHTTP()
         
-        naive.jsonPOST(URI.loc("post"), postObject: nil, responseFilter: nil, headers: nil) { (json, response, error) -> () in
+        swiftyHTTP.POST(URI.loc("post"), postObject: nil, responseFilter: nil, headers: nil) { (json, response, error) -> () in
             XCTAssertNil(error)
             XCTAssertEqual(JSON(NSNull()), json!["json"])
             self.networkExpectation!.fulfill()
@@ -106,10 +106,10 @@ class ExternalSwiftyJSONTests: XCTestCase {
     }
     
     func testJSONPOSTError() {
-        let naive = NaiveHTTP()
+        let swiftyHTTP = SwiftyHTTP()
         let postObject = ["herp":"derp"];
         
-        naive.jsonPOST(URI.loc("status/500"), postObject: postObject, responseFilter: nil, headers: nil) { (json, response, error) -> () in
+        swiftyHTTP.POST(URI.loc("status/500"), postObject: postObject, responseFilter: nil, headers: nil) { (json, response, error) -> () in
             
             XCTAssertNil(json)
             XCTAssertEqual(500, error!.code)
@@ -121,12 +121,12 @@ class ExternalSwiftyJSONTests: XCTestCase {
     }
     
     func testJSONPOSTWithPreFilter() {
-        let naive = NaiveHTTP()
+        let swiftyHTTP = SwiftyHTTP()
         let prefixFilter = "while(1);</x>"
         let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
         
-        naive.jsonPOST(uri!, postObject: nil, responseFilter: prefixFilter, headers: nil) { (json, response, error) -> () in
+        swiftyHTTP.POST(uri!, postObject: nil, responseFilter: prefixFilter, headers: nil) { (json, response, error) -> () in
             XCTAssertNil(error)
             XCTAssertEqual(JSON(["feh":"bleh"]), json)
             self.networkExpectation!.fulfill()
@@ -136,10 +136,10 @@ class ExternalSwiftyJSONTests: XCTestCase {
     }
     
     func testJSONPUT() {
-        let naive = NaiveHTTP()
+        let swiftyHTTP = SwiftyHTTP()
         let putBody = ["put":"this"];
         
-        naive.jsonPUT(URI.loc("put"), body: putBody, responseFilter: nil, headers: nil) { (json, response, error) -> Void in
+        swiftyHTTP.PUT(URI.loc("put"), body: putBody, responseFilter: nil, headers: nil) { (json, response, error) -> Void in
             XCTAssertNil(error)
             XCTAssertEqual("this", json!.dictionary!["json"]!["put"])
             self.networkExpectation!.fulfill()
@@ -149,10 +149,10 @@ class ExternalSwiftyJSONTests: XCTestCase {
     }
     
     func testJSONDELETE() {
-        let naive = NaiveHTTP()
+        let swiftyHTTP = SwiftyHTTP()
         let deleteBody = ["delete":"this"];
         
-        naive.jsonDELETE(URI.loc("delete"), body: deleteBody, responseFilter: nil, headers: nil) { (json, response, error) -> Void in
+        swiftyHTTP.DELETE(URI.loc("delete"), body: deleteBody, responseFilter: nil, headers: nil) { (json, response, error) -> Void in
             XCTAssertNil(error)
             XCTAssertEqual("this", json!.dictionary!["json"]!["delete"])
             self.networkExpectation!.fulfill()

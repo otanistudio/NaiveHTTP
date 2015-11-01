@@ -13,19 +13,28 @@ public enum NaiveHTTPSwiftyJSONError: ErrorType {
     case SwiftyJSONInternal
 }
 
-public extension NaiveHTTPProtocol {
+public final class SwiftyHTTP {
     public typealias swiftyCompletion = (json: JSON?, response: NSURLResponse?, error: NSError?) -> Void
+    let naive: NaiveHTTP
     
-    public func jsonGET(
+    required public init(_ naiveHTTP: NaiveHTTP? = nil) {
+        if naiveHTTP == nil {
+            naive = NaiveHTTP()
+        } else {
+            naive = naiveHTTP!
+        }
+    }
+    
+    public func GET(
         uri:String,
         params:[String: String]?,
         responseFilter: String?,
         headers: [String:String]?,
         completion: swiftyCompletion?) -> NSURLSessionDataTask? {
 
-        return GET(uri,
+        return naive.GET(uri,
             params: params,
-            headers: self.jsonHeaders(headers)) { (data, response, error) -> () in
+            headers: self.jsonHeaders(headers)) { [weak self](data, response, error) -> () in
             
                 guard error == nil else {
                     completion?(json: nil, response: response, error: error)
@@ -36,7 +45,7 @@ public extension NaiveHTTPProtocol {
                 let jsonError: NSError?
                 
                 if responseFilter != nil {
-                    json = self.dynamicType.filteredJSON(responseFilter!, data: data)
+                    json = self?.dynamicType.filteredJSON(responseFilter!, data: data)
                 } else {
                     json = JSON(data: data!)
                 }
@@ -47,7 +56,7 @@ public extension NaiveHTTPProtocol {
             }
     }
     
-    public func jsonPOST(
+    public func POST(
         uri: String,
         postObject: AnyObject?,
         responseFilter: String?,
@@ -64,7 +73,7 @@ public extension NaiveHTTPProtocol {
                 }
             }
             
-            return POST(uri, body: body, headers: self.jsonHeaders(headers)) { (data, response, error)->() in
+            return naive.POST(uri, body: body, headers: self.jsonHeaders(headers)) { [weak self](data, response, error)->() in
                 guard error == nil else {
                     completion?(json: nil, response: response, error: error)
                     return
@@ -73,7 +82,7 @@ public extension NaiveHTTPProtocol {
                 // TODO: pass any JSON errors into completion function
                 let json: JSON?
                 if responseFilter != nil {
-                    json = self.dynamicType.filteredJSON(responseFilter!, data: data)
+                    json = self?.dynamicType.filteredJSON(responseFilter!, data: data)
                 } else {
                     json = JSON(data: data!)
                 }
@@ -83,7 +92,7 @@ public extension NaiveHTTPProtocol {
             }
     }
     
-    public func jsonPUT(
+    public func PUT(
         uri: String,
         body: AnyObject?,
         responseFilter: String?,
@@ -101,7 +110,7 @@ public extension NaiveHTTPProtocol {
             }
         }
             
-        return PUT(uri, body: putBody, headers: self.jsonHeaders(headers)) { (data, response, error) -> Void in
+        return naive.PUT(uri, body: putBody, headers: self.jsonHeaders(headers)) { [weak self](data, response, error) -> Void in
             guard error == nil else {
                 completion?(json: nil, response: response, error: error)
                 return
@@ -110,7 +119,7 @@ public extension NaiveHTTPProtocol {
             // TODO: pass any JSON errors into completion function
             let json: JSON?
             if responseFilter != nil {
-                json = self.dynamicType.filteredJSON(responseFilter!, data: data)
+                json = self?.dynamicType.filteredJSON(responseFilter!, data: data)
             } else {
                 json = JSON(data: data!)
             }
@@ -120,7 +129,7 @@ public extension NaiveHTTPProtocol {
             
     }
 
-    public func jsonDELETE(
+    public func DELETE(
         uri: String,
         body: AnyObject?,
         responseFilter: String?,
@@ -137,7 +146,7 @@ public extension NaiveHTTPProtocol {
             }
         }
             
-        return DELETE(uri, body: deleteBody, headers: self.jsonHeaders(headers)) { (data, response, error) -> Void in
+        return naive.DELETE(uri, body: deleteBody, headers: self.jsonHeaders(headers)) { [weak self](data, response, error) -> Void in
             guard error == nil else {
                 completion?(json: nil, response: response, error: error)
                 return
@@ -146,7 +155,7 @@ public extension NaiveHTTPProtocol {
             // TODO: pass any JSON errors into completion function
             let json: JSON?
             if responseFilter != nil {
-                json = self.dynamicType.filteredJSON(responseFilter!, data: data)
+                json = self?.dynamicType.filteredJSON(responseFilter!, data: data)
             } else {
                 json = JSON(data: data!)
             }

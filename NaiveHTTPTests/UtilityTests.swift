@@ -29,12 +29,11 @@ class UtilityTests: XCTestCase {
         XCTAssertEqual(expectedURL, url)
     }
     
-    func testFilteredJSON() {
+    func testFilteredJSON() {        
         let str: String = "while(1);\n[\"bleh\", \"blah\"]"
         let data: NSData = str.dataUsingEncoding(NSUTF8StringEncoding)!
-        let json = NaiveHTTP.filteredJSON("while(1);", data: data)
+        let json = SwiftyHTTP.filteredJSON("while(1);", data: data)
         let expected: JSON = ["bleh", "blah"]
         XCTAssertEqual(expected, json)
     }
-    
 }

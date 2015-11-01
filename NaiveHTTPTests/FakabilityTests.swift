@@ -67,10 +67,11 @@ class FakeTests: XCTestCase {
         // expected behavior from the other protocol extensions
         let fakeNaive = FakeNaive()
         let asyncExpectation = self.expectationWithDescription("async expectation")
-
-        fakeNaive.jsonGET("http://example.com/whatever", params: nil, responseFilter: nil, headers: nil) { (json, response, error) -> () in
+        
+        fakeNaive.GET("http://example.com/whatever", params: nil, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
-            XCTAssertEqual("somevalue", json!["somekey"].stringValue)
+            let json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)
+            XCTAssertEqual("somevalue", json["somekey"]!)
             asyncExpectation.fulfill()
         }
         

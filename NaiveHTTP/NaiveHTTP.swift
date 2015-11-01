@@ -32,7 +32,7 @@ public protocol NaiveHTTPProtocol {
     ) -> NSURLSessionDataTask?
 }
 
-final public class NaiveHTTP: NaiveHTTPProtocol {
+public final class NaiveHTTP: NaiveHTTPProtocol {
     let _urlSession: NSURLSession!
     let _configuration: NSURLSessionConfiguration!
     
