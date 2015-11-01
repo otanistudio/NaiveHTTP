@@ -97,7 +97,7 @@ class ExternalTests: XCTestCase {
         
         naive.POST(URI.loc("post"), body: postString.dataUsingEncoding(NSUTF8StringEncoding), headers: formEncodedHeader) { (data, response, error) -> Void in
             XCTAssertNil(error)
-            let parsedResult = try! NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
+            let parsedResult = try! NSJSONSerialization.JSONObjectWithData(data!, options: [])
             let receivedFormInfo = parsedResult["form"]!!
             XCTAssertEqual("blee", receivedFormInfo["blah"])
             XCTAssertEqual("this is a string folks", receivedFormInfo["hey"])
@@ -111,10 +111,10 @@ class ExternalTests: XCTestCase {
     func testPUT() {
         let naive = NaiveHTTP()
         let putBody = ["put":"this"];
-        let data = try! NSJSONSerialization.dataWithJSONObject(putBody, options: NSJSONWritingOptions(rawValue: 0))
+        let data = try! NSJSONSerialization.dataWithJSONObject(putBody, options: [])
         naive.PUT(URI.loc("put"), body: data, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
-            let parsed = try! NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
+            let parsed = try! NSJSONSerialization.JSONObjectWithData(data!, options: [])
             XCTAssertEqual("this", parsed["json"]??["put"])
             self.networkExpectation!.fulfill()
         }
@@ -126,10 +126,10 @@ class ExternalTests: XCTestCase {
     func testDELETE() {
         let naive = NaiveHTTP()
         let deleteBody = ["delete":"this"];
-        let data = try! NSJSONSerialization.dataWithJSONObject(deleteBody, options: NSJSONWritingOptions(rawValue: 0))
+        let data = try! NSJSONSerialization.dataWithJSONObject(deleteBody, options: [])
         naive.DELETE(URI.loc("delete"), body: data, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
-            let parsedResult = try! NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
+            let parsedResult = try! NSJSONSerialization.JSONObjectWithData(data!, options: [])
             XCTAssertEqual("this", parsedResult["json"]??["delete"])
             self.networkExpectation!.fulfill()
         }
