@@ -49,6 +49,45 @@ class ExternalTests: XCTestCase {
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
+    func testGET() {
+        let naive = NaiveHTTP()
+        naive.GET(URI.loc("get"), params: ["something":"this is something"], headers: nil) { (data, response, error) -> Void in
+            XCTAssertNil(error)
+            let httpResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
+            XCTAssertEqual(200, httpResponse.statusCode)
+            let jsonResponse = try! NSJSONSerialization.JSONObjectWithData(data!, options: [])
+            XCTAssertEqual("this is something", jsonResponse["args"]??["something"])
+            self.networkExpectation!.fulfill()
+        }
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
+    
+    func testOPTIONS() {
+        let naive = NaiveHTTP()
+        naive.performRequest(.OPTIONS, uri: URI.loc("get"), body: nil, headers: nil) { (data, response, error) -> Void in
+            XCTAssertNil(error)
+            let httpResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
+            XCTAssertEqual(200, httpResponse.statusCode)
+            let headers = httpResponse.allHeaderFields
+            let allowHeader: String = headers["Allow"] as! String
+            XCTAssertEqual(allowHeader, "HEAD, OPTIONS, GET")
+            self.networkExpectation!.fulfill()
+        }
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
+    
+    func testHEAD() {
+        let naive = NaiveHTTP()
+        naive.performRequest(.HEAD, uri: URI.loc("get"), body: nil, headers: nil) { (data, response, error) -> Void in
+            XCTAssertNil(error)
+            let httpResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
+            XCTAssertEqual(0, data?.length)
+            XCTAssertEqual(200, httpResponse.statusCode)
+            self.networkExpectation!.fulfill()
+        }
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
+    
     func testBadImageGET() {
         let naive = NaiveHTTP()
 

@@ -13,10 +13,12 @@ internal let errorDomain = "com.otanistudio.NaiveHTTP.error"
 public typealias completionHandler = (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void
 
 public enum Method: String {
-    case GET    = "GET"
-    case POST   = "POST"
-    case PUT    = "PUT"
-    case DELETE = "DELETE"
+    case GET        = "GET"
+    case HEAD       = "HEAD"
+    case OPTIONS    = "OPTIONS"
+    case POST       = "POST"
+    case PUT        = "PUT"
+    case DELETE     = "DELETE"
 }
 
 public protocol NaiveHTTPProtocol {
