@@ -68,6 +68,13 @@ public final class NaiveHTTP: NaiveHTTPProtocol {
         completion: completionHandler?) -> NSURLSessionDataTask? {
             
             let url = NSURL(string: uri)
+            if url == nil {
+                let urlError = NSError(domain: errorDomain, code: -13, userInfo: [
+                    NSLocalizedFailureReasonErrorKey : "could not create NSURL from string"
+                    ])
+                completion?(data: nil, response: nil, error: urlError)
+                return nil
+            }
             let req = NSMutableURLRequest(URL: url!)
             req.HTTPMethod = "\(method)"
             

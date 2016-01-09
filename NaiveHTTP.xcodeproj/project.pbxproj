@@ -11,6 +11,7 @@
 		5C2660B91B3B30A1004DF6E7 /* NaiveHTTP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C2660AE1B3B30A1004DF6E7 /* NaiveHTTP.framework */; };
 		5C2660C91B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */; };
 		5C2660CA1B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */; };
+		5C2AE1F21C40D9160088A0CA /* InternalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2AE1F11C40D9160088A0CA /* InternalTests.swift */; };
 		5C65BA251B3B4CF1005B4DCE /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C65BA241B3B4CF1005B4DCE /* SwiftyJSON.swift */; };
 		5C65BA261B3B66FF005B4DCE /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C65BA241B3B4CF1005B4DCE /* SwiftyJSON.swift */; };
 		5C65BA281B3B67D6005B4DCE /* ExternalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C65BA271B3B67D6005B4DCE /* ExternalTests.swift */; };
@@ -45,6 +46,7 @@
 		5C2660B81B3B30A1004DF6E7 /* NaiveHTTPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NaiveHTTPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C2660BF1B3B30A1004DF6E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaiveHTTP.swift; sourceTree = "<group>"; };
+		5C2AE1F11C40D9160088A0CA /* InternalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternalTests.swift; sourceTree = "<group>"; };
 		5C65BA241B3B4CF1005B4DCE /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftyJSON.swift; path = SwiftyJSON/Source/SwiftyJSON.swift; sourceTree = "<group>"; };
 		5C65BA271B3B67D6005B4DCE /* ExternalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExternalTests.swift; sourceTree = "<group>"; };
 		5C871B231B98E9A9006FC22F /* hijack_guarded.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = hijack_guarded.json; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				5CC389B61B9CC7DA0058CE06 /* UtilityTests.swift */,
 				5C2660BF1B3B30A1004DF6E7 /* Info.plist */,
 				5C871B231B98E9A9006FC22F /* hijack_guarded.json */,
+				5C2AE1F11C40D9160088A0CA /* InternalTests.swift */,
 			);
 			path = NaiveHTTPTests;
 			sourceTree = "<group>";
@@ -266,6 +269,7 @@
 				5C65BA261B3B66FF005B4DCE /* SwiftyJSON.swift in Sources */,
 				5CC389B71B9CC7DA0058CE06 /* UtilityTests.swift in Sources */,
 				5CC389BD1B9E82070058CE06 /* NaiveHTTP+Image.swift in Sources */,
+				5C2AE1F21C40D9160088A0CA /* InternalTests.swift in Sources */,
 				5C2660CA1B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */,
 				5CC389C61B9E973B0058CE06 /* NaiveHTTP+Base.swift in Sources */,
 				5CC389C01B9E82BB0058CE06 /* SwiftyHTTP.swift in Sources */,
