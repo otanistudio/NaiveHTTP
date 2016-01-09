@@ -34,59 +34,6 @@ public protocol NaiveHTTPProtocol {
     ) -> NSURLSessionDataTask?
 }
 
-public extension NaiveHTTPProtocol {
-    public func performRequest(
-        method: Method,
-        uri: String,
-        body: NSData?,
-        headers: [String : String]?,
-        completion: completionHandler?) -> NSURLSessionDataTask? {
-            
-            let url = NSURL(string: uri)
-            if url == nil {
-                let urlError = NSError(domain: errorDomain, code: -13, userInfo: [
-                    NSLocalizedFailureReasonErrorKey : "could not create NSURL from string"
-                    ])
-                completion?(data: nil, response: nil, error: urlError)
-                return nil
-            }
-            let req = NSMutableURLRequest(URL: url!)
-            req.HTTPMethod = "\(method)"
-            
-            if headers != nil {
-                for (k, v) in headers! {
-                    req.setValue(v, forHTTPHeaderField: k)
-                }
-            }
-            
-            if method == .POST || method == .PUT || method == .DELETE {
-                req.HTTPBody = body
-            }
-            
-            let task = urlSession.dataTaskWithRequest(req) { (data, response, error) -> Void in
-                guard error == nil else {
-                    completion?(data: data, response: response, error: error)
-                    return
-                }
-                
-                if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
-                    if (httpResponse.statusCode >= 400) {
-                        let responseError = NSError(domain: errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
-                        completion?(data: data, response: response, error: responseError)
-                        return
-                    }
-                }
-                
-                completion?(data: data, response: response, error: error)
-                
-            }
-            
-            task.resume()
-            return task
-            
-    }
-}
-
 public final class NaiveHTTP: NaiveHTTPProtocol {
     let _urlSession: NSURLSession!
     let _configuration: NSURLSessionConfiguration!
@@ -112,5 +59,54 @@ public final class NaiveHTTP: NaiveHTTPProtocol {
     deinit {
         _urlSession.invalidateAndCancel()
     }
-
+    
+    public func performRequest(
+        method: Method,
+        uri: String,
+        body: NSData?,
+        headers: [String : String]?,
+        completion: completionHandler?) -> NSURLSessionDataTask? {
+            
+        let url = NSURL(string: uri)
+        if url == nil {
+            let urlError = NSError(domain: errorDomain, code: -13, userInfo: [
+                NSLocalizedFailureReasonErrorKey : "could not create NSURL from string"
+                ])
+            completion?(data: nil, response: nil, error: urlError)
+            return nil
+        }
+        let req = NSMutableURLRequest(URL: url!)
+        req.HTTPMethod = "\(method)"
+        
+        if headers != nil {
+            for (k, v) in headers! {
+                req.setValue(v, forHTTPHeaderField: k)
+            }
+        }
+        
+        if method == .POST || method == .PUT || method == .DELETE {
+            req.HTTPBody = body
+        }
+        
+        let task = urlSession.dataTaskWithRequest(req) { (data, response, error) -> Void in
+            guard error == nil else {
+                completion?(data: data, response: response, error: error)
+                return
+            }
+            
+            if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
+                if (httpResponse.statusCode >= 400) {
+                    let responseError = NSError(domain: errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
+                    completion?(data: data, response: response, error: responseError)
+                    return
+                }
+            }
+            
+            completion?(data: data, response: response, error: error)
+            
+        }
+        
+        task.resume()
+        return task
+    }
 }

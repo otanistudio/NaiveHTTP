@@ -229,6 +229,12 @@ public final class SwiftyHTTP: NaiveHTTPProtocol {
             throw SwiftyHTTPError.SwiftyJSONInternal
         }
     }
+    
+    public func performRequest(method: Method, uri: String, body: NSData?, headers: [String : String]?, completion: completionHandler?) -> NSURLSessionDataTask? {
+        return naive.performRequest(method, uri: uri, body: body, headers: headers, completion: { (data, response, error) -> Void in
+            completion?(data: data, response: response, error: error)
+        })
+    }
 
     private func jsonHeaders(additionalHeaders: [String : String]?) -> [String : String] {
         let jsonHeaders: [String : String] = [
