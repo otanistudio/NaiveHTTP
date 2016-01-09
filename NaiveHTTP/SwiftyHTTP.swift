@@ -13,13 +13,21 @@ public enum SwiftyHTTPError: ErrorType {
     case SwiftyJSONInternal
 }
 
-public final class SwiftyHTTP {
+public final class SwiftyHTTP: NaiveHTTPProtocol {
     public typealias swiftyCompletion = (json: JSON?, response: NSURLResponse?, error: NSError?) -> Void
     let naive: NaiveHTTP
     
-    required public init(_ naiveHTTP: NaiveHTTP? = nil) {
+    public var urlSession: NSURLSession {
+        return naive.urlSession
+    }
+    
+    public var configuration: NSURLSessionConfiguration {
+        return naive.configuration
+    }
+    
+    required public init(_ naiveHTTP: NaiveHTTP? = nil, configuration: NSURLSessionConfiguration? = nil) {
         if naiveHTTP == nil {
-            naive = NaiveHTTP()
+            naive = NaiveHTTP(configuration)
         } else {
             naive = naiveHTTP!
         }
