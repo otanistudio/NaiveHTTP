@@ -31,29 +31,8 @@ class ExternalTests: XCTestCase {
         super.tearDown()
     }
     
-    func testJSONGETWithParams() {
-        let naive = NaiveHTTP(configuration: nil)
-        let params = ["herp":"derp"]
-        let uri = URI.loc("get")
-        
-        naive.jsonGET(
-            uri,
-            params:params,
-            responseFilter: nil,
-            headers: nil) { (json, response, error) -> () in
-                
-            XCTAssertNil(error)
-            XCTAssertEqual("derp", json!["args"]["herp"])
-            let httpResp = response as! NSHTTPURLResponse
-            XCTAssertEqual(uri+"?herp=derp", httpResp.URL!.absoluteString)
-            self.networkExpectation!.fulfill()
-        }
-        
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
-    }
-    
     func testDataTask() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         let task = naive.performRequest(.GET, uri: URI.loc("get") + "?task=data", body: nil, headers: nil) { (data, response, error) -> Void in
             self.networkExpectation!.fulfill()
         }
@@ -62,7 +41,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testGETWithError() {
-        let naive = NaiveHTTP(configuration: NSURLSessionConfiguration.ephemeralSessionConfiguration())
+        let naive = NaiveHTTP()
         naive.GET(URI.loc("status/400"), params: nil, headers: nil) { (data, response, error) -> Void in
             XCTAssertEqual(400, error?.code)
             self.networkExpectation!.fulfill()
@@ -70,8 +49,47 @@ class ExternalTests: XCTestCase {
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
+    func testGET() {
+        let naive = NaiveHTTP()
+        naive.GET(URI.loc("get"), params: ["something":"this is something"], headers: nil) { (data, response, error) -> Void in
+            XCTAssertNil(error)
+            let httpResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
+            XCTAssertEqual(200, httpResponse.statusCode)
+            let jsonResponse = try! NSJSONSerialization.JSONObjectWithData(data!, options: [])
+            XCTAssertEqual("this is something", jsonResponse["args"]??["something"])
+            self.networkExpectation!.fulfill()
+        }
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
+    
+    func testOPTIONS() {
+        let naive = NaiveHTTP()
+        naive.performRequest(.OPTIONS, uri: URI.loc("get"), body: nil, headers: nil) { (data, response, error) -> Void in
+            XCTAssertNil(error)
+            let httpResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
+            XCTAssertEqual(200, httpResponse.statusCode)
+            let headers = httpResponse.allHeaderFields
+            let allowHeader: String = headers["Allow"] as! String
+            XCTAssertEqual(allowHeader, "HEAD, OPTIONS, GET")
+            self.networkExpectation!.fulfill()
+        }
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
+    
+    func testHEAD() {
+        let naive = NaiveHTTP()
+        naive.performRequest(.HEAD, uri: URI.loc("get"), body: nil, headers: nil) { (data, response, error) -> Void in
+            XCTAssertNil(error)
+            let httpResponse: NSHTTPURLResponse = response as! NSHTTPURLResponse
+            XCTAssertEqual(0, data?.length)
+            XCTAssertEqual(200, httpResponse.statusCode)
+            self.networkExpectation!.fulfill()
+        }
+        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+    }
+    
     func testBadImageGET() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
 
         naive.imageGET(URI.loc("image/webp")) { (image, response, error) -> () in
             XCTAssertEqual("nil UIImage", error?.userInfo[NSLocalizedFailureReasonErrorKey] as? String)
@@ -84,7 +102,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testPNGImageGET() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         
         naive.imageGET(URI.loc("image/png")) { (image, response, error) -> () in
             XCTAssertNotNil(image)
@@ -97,7 +115,7 @@ class ExternalTests: XCTestCase {
     }
     
     func testImage404() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         
         naive.imageGET(URI.loc("status/404")) { (image, response, error) -> () in
             XCTAssertEqual(404, error!.code)
@@ -110,16 +128,16 @@ class ExternalTests: XCTestCase {
     }
     
     func testPOSTFormEncoded() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         let postString = "blah=blee&hey=this+is+a+string+folks"
         let formEncodedHeader = [
             "Content-Type" : "application/x-www-form-urlencoded"
         ]
         
-        naive.POST(URI.loc("post"), postObject: postString, headers: formEncodedHeader) { (data, response, error) -> Void in
+        naive.POST(URI.loc("post"), body: postString.dataUsingEncoding(NSUTF8StringEncoding), headers: formEncodedHeader) { (data, response, error) -> Void in
             XCTAssertNil(error)
-            let parsedResult = JSON(data: data!)
-            let receivedFormInfo = parsedResult["form"]
+            let parsedResult = try! NSJSONSerialization.JSONObjectWithData(data!, options: [])
+            let receivedFormInfo = parsedResult["form"]!!
             XCTAssertEqual("blee", receivedFormInfo["blah"])
             XCTAssertEqual("this is a string folks", receivedFormInfo["hey"])
             self.networkExpectation!.fulfill()
@@ -128,145 +146,34 @@ class ExternalTests: XCTestCase {
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
-    func testPOSTWithAdditionalHeaders() {
-        let naive = NaiveHTTP(configuration: nil)
-        let postObject = ["herp":"derp"];
-        let additionalHeaders = ["X-Some-Custom-Header":"hey-hi-ho"]
-        
-        naive.jsonPOST(URI.loc("post"), postObject: postObject, responseFilter: nil, headers: additionalHeaders) { (json, response, error) -> () in
-            XCTAssertNil(error)
-            XCTAssertEqual("hey-hi-ho", json!["headers"]["X-Some-Custom-Header"].string)
-            self.networkExpectation!.fulfill()
-        }
-        
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
-    }
     
     func testPUT() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         let putBody = ["put":"this"];
-    
-        naive.PUT(URI.loc("put"), body: putBody, headers: nil) { (data, response, error) -> Void in
+        let data = try! NSJSONSerialization.dataWithJSONObject(putBody, options: [])
+        naive.PUT(URI.loc("put"), body: data, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
-            let parsedResult = JSON(data: data!)
-            XCTAssertEqual("this", parsedResult["json"]["put"])
+            let parsed = try! NSJSONSerialization.JSONObjectWithData(data!, options: [])
+            XCTAssertEqual("this", parsed["json"]??["put"])
             self.networkExpectation!.fulfill()
         }
     
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
     
-    func testJSONPUT() {
-        let naive = NaiveHTTP(configuration: nil)
-        let putBody = ["put":"this"];
-        
-        naive.jsonPUT(URI.loc("put"), body: putBody, responseFilter: nil, headers: nil) { (json, response, error) -> Void in
-            XCTAssertNil(error)
-            XCTAssertEqual("this", json!.dictionary!["json"]!["put"])
-            self.networkExpectation!.fulfill()
-        }
-        
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
-    }
-    
-    func testJSONPOST() {
-        let naive = NaiveHTTP(configuration: nil)
-        let postObject = ["herp":"derp"];
-        let expectedResponseJSON = JSON(postObject)
-        
-        naive.jsonPOST(URI.loc("post"), postObject: postObject, responseFilter: nil, headers: nil) { (json, response, error) -> () in
-            XCTAssertNil(error)
-            XCTAssertEqual(expectedResponseJSON, json!.dictionary!["json"])
-            let httpResp = response as! NSHTTPURLResponse
-            XCTAssertEqual(URI.loc("post"), httpResp.URL!.absoluteString)
-            self.networkExpectation!.fulfill()
-        }
-        
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
-    }
-    
-    func testJSONPOSTWithNilPostBody() {
-        let naive = NaiveHTTP(configuration: nil)
-        
-        naive.jsonPOST(URI.loc("post"), postObject: nil, responseFilter: nil, headers: nil) { (json, response, error) -> () in
-            XCTAssertNil(error)
-            XCTAssertEqual(JSON(NSNull()), json!["json"])
-            self.networkExpectation!.fulfill()
-        }
-        
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
-    }
-    
-    func testJSONPOSTError() {
-        let naive = NaiveHTTP(configuration: nil)
-        let postObject = ["herp":"derp"];
-        
-        naive.jsonPOST(URI.loc("status/500"), postObject: postObject, responseFilter: nil, headers: nil) { (json, response, error) -> () in
-            
-            XCTAssertNil(json)
-            XCTAssertEqual(500, error!.code)
-            XCTAssertEqual("HTTP Error 500", error!.userInfo[NSLocalizedDescriptionKey] as? String)
-            self.networkExpectation!.fulfill()
-
-        }
-        
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
-    }
-    
-    func testGETWithPreFilter() {
-        let naive = NaiveHTTP(configuration: nil)
-        let prefixFilter = "while(1);</x>"
-        let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
-        let uri = url?.absoluteString
-        
-        naive.jsonGET(uri!, params: nil, responseFilter: prefixFilter, headers: nil) { (json, response, error) -> () in
-            XCTAssertNil(error)
-            XCTAssertEqual(JSON(["feh":"bleh"]), json)
-            self.networkExpectation!.fulfill()
-        }
-        
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
-    }
-    
-    func testJSONPOSTWithPreFilter() {
-        let naive = NaiveHTTP(configuration: nil)
-        let prefixFilter = "while(1);</x>"
-        let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
-        let uri = url?.absoluteString
-        
-        naive.jsonPOST(uri!, postObject: nil, responseFilter: prefixFilter, headers: nil) { (json, response, error) -> () in
-            XCTAssertNil(error)
-            XCTAssertEqual(JSON(["feh":"bleh"]), json)
-            self.networkExpectation!.fulfill()
-        }
-        
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
-    }
 
     func testDELETE() {
-        let naive = NaiveHTTP(configuration: nil)
+        let naive = NaiveHTTP()
         let deleteBody = ["delete":"this"];
-
-        naive.DELETE(URI.loc("delete"), body: deleteBody, headers: nil) { (data, response, error) -> Void in
+        let data = try! NSJSONSerialization.dataWithJSONObject(deleteBody, options: [])
+        naive.DELETE(URI.loc("delete"), body: data, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
-            let parsedResult = JSON(data: data!)
-            XCTAssertEqual("this", parsedResult["json"]["delete"])
+            let parsedResult = try! NSJSONSerialization.JSONObjectWithData(data!, options: [])
+            XCTAssertEqual("this", parsedResult["json"]??["delete"])
             self.networkExpectation!.fulfill()
         }
 
         self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
     }
 
-    func testJSONDELETE() {
-        let naive = NaiveHTTP(configuration: nil)
-        let deleteBody = ["delete":"this"];
-
-        naive.jsonDELETE(URI.loc("delete"), body: deleteBody, responseFilter: nil, headers: nil) { (json, response, error) -> Void in
-            XCTAssertNil(error)
-            XCTAssertEqual("this", json!.dictionary!["json"]!["delete"])
-            self.networkExpectation!.fulfill()
-        }
-
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
-    }
 }

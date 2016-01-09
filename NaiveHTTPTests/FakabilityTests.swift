@@ -33,7 +33,7 @@ class FakeTests: XCTestCase {
             return nil
         }
         
-        func performRequest(method: Method, uri: String, body: AnyObject?, headers: [String : String]?, completion: completionHandler?)  -> NSURLSessionDataTask? {
+        func performRequest(method: Method, uri: String, body: NSData?, headers: [String : String]?, completion: completionHandler?)  -> NSURLSessionDataTask? {
             
             return fakeAsync({ (data, response) -> () in
                 completion!(data: data, response: response, error: nil)
@@ -67,10 +67,11 @@ class FakeTests: XCTestCase {
         // expected behavior from the other protocol extensions
         let fakeNaive = FakeNaive()
         let asyncExpectation = self.expectationWithDescription("async expectation")
-
-        fakeNaive.jsonGET("http://example.com/whatever", params: nil, responseFilter: nil, headers: nil) { (json, response, error) -> () in
+        
+        fakeNaive.GET("http://example.com/whatever", params: nil, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
-            XCTAssertEqual("somevalue", json!["somekey"].stringValue)
+            let json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)
+            XCTAssertEqual("somevalue", json["somekey"]!)
             asyncExpectation.fulfill()
         }
         

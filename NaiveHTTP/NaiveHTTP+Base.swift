@@ -22,16 +22,16 @@ public extension NaiveHTTPProtocol {
     
     public func POST(
         uri: String,
-        postObject: AnyObject?,
+        body: NSData?,
         headers: [String : String]?,
         completion: completionHandler?) -> NSURLSessionDataTask? {
             
-        return performRequest(.POST, uri: uri, body: postObject, headers: headers, completion: completion)
+        return performRequest(.POST, uri: uri, body: body, headers: headers, completion: completion)
     }
     
     public func PUT(
         uri: String,
-        body: AnyObject?,
+        body: NSData?,
         headers: [String : String]?,
         completion: completionHandler?) -> NSURLSessionDataTask? {
             
@@ -40,7 +40,7 @@ public extension NaiveHTTPProtocol {
 
     public func DELETE(
         uri: String,
-        body: AnyObject?,
+        body: NSData?,
         headers: [String : String]?,
         completion: completionHandler?) -> NSURLSessionDataTask? {
 

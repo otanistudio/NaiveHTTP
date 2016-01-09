@@ -8,37 +8,6 @@
 
 import Foundation
 
-public class Utility {
-    /// A convenience function for services that returns a string response prepended with
-    /// with an anti-hijacking string.
-    ///
-    /// Some services return a string, like `while(1);` pre-pended to their JSON string, which can
-    /// break the normal decoding dance.
-    /// 
-    /// - parameter prefixFilter: The string to remove from the beginning of the response
-    /// - parameter data: The data, usually the response data from of your `NSURLSession` or `NSURLConnection` request
-    /// - returns: a valid `SwiftyJSON` object
-    public static func filteredJSON(prefixFilter: String, data: NSData?) -> JSON {
-        let json: JSON?
-        
-        if let unfilteredJSONStr = NSString(data: data!, encoding: NSUTF8StringEncoding) {
-            if unfilteredJSONStr.hasPrefix(prefixFilter) {
-                let range = unfilteredJSONStr.rangeOfString(prefixFilter, options: .LiteralSearch)
-                let filteredStr = unfilteredJSONStr.substringFromIndex(range.length)
-                let filteredData = filteredStr.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-                json = JSON(data: filteredData!)
-            } else {
-                let filteredData = unfilteredJSONStr.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-                json = JSON(data: filteredData!)
-            }
-        } else {
-            json = JSON(NSNull())
-        }
-        
-        return json!
-    }
-}
-
 internal extension NSURL {
     /// Returns an NSURL with alphabetized query paramters. 
     ///
