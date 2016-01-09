@@ -34,32 +34,7 @@ public protocol NaiveHTTPProtocol {
     ) -> NSURLSessionDataTask?
 }
 
-public final class NaiveHTTP: NaiveHTTPProtocol {
-    let _urlSession: NSURLSession!
-    let _configuration: NSURLSessionConfiguration!
-    
-    public var urlSession: NSURLSession {
-        return _urlSession
-    }
-    
-    public var configuration: NSURLSessionConfiguration {
-        return _configuration
-    }
-    
-    required public init(_ configuration: NSURLSessionConfiguration? = nil) {
-        if let config = configuration {
-            self._configuration = config
-            _urlSession = NSURLSession(configuration: config)
-        } else {
-            self._configuration = NSURLSessionConfiguration.ephemeralSessionConfiguration()
-            _urlSession = NSURLSession(configuration: NSURLSessionConfiguration.ephemeralSessionConfiguration())
-        }
-    }
-    
-    deinit {
-        _urlSession.invalidateAndCancel()
-    }
-    
+public extension NaiveHTTPProtocol {
     public func performRequest(
         method: Method,
         uri: String,
@@ -104,10 +79,38 @@ public final class NaiveHTTP: NaiveHTTPProtocol {
                 
                 completion?(data: data, response: response, error: error)
                 
-                }
+            }
             
             task.resume()
             return task
             
     }
+}
+
+public final class NaiveHTTP: NaiveHTTPProtocol {
+    let _urlSession: NSURLSession!
+    let _configuration: NSURLSessionConfiguration!
+    
+    public var urlSession: NSURLSession {
+        return _urlSession
+    }
+    
+    public var configuration: NSURLSessionConfiguration {
+        return _configuration
+    }
+    
+    required public init(_ configuration: NSURLSessionConfiguration? = nil) {
+        if let config = configuration {
+            self._configuration = config
+            _urlSession = NSURLSession(configuration: config)
+        } else {
+            self._configuration = NSURLSessionConfiguration.ephemeralSessionConfiguration()
+            _urlSession = NSURLSession(configuration: NSURLSessionConfiguration.ephemeralSessionConfiguration())
+        }
+    }
+    
+    deinit {
+        _urlSession.invalidateAndCancel()
+    }
+
 }
