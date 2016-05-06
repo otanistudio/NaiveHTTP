@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import SwiftyJSON
 
 class ExternalSwiftyHTTPTests: XCTestCase {
     struct URI {

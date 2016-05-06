@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 public enum SwiftyHTTPError: ErrorType {
     case HTTPBodyDataConversion

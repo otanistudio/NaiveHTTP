@@ -8,6 +8,7 @@
 
 import XCTest
 import NaiveHTTP
+import SwiftyJSON
 
 class UtilityTests: XCTestCase {
     
