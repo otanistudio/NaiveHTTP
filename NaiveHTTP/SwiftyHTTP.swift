@@ -244,9 +244,10 @@ public final class SwiftyHTTP: NaiveHTTPProtocol {
         
         let headers: [String : String]?
         if let additional = additionalHeaders {
-            headers = additional.reduce(jsonHeaders) { (var dict, pair) in
-                dict[pair.0] = pair.1
-                return dict
+            headers = additional.reduce(jsonHeaders) { dict, pair in
+                var fixed = dict
+                fixed[pair.0] = pair.1
+                return fixed
             }
         } else {
             headers = jsonHeaders
