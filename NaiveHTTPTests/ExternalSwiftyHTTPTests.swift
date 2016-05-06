@@ -67,7 +67,7 @@ class ExternalSwiftyHTTPTests: XCTestCase {
     func testJSONPOST() {
         let swiftyHTTP = SwiftyHTTP()
         let postObject = ["herp":"derp"];
-        let expectedResponseJSON = JSON(postObject)
+        let expectedResponseJSON = SwiftyJSON.JSON(postObject)
         
         swiftyHTTP.POST(URI.loc("post"), postObject: postObject, responseFilter: nil, headers: nil) { (json, response, error) -> () in
             XCTAssertNil(error)
