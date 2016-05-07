@@ -44,7 +44,7 @@ class ExternalFreddyHTTPTests: XCTestCase {
         let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
         
-        freddyHTTP.GET(uri!, params: nil, responseFilter: prefixFilter, headers: nil) { (json, response, error) -> () in
+        freddyHTTP.GET(uri!, params: nil, responseFilter: prefixFilter, headers: nil) { json, response, error in
             XCTAssertNil(error)
             let jDict = ["feh" : "bleh"].toJSON()
             XCTAssertEqual(jDict, json)
@@ -75,7 +75,7 @@ class ExternalFreddyHTTPTests: XCTestCase {
         let postObject = ["herp":"derp"];
         let additionalHeaders = ["X-Some-Custom-Header":"hey-hi-ho"]
         
-        freddyHTTP.POST(URI.loc("post"), postObject: postObject, responseFilter: nil, headers: additionalHeaders) { (json, response, error) -> () in
+        freddyHTTP.POST(URI.loc("post"), postObject: postObject, responseFilter: nil, headers: additionalHeaders) { json, response, error in
             XCTAssertNil(error)
             XCTAssertEqual("hey-hi-ho", json!["headers"]!["X-Some-Custom-Header"])
             self.networkExpectation!.fulfill()
@@ -87,7 +87,7 @@ class ExternalFreddyHTTPTests: XCTestCase {
     func testJSONPOSTWithNilPostBody() {
         let freddyHTTP = FreddyHTTP()
         
-        freddyHTTP.POST(URI.loc("post"), postObject: nil, responseFilter: nil, headers: nil) { (json, response, error) -> () in
+        freddyHTTP.POST(URI.loc("post"), postObject: nil, responseFilter: nil, headers: nil) { json, response, error in
             XCTAssertNil(error)
             XCTAssertEqual(JSON.Null, json!["json"])
             self.networkExpectation!.fulfill()
@@ -100,7 +100,7 @@ class ExternalFreddyHTTPTests: XCTestCase {
         let freddyHTTP = FreddyHTTP()
         let postObject = ["herp":"derp"];
         
-        freddyHTTP.POST(URI.loc("status/500"), postObject: postObject, responseFilter: nil, headers: nil) { (json, response, error) -> () in
+        freddyHTTP.POST(URI.loc("status/500"), postObject: postObject, responseFilter: nil, headers: nil) { json, response, error in
             
             XCTAssertNil(json)
             XCTAssertEqual(500, error!.code)
@@ -117,7 +117,7 @@ class ExternalFreddyHTTPTests: XCTestCase {
         let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
         
-        freddyHTTP.POST(uri!, postObject: nil, responseFilter: prefixFilter, headers: nil) { (json, response, error) -> () in
+        freddyHTTP.POST(uri!, postObject: nil, responseFilter: prefixFilter, headers: nil) { json, response, error in
             XCTAssertNil(error)
             XCTAssertEqual(JSON(["feh":"bleh"]), json)
             self.networkExpectation!.fulfill()
@@ -130,7 +130,7 @@ class ExternalFreddyHTTPTests: XCTestCase {
         let freddyHTTP = FreddyHTTP()
         let putBody = ["put":"this"];
         
-        freddyHTTP.PUT(URI.loc("put"), body: putBody, responseFilter: nil, headers: nil) { (json, response, error) -> Void in
+        freddyHTTP.PUT(URI.loc("put"), body: putBody, responseFilter: nil, headers: nil) { json, response, error in
             XCTAssertNil(error)
             XCTAssertEqual("this", json!["json"]!["put"])
             self.networkExpectation!.fulfill()
@@ -143,7 +143,7 @@ class ExternalFreddyHTTPTests: XCTestCase {
         let freddyHTTP = FreddyHTTP()
         let deleteBody = ["delete":"this"];
         
-        freddyHTTP.DELETE(URI.loc("delete"), body: deleteBody, responseFilter: nil, headers: nil) { (json, response, error) -> Void in
+        freddyHTTP.DELETE(URI.loc("delete"), body: deleteBody, responseFilter: nil, headers: nil) { json, response, error in
             XCTAssertNil(error)
             XCTAssertEqual("this", json!["json"]!["delete"])
             self.networkExpectation!.fulfill()
