@@ -71,14 +71,15 @@ public final class FreddyHTTP: NaiveHTTPProtocol {
     
     public func POST(
         uri: String,
-        postBody: [String : String]?,
+        postObject: AnyObject?,
         responseFilter: String?,
         headers: [String : String]?,
         completion: freddyCompletion?) -> NSURLSessionDataTask? {
+        
         var body: NSData? = nil
-        if postBody != nil {
+        if postObject != nil {
             do {
-                body = try postBody?.toJSON().serialize()
+                body = try jsonData(postObject!)
             } catch let e {
                 completion?(json: nil, response: nil, error: jsonError(e))
                 return nil
