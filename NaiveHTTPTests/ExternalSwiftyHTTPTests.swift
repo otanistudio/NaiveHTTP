@@ -10,12 +10,6 @@ import XCTest
 import SwiftyJSON
 
 class ExternalSwiftyHTTPTests: XCTestCase {
-    struct URI {
-        static func loc(path: String) -> String {
-            return "\(localServerURI)/\(path)"
-        }
-    }
-    
     let networkTimeout = 2.0
     var networkExpectation: XCTestExpectation?
     

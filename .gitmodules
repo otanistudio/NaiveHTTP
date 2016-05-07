@@ -1,3 +1,6 @@
 [submodule "Externals/SwiftyJSON"]
 	path = Externals/SwiftyJSON
 	url = git@github.com:otanistudio/SwiftyJSON.git
+[submodule "Externals/Freddy"]
+	path = Externals/Freddy
+	url = https://github.com/otanistudio/Freddy.git

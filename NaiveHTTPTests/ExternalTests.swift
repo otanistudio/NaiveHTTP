@@ -11,14 +11,13 @@ import NaiveHTTP
 
 let localServerURI = (NSProcessInfo.processInfo().environment["NAIVEHTTP_EXTERNAL_TEST_SERVER"] != nil) ? NSProcessInfo.processInfo().environment["NAIVEHTTP_EXTERNAL_TEST_SERVER"]! : "https://httpbin.org"
 
-class ExternalTests: XCTestCase {
-
-    struct URI {
-        static func loc(path: String) -> String {
-            return "\(localServerURI)/\(path)"
-        }
+struct URI {
+    static func loc(path: String) -> String {
+        return "\(localServerURI)/\(path)"
     }
-    
+}
+
+class ExternalTests: XCTestCase {
     let networkTimeout = 2.0
     var networkExpectation: XCTestExpectation?
     

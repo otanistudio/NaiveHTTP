@@ -12,13 +12,17 @@
 		5C2660C91B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */; };
 		5C2660CA1B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */; };
 		5C2A45531CDD2D7000F4172E /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C2A45461CDD2D6600F4172E /* SwiftyJSON.framework */; };
+		5C2A457F1CDD3E7000F4172E /* Freddy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C2A45761CDD3E3300F4172E /* Freddy.framework */; };
+		5C2A45801CDD3F8700F4172E /* SwiftyHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389BE1B9E82BB0058CE06 /* SwiftyHTTP.swift */; };
+		5C2A45821CDD406800F4172E /* FreddyHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2A45811CDD406800F4172E /* FreddyHTTP.swift */; };
+		5C2A45831CDD406800F4172E /* FreddyHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2A45811CDD406800F4172E /* FreddyHTTP.swift */; };
 		5C2AE1F21C40D9160088A0CA /* InternalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2AE1F11C40D9160088A0CA /* InternalTests.swift */; };
+		5C61B8F61CDD785A00289D95 /* ExternalFreddyHTTPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C61B8F51CDD785A00289D95 /* ExternalFreddyHTTPTests.swift */; };
 		5C65BA281B3B67D6005B4DCE /* ExternalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C65BA271B3B67D6005B4DCE /* ExternalTests.swift */; };
 		5C871B241B98E9A9006FC22F /* hijack_guarded.json in Resources */ = {isa = PBXBuildFile; fileRef = 5C871B231B98E9A9006FC22F /* hijack_guarded.json */; };
 		5CC389B71B9CC7DA0058CE06 /* UtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389B61B9CC7DA0058CE06 /* UtilityTests.swift */; };
 		5CC389BC1B9E82070058CE06 /* NaiveHTTP+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389BB1B9E82070058CE06 /* NaiveHTTP+Image.swift */; };
 		5CC389BD1B9E82070058CE06 /* NaiveHTTP+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389BB1B9E82070058CE06 /* NaiveHTTP+Image.swift */; };
-		5CC389BF1B9E82BB0058CE06 /* SwiftyHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389BE1B9E82BB0058CE06 /* SwiftyHTTP.swift */; };
 		5CC389C01B9E82BB0058CE06 /* SwiftyHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389BE1B9E82BB0058CE06 /* SwiftyHTTP.swift */; };
 		5CC389C21B9E83390058CE06 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389C11B9E83390058CE06 /* Utility.swift */; };
 		5CC389C31B9E83390058CE06 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389C11B9E83390058CE06 /* Utility.swift */; };
@@ -85,6 +89,55 @@
 			remoteGlobalIDString = A8580F741BCF5C5B00DA927B;
 			remoteInfo = "SwiftyJSON tvOS Tests";
 		};
+		5C2A45711CDD3E3300F4172E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5C2A45671CDD3E3300F4172E /* Freddy.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DB6ADF3E1C23612000D77BF1;
+			remoteInfo = Freddy;
+		};
+		5C2A45731CDD3E3300F4172E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5C2A45671CDD3E3300F4172E /* Freddy.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DB6ADF471C23612000D77BF1;
+			remoteInfo = FreddyTests;
+		};
+		5C2A45751CDD3E3300F4172E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5C2A45671CDD3E3300F4172E /* Freddy.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DB6ADF1F1C23610B00D77BF1;
+			remoteInfo = MobileFreddy;
+		};
+		5C2A45771CDD3E3300F4172E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5C2A45671CDD3E3300F4172E /* Freddy.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DB6ADF291C23610B00D77BF1;
+			remoteInfo = MobileFreddyTests;
+		};
+		5C2A45791CDD3E3300F4172E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5C2A45671CDD3E3300F4172E /* Freddy.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DB6ADF5A1C23612900D77BF1;
+			remoteInfo = TVFreddy;
+		};
+		5C2A457B1CDD3E3300F4172E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5C2A45671CDD3E3300F4172E /* Freddy.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DB6ADF631C23612A00D77BF1;
+			remoteInfo = TVFreddyTests;
+		};
+		5C2A457D1CDD3E3300F4172E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5C2A45671CDD3E3300F4172E /* Freddy.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DB6ADF761C23613200D77BF1;
+			remoteInfo = NanoFreddy;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -95,7 +148,10 @@
 		5C2660BF1B3B30A1004DF6E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaiveHTTP.swift; sourceTree = "<group>"; };
 		5C2A453B1CDD2D6600F4172E /* SwiftyJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftyJSON.xcodeproj; path = SwiftyJSON/SwiftyJSON.xcodeproj; sourceTree = "<group>"; };
+		5C2A45671CDD3E3300F4172E /* Freddy.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Freddy.xcodeproj; path = Freddy/Freddy.xcodeproj; sourceTree = "<group>"; };
+		5C2A45811CDD406800F4172E /* FreddyHTTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreddyHTTP.swift; sourceTree = "<group>"; };
 		5C2AE1F11C40D9160088A0CA /* InternalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternalTests.swift; sourceTree = "<group>"; };
+		5C61B8F51CDD785A00289D95 /* ExternalFreddyHTTPTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExternalFreddyHTTPTests.swift; sourceTree = "<group>"; };
 		5C65BA271B3B67D6005B4DCE /* ExternalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExternalTests.swift; sourceTree = "<group>"; };
 		5C871B231B98E9A9006FC22F /* hijack_guarded.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = hijack_guarded.json; sourceTree = "<group>"; };
 		5CC389B61B9CC7DA0058CE06 /* UtilityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilityTests.swift; sourceTree = "<group>"; };
@@ -112,6 +168,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C2A457F1CDD3E7000F4172E /* Freddy.framework in Frameworks */,
 				5C2A45531CDD2D7000F4172E /* SwiftyJSON.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -149,12 +206,12 @@
 		5C2660B01B3B30A1004DF6E7 /* NaiveHTTP */ = {
 			isa = PBXGroup;
 			children = (
-				5C2660B11B3B30A1004DF6E7 /* NaiveHTTP.h */,
 				5C2660B31B3B30A1004DF6E7 /* Info.plist */,
+				5C2A45841CDD408600F4172E /* JSON Support */,
+				5C2660B11B3B30A1004DF6E7 /* NaiveHTTP.h */,
 				5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */,
 				5CC389C41B9E973B0058CE06 /* NaiveHTTP+Base.swift */,
 				5CC389BB1B9E82070058CE06 /* NaiveHTTP+Image.swift */,
-				5CC389BE1B9E82BB0058CE06 /* SwiftyHTTP.swift */,
 				5CC389C11B9E83390058CE06 /* Utility.swift */,
 			);
 			path = NaiveHTTP;
@@ -163,13 +220,14 @@
 		5C2660BC1B3B30A1004DF6E7 /* NaiveHTTPTests */ = {
 			isa = PBXGroup;
 			children = (
+				5C61B8F51CDD785A00289D95 /* ExternalFreddyHTTPTests.swift */,
 				5CEE75671BE58FB300445D21 /* ExternalSwiftyHTTPTests.swift */,
 				5C65BA271B3B67D6005B4DCE /* ExternalTests.swift */,
 				5CC389C71B9EA4D40058CE06 /* FakabilityTests.swift */,
-				5CC389B61B9CC7DA0058CE06 /* UtilityTests.swift */,
-				5C2660BF1B3B30A1004DF6E7 /* Info.plist */,
 				5C871B231B98E9A9006FC22F /* hijack_guarded.json */,
+				5C2660BF1B3B30A1004DF6E7 /* Info.plist */,
 				5C2AE1F11C40D9160088A0CA /* InternalTests.swift */,
+				5CC389B61B9CC7DA0058CE06 /* UtilityTests.swift */,
 			);
 			path = NaiveHTTPTests;
 			sourceTree = "<group>";
@@ -177,6 +235,7 @@
 		5C2660CB1B3B34B7004DF6E7 /* Externals */ = {
 			isa = PBXGroup;
 			children = (
+				5C2A455F1CDD3E2000F4172E /* Freddy */,
 				5C65BA231B3B4CCC005B4DCE /* SwiftyJSON */,
 			);
 			path = Externals;
@@ -194,6 +253,37 @@
 				5C2A45521CDD2D6600F4172E /* SwiftyJSON tvOS Tests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		5C2A455F1CDD3E2000F4172E /* Freddy */ = {
+			isa = PBXGroup;
+			children = (
+				5C2A45671CDD3E3300F4172E /* Freddy.xcodeproj */,
+			);
+			name = Freddy;
+			sourceTree = "<group>";
+		};
+		5C2A45681CDD3E3300F4172E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5C2A45721CDD3E3300F4172E /* Freddy.framework */,
+				5C2A45741CDD3E3300F4172E /* FreddyTests.xctest */,
+				5C2A45761CDD3E3300F4172E /* Freddy.framework */,
+				5C2A45781CDD3E3300F4172E /* MobileFreddyTests.xctest */,
+				5C2A457A1CDD3E3300F4172E /* Freddy.framework */,
+				5C2A457C1CDD3E3300F4172E /* TVFreddyTests.xctest */,
+				5C2A457E1CDD3E3300F4172E /* Freddy.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5C2A45841CDD408600F4172E /* JSON Support */ = {
+			isa = PBXGroup;
+			children = (
+				5C2A45811CDD406800F4172E /* FreddyHTTP.swift */,
+				5CC389BE1B9E82BB0058CE06 /* SwiftyHTTP.swift */,
+			);
+			name = "JSON Support";
 			sourceTree = "<group>";
 		};
 		5C65BA231B3B4CCC005B4DCE /* SwiftyJSON */ = {
@@ -284,6 +374,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 5C2A45681CDD3E3300F4172E /* Products */;
+					ProjectRef = 5C2A45671CDD3E3300F4172E /* Freddy.xcodeproj */;
+				},
+				{
 					ProductGroup = 5C2A453C1CDD2D6600F4172E /* Products */;
 					ProjectRef = 5C2A453B1CDD2D6600F4172E /* SwiftyJSON.xcodeproj */;
 				},
@@ -346,6 +440,55 @@
 			remoteRef = 5C2A45511CDD2D6600F4172E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		5C2A45721CDD3E3300F4172E /* Freddy.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Freddy.framework;
+			remoteRef = 5C2A45711CDD3E3300F4172E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5C2A45741CDD3E3300F4172E /* FreddyTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FreddyTests.xctest;
+			remoteRef = 5C2A45731CDD3E3300F4172E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5C2A45761CDD3E3300F4172E /* Freddy.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Freddy.framework;
+			remoteRef = 5C2A45751CDD3E3300F4172E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5C2A45781CDD3E3300F4172E /* MobileFreddyTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MobileFreddyTests.xctest;
+			remoteRef = 5C2A45771CDD3E3300F4172E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5C2A457A1CDD3E3300F4172E /* Freddy.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Freddy.framework;
+			remoteRef = 5C2A45791CDD3E3300F4172E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5C2A457C1CDD3E3300F4172E /* TVFreddyTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = TVFreddyTests.xctest;
+			remoteRef = 5C2A457B1CDD3E3300F4172E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5C2A457E1CDD3E3300F4172E /* Freddy.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Freddy.framework;
+			remoteRef = 5C2A457D1CDD3E3300F4172E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -372,9 +515,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				5C2660C91B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */,
+				5C2A45821CDD406800F4172E /* FreddyHTTP.swift in Sources */,
 				5CC389C21B9E83390058CE06 /* Utility.swift in Sources */,
-				5CC389BF1B9E82BB0058CE06 /* SwiftyHTTP.swift in Sources */,
 				5CC389C51B9E973B0058CE06 /* NaiveHTTP+Base.swift in Sources */,
+				5C2A45801CDD3F8700F4172E /* SwiftyHTTP.swift in Sources */,
 				5CC389BC1B9E82070058CE06 /* NaiveHTTP+Image.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -387,9 +531,11 @@
 				5CC389C91B9EA4D40058CE06 /* FakabilityTests.swift in Sources */,
 				5CEE75681BE58FB300445D21 /* ExternalSwiftyHTTPTests.swift in Sources */,
 				5CC389B71B9CC7DA0058CE06 /* UtilityTests.swift in Sources */,
+				5C61B8F61CDD785A00289D95 /* ExternalFreddyHTTPTests.swift in Sources */,
 				5CC389BD1B9E82070058CE06 /* NaiveHTTP+Image.swift in Sources */,
 				5C2AE1F21C40D9160088A0CA /* InternalTests.swift in Sources */,
 				5C2660CA1B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */,
+				5C2A45831CDD406800F4172E /* FreddyHTTP.swift in Sources */,
 				5CC389C61B9E973B0058CE06 /* NaiveHTTP+Base.swift in Sources */,
 				5CC389C01B9E82BB0058CE06 /* SwiftyHTTP.swift in Sources */,
 				5CC389C31B9E83390058CE06 /* Utility.swift in Sources */,
