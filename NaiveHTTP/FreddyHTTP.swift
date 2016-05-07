@@ -251,19 +251,19 @@ public final class FreddyHTTP: NaiveHTTPProtocol {
     }
     
     private func jsonData(object: AnyObject) throws -> NSData {
-        do {
-            if object is String {
-                if let jsonData: NSData = (object.stringValue as NSString).dataUsingEncoding(NSUTF8StringEncoding) {
-                    return jsonData
-                } else {
-                    throw FreddyHTTPError.HTTPBodyDataConversion
-                }
+        switch object {
+        case is String:
+            if let jsonData: NSData = (object.stringValue as NSString).dataUsingEncoding(NSUTF8StringEncoding) {
+                return jsonData
             } else {
-                return try Freddy.JSON(object as! String).serialize()
+                throw FreddyHTTPError.HTTPBodyDataConversion
             }
-        } catch let jsonError as NSError {
-            debugPrint("NaiveHTTP+JSON: \(jsonError)")
-            throw FreddyHTTPError.FreddyJSONInternal
+        case is [String : String]:
+            return try (object as! [String : String]).toJSON().serialize()
+        case is [String]:
+            return try (object as! [String]).toJSON().serialize()
+        default:
+            return try Freddy.JSON(object as! String).serialize()
         }
     }
     
