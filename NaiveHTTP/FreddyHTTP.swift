@@ -86,7 +86,7 @@ public final class FreddyHTTP: NaiveHTTPProtocol {
             }
         }
         
-        return naive.POST(uri, body: body, headers: self.jsonHeaders(headers)) { [weak self](data, response, error)->() in
+        return naive.POST(uri, body: body, headers: self.jsonHeaders(headers)) { [weak self](data, response, error) in
             guard error == nil else {
                 completion?(json: nil, response: response, error: error)
                 return
