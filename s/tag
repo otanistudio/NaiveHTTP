@@ -1,0 +1,15 @@
+#!/usr/bin/ruby
+puts 'Release candidate tag format is vX.Y.ZRCN, X = Major, Y = Minor, Z = Bugfix, N = RC enum (e.g.: v0.9.9RC1)'
+puts 'Tag name (no space):'
+tag_name = STDIN.gets.chomp.gsub("'", "'\\\\''")
+
+if tag_name.index(' ')
+	puts "No space in the tag name please"
+	exit(0)
+end
+
+puts "Notes (short one line please)"
+notes = STDIN.gets.chomp.gsub("'", "'\\\\''")
+  
+system("git tag -a #{tag_name} -m '#{notes}'")
+system('s/show_tags')
