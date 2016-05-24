@@ -107,7 +107,7 @@ public final class FreddyHTTP: NaiveHTTPProtocol {
     
     public func PUT(
         uri: String,
-        body: [String : String]?,
+        body: AnyObject?,
         responseFilter: String?,
         headers: [String : String]?,
         completion: freddyCompletion?) -> NSURLSessionDataTask? {
@@ -144,7 +144,7 @@ public final class FreddyHTTP: NaiveHTTPProtocol {
     
     public func DELETE(
         uri: String,
-        body: [String : String]?,
+        body: AnyObject?,
         responseFilter: String?,
         headers: [String : String]?,
         completion: freddyCompletion?) -> NSURLSessionDataTask? {
