@@ -9,9 +9,6 @@
 import Foundation
 import UIKit
 
-internal let errorDomain = "com.otanistudio.NaiveHTTP.error"
-public typealias completionHandler = (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void
-
 public enum Method: String {
     case GET        = "GET"
     case HEAD       = "HEAD"
@@ -24,17 +21,21 @@ public enum Method: String {
 public protocol NaiveHTTPProtocol {
     var urlSession: NSURLSession { get }
     var configuration: NSURLSessionConfiguration { get }
-    
+    var errorDomain: String { get }
+
     func performRequest(
         method: Method,
         uri: String,
         body: NSData?,
         headers: [String : String]?,
-        completion: completionHandler?
+        completion: ((data: NSData?, response: NSURLResponse?, error: NSError?) -> Void)?
     ) -> NSURLSessionDataTask?
 }
 
 public final class NaiveHTTP: NaiveHTTPProtocol {
+    public let errorDomain = "com.otanistudio.NaiveHTTP.error"
+    public typealias completionHandler = (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void
+    
     let _urlSession: NSURLSession!
     let _configuration: NSURLSessionConfiguration!
     
@@ -96,7 +97,7 @@ public final class NaiveHTTP: NaiveHTTPProtocol {
             
             if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
                 if (httpResponse.statusCode >= 400) {
-                    let responseError = NSError(domain: errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
+                    let responseError = NSError(domain: self.errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
                     completion?(data: data, response: response, error: responseError)
                     return
                 }

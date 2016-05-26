@@ -11,10 +11,6 @@
 		5C2660B91B3B30A1004DF6E7 /* NaiveHTTP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C2660AE1B3B30A1004DF6E7 /* NaiveHTTP.framework */; };
 		5C2660C91B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */; };
 		5C2660CA1B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */; };
-		5C2A45531CDD2D7000F4172E /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C2A45461CDD2D6600F4172E /* SwiftyJSON.framework */; };
-		5C2A457F1CDD3E7000F4172E /* Freddy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C2A45761CDD3E3300F4172E /* Freddy.framework */; };
-		5C2A45801CDD3F8700F4172E /* SwiftyHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389BE1B9E82BB0058CE06 /* SwiftyHTTP.swift */; };
-		5C2A45821CDD406800F4172E /* FreddyHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2A45811CDD406800F4172E /* FreddyHTTP.swift */; };
 		5C2A45831CDD406800F4172E /* FreddyHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2A45811CDD406800F4172E /* FreddyHTTP.swift */; };
 		5C2AE1F21C40D9160088A0CA /* InternalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2AE1F11C40D9160088A0CA /* InternalTests.swift */; };
 		5C61B8F61CDD785A00289D95 /* ExternalFreddyHTTPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C61B8F51CDD785A00289D95 /* ExternalFreddyHTTPTests.swift */; };
@@ -168,8 +164,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5C2A457F1CDD3E7000F4172E /* Freddy.framework in Frameworks */,
-				5C2A45531CDD2D7000F4172E /* SwiftyJSON.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -515,10 +509,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5C2660C91B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */,
-				5C2A45821CDD406800F4172E /* FreddyHTTP.swift in Sources */,
 				5CC389C21B9E83390058CE06 /* Utility.swift in Sources */,
 				5CC389C51B9E973B0058CE06 /* NaiveHTTP+Base.swift in Sources */,
-				5C2A45801CDD3F8700F4172E /* SwiftyHTTP.swift in Sources */,
 				5CC389BC1B9E82070058CE06 /* NaiveHTTP+Image.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
