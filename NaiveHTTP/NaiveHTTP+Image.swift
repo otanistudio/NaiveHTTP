@@ -24,7 +24,7 @@ public extension NaiveHTTPProtocol {
             }
             
             guard let image = UIImage(data: data!) else {
-                let imageNilError = NSError(domain: errorDomain, code: -1, userInfo: [
+                let imageNilError = NSError(domain: self.errorDomain, code: -1, userInfo: [
                     NSLocalizedFailureReasonErrorKey: "nil UIImage",
                     NSLocalizedDescriptionKey: "image data retrieved resulted in a nil UIImage"])
                 completion?(image: nil, response: response, error: imageNilError)

@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import NaiveHTTP
+import enum NaiveHTTP.Method
 import Freddy
 
 public enum FreddyHTTPError: ErrorType {
@@ -15,6 +17,7 @@ public enum FreddyHTTPError: ErrorType {
 }
 
 public final class FreddyHTTP: NaiveHTTPProtocol {
+    public let errorDomain = "com.otanistudio.FreddyHTTP.error"
     public typealias freddyCompletion = (json: Freddy.JSON?, response: NSURLResponse?, error: NSError?) -> Void
     let naive: NaiveHTTP
     
@@ -225,7 +228,7 @@ public final class FreddyHTTP: NaiveHTTPProtocol {
             ])
     }
     
-    public func performRequest(method: Method, uri: String, body: NSData?, headers: [String : String]?, completion: completionHandler?) -> NSURLSessionDataTask? {
+    public func performRequest(method: Method, uri: String, body: NSData?, headers: [String : String]?, completion: ((data: NSData?, response: NSURLResponse?, error: NSError?) -> Void)?) -> NSURLSessionDataTask? {
         return naive.performRequest(method, uri: uri, body: body, headers: headers, completion: { (data, response, error) -> Void in
             completion?(data: data, response: response, error: error)
         })

@@ -11,6 +11,8 @@ import XCTest
 class FakeTests: XCTestCase {
     
     struct FakeNaive: NaiveHTTPProtocol {
+        let errorDomain = "com.otanistudio.FakeNaive.error"
+        
         var urlSession: NSURLSession {
             return NSURLSession(configuration: configuration)
         }
@@ -33,7 +35,7 @@ class FakeTests: XCTestCase {
             return nil
         }
         
-        func performRequest(method: Method, uri: String, body: NSData?, headers: [String : String]?, completion: completionHandler?)  -> NSURLSessionDataTask? {
+        func performRequest(method: Method, uri: String, body: NSData?, headers: [String : String]?, completion: ((data: NSData?, response: NSURLResponse?, error: NSError?) -> Void)?)  -> NSURLSessionDataTask? {
             
             return fakeAsync({ (data, response) -> () in
                 completion!(data: data, response: response, error: nil)

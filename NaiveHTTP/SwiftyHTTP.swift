@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import NaiveHTTP
+import enum NaiveHTTP.Method
 import SwiftyJSON
 
 public enum SwiftyHTTPError: ErrorType {
@@ -15,7 +17,9 @@ public enum SwiftyHTTPError: ErrorType {
 }
 
 public final class SwiftyHTTP: NaiveHTTPProtocol {
+    public let errorDomain = "com.otanistudio.SwiftyHTTP.error"
     public typealias swiftyCompletion = (json: SwiftyJSON.JSON?, response: NSURLResponse?, error: NSError?) -> Void
+    
     let naive: NaiveHTTP
     
     public var urlSession: NSURLSession {
@@ -231,7 +235,7 @@ public final class SwiftyHTTP: NaiveHTTPProtocol {
         }
     }
     
-    public func performRequest(method: Method, uri: String, body: NSData?, headers: [String : String]?, completion: completionHandler?) -> NSURLSessionDataTask? {
+    public func performRequest(method: Method, uri: String, body: NSData?, headers: [String : String]?, completion: ((data: NSData?, response: NSURLResponse?, error: NSError?) -> Void)?) -> NSURLSessionDataTask? {
         return naive.performRequest(method, uri: uri, body: body, headers: headers, completion: { (data, response, error) -> Void in
             completion?(data: data, response: response, error: error)
         })
