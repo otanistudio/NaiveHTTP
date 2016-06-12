@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import UIKit
 
 public enum Method: String {
     case GET        = "GET"
@@ -17,6 +16,8 @@ public enum Method: String {
     case PUT        = "PUT"
     case DELETE     = "DELETE"
 }
+
+public typealias NaiveMethod = Method
 
 public protocol NaiveHTTPProtocol {
     var urlSession: NSURLSession { get }
