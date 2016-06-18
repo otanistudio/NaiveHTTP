@@ -11,10 +11,10 @@ import UIKit
 
 public extension NaiveHTTPProtocol {
     
-    func imageGET(uri: String, completion:((image: UIImage?, response: NSURLResponse?, error: NSError?)->())?) -> NSURLSessionDataTask? {
+    func imageGET(_ uri: String, completion:((image: UIImage?, response: URLResponse?, error: NSError?)->())?) -> URLSessionDataTask? {
         //TODO: Include all the image formats that are supported by UIImage (and eventually, their extensions)
         let headers = [
-            "Accept" : "image/png,image/jpg,image/jpeg,image/tiff,image/gif"
+            "Accept" : "image/png,image/jpg,image/jpeg,image/tiff,image/gif,image/webp"
         ]
         
         return performRequest(.GET, uri: uri, body: nil, headers: headers) { (data, response, error) -> Void in

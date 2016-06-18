@@ -15,7 +15,7 @@ class ExternalFreddyHTTPTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        networkExpectation = self.expectationWithDescription("naive network expectation")
+        networkExpectation = self.expectation(withDescription: "naive network expectation")
     }
 
     func testJSONGETWithParams() {
@@ -35,13 +35,13 @@ class ExternalFreddyHTTPTests: XCTestCase {
                 self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
     
     func testGETWithPreFilter() {
         let freddyHTTP = FreddyHTTP()
         let prefixFilter = "while(1);</x>"
-        let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
+        let url = Bundle(for: self.dynamicType).urlForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
         
         freddyHTTP.GET(uri!, params: nil, responseFilter: prefixFilter, headers: nil) { json, response, error in
@@ -51,7 +51,7 @@ class ExternalFreddyHTTPTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
     
     func testJSONPOST() {
@@ -67,7 +67,7 @@ class ExternalFreddyHTTPTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
     
     func testJSONPOSTWithAdditionalHeaders() {
@@ -81,7 +81,7 @@ class ExternalFreddyHTTPTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
     
     func testJSONPOSTWithNilPostBody() {
@@ -93,7 +93,7 @@ class ExternalFreddyHTTPTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
     
     func testJSONPOSTError() {
@@ -108,13 +108,13 @@ class ExternalFreddyHTTPTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
     
     func testJSONPOSTWithPreFilter() {
         let freddyHTTP = FreddyHTTP()
         let prefixFilter = "while(1);</x>"
-        let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
+        let url = Bundle(for: self.dynamicType).urlForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
         
         freddyHTTP.POST(uri!, postObject: nil, responseFilter: prefixFilter, headers: nil) { json, response, error in
@@ -123,7 +123,7 @@ class ExternalFreddyHTTPTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
     
     func testJSONPUT() {
@@ -136,7 +136,7 @@ class ExternalFreddyHTTPTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
     
     func testJSONDELETE() {
@@ -149,6 +149,6 @@ class ExternalFreddyHTTPTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
 }

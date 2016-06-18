@@ -11,9 +11,9 @@ import NaiveHTTP
 import enum NaiveHTTP.Method
 import SwiftyJSON
 
-public enum SwiftyHTTPError: ErrorType {
-    case HTTPBodyDataConversion
-    case SwiftyJSONInternal
+public enum SwiftyHTTPError: ErrorProtocol {
+    case httpBodyDataConversion
+    case swiftyJSONInternal
 }
 
 public final class SwiftyHTTP: NaiveHTTPProtocol {
@@ -22,15 +22,15 @@ public final class SwiftyHTTP: NaiveHTTPProtocol {
     
     let naive: NaiveHTTP
     
-    public var urlSession: NSURLSession {
+    public var urlSession: URLSession {
         return naive.urlSession
     }
     
-    public var configuration: NSURLSessionConfiguration {
+    public var configuration: URLSessionConfiguration {
         return naive.configuration
     }
     
-    required public init(_ naiveHTTP: NaiveHTTP? = nil, configuration: NSURLSessionConfiguration? = nil) {
+    required public init(_ naiveHTTP: NaiveHTTP? = nil, configuration: URLSessionConfiguration? = nil) {
         if naiveHTTP == nil {
             naive = NaiveHTTP(configuration)
         } else {
@@ -39,11 +39,11 @@ public final class SwiftyHTTP: NaiveHTTPProtocol {
     }
     
     public func GET(
-        uri:String,
+        _ uri:String,
         params:[String: String]?,
         responseFilter: String?,
         headers: [String:String]?,
-        completion: swiftyCompletion?) -> NSURLSessionDataTask? {
+        completion: swiftyCompletion?) -> URLSessionDataTask? {
 
         return naive.GET(uri,
             params: params,
@@ -70,13 +70,13 @@ public final class SwiftyHTTP: NaiveHTTPProtocol {
     }
     
     public func POST(
-        uri: String,
+        _ uri: String,
         postObject: AnyObject?,
         responseFilter: String?,
         headers: [String : String]?,
-        completion: swiftyCompletion?) -> NSURLSessionDataTask? {
+        completion: swiftyCompletion?) -> URLSessionDataTask? {
             
-            var body: NSData? = nil
+            var body: Data? = nil
             if postObject != nil {
                 do {
                     body = try jsonData(postObject!)
@@ -106,13 +106,13 @@ public final class SwiftyHTTP: NaiveHTTPProtocol {
     }
     
     public func PUT(
-        uri: String,
+        _ uri: String,
         body: AnyObject?,
         responseFilter: String?,
         headers: [String : String]?,
-        completion: swiftyCompletion?) -> NSURLSessionDataTask? {
+        completion: swiftyCompletion?) -> URLSessionDataTask? {
         
-        var putBody: NSData? = nil
+        var putBody: Data? = nil
             
         if body != nil {
             do {
@@ -143,13 +143,13 @@ public final class SwiftyHTTP: NaiveHTTPProtocol {
     }
 
     public func DELETE(
-        uri: String,
+        _ uri: String,
         body: AnyObject?,
         responseFilter: String?,
         headers: [String : String]?,
-        completion: swiftyCompletion?) -> NSURLSessionDataTask? {
+        completion: swiftyCompletion?) -> URLSessionDataTask? {
 
-        var deleteBody: NSData? = nil
+        var deleteBody: Data? = nil
         if body != nil {
             do {
                 deleteBody = try jsonData(body!)
@@ -187,17 +187,17 @@ public final class SwiftyHTTP: NaiveHTTPProtocol {
     /// - parameter prefixFilter: The string to remove from the beginning of the response
     /// - parameter data: The data, usually the response data from of your `NSURLSession` or `NSURLConnection` request
     /// - returns: a valid `SwiftyJSON` object
-    public static func filteredJSON(prefixFilter: String, data: NSData?) -> SwiftyJSON.JSON {
+    public static func filteredJSON(_ prefixFilter: String, data: NSData?) -> SwiftyJSON.JSON {
         let json: SwiftyJSON.JSON?
         
-        if let unfilteredJSONStr = NSString(data: data!, encoding: NSUTF8StringEncoding) {
+        if let unfilteredJSONStr = NSString(data: data!, encoding: String.Encoding.utf8) {
             if unfilteredJSONStr.hasPrefix(prefixFilter) {
                 let range = unfilteredJSONStr.rangeOfString(prefixFilter, options: .LiteralSearch)
                 let filteredStr = unfilteredJSONStr.substringFromIndex(range.length)
-                let filteredData = filteredStr.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+                let filteredData = filteredStr.dataUsingEncoding(String.Encoding.utf8, allowLossyConversion: false)
                 json = SwiftyJSON.JSON(data: filteredData!)
             } else {
-                let filteredData = unfilteredJSONStr.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+                let filteredData = unfilteredJSONStr.dataUsingEncoding(String.Encoding.utf8, allowLossyConversion: false)
                 json = SwiftyJSON.JSON(data: filteredData!)
             }
         } else {
@@ -217,31 +217,31 @@ public final class SwiftyHTTP: NaiveHTTPProtocol {
         ])
     }
     
-    private func jsonData(object: AnyObject) throws -> NSData {
+    private func jsonData(_ object: AnyObject) throws -> Data {
         do {
             let o = SwiftyJSON.JSON(object)
             if o.type == .String {
-                if let jsonData: NSData = (o.stringValue as NSString).dataUsingEncoding(NSUTF8StringEncoding) {
+                if let jsonData: Data = (o.stringValue as NSString).dataUsingEncoding(String.Encoding.utf8) {
                     return jsonData
                 } else {
-                    throw SwiftyHTTPError.HTTPBodyDataConversion
+                    throw SwiftyHTTPError.httpBodyDataConversion
                 }
             } else {
                 return try o.rawData()
             }
         } catch let jsonError as NSError {
             debugPrint("NaiveHTTP+JSON: \(jsonError)")
-            throw SwiftyHTTPError.SwiftyJSONInternal
+            throw SwiftyHTTPError.swiftyJSONInternal
         }
     }
     
-    public func performRequest(method: Method, uri: String, body: NSData?, headers: [String : String]?, completion: ((data: NSData?, response: NSURLResponse?, error: NSError?) -> Void)?) -> NSURLSessionDataTask? {
+    public func performRequest(_ method: Method, uri: String, body: Data?, headers: [String : String]?, completion: ((data: Data?, response: URLResponse?, error: NSError?) -> Void)?) -> URLSessionDataTask? {
         return naive.performRequest(method, uri: uri, body: body, headers: headers, completion: { (data, response, error) -> Void in
             completion?(data: data, response: response, error: error)
         })
     }
 
-    private func jsonHeaders(additionalHeaders: [String : String]?) -> [String : String] {
+    private func jsonHeaders(_ additionalHeaders: [String : String]?) -> [String : String] {
         let jsonHeaders: [String : String] = [
             "Accept" : "application/json",
             "Content-Type" : "application/json"

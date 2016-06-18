@@ -13,29 +13,29 @@ class FakeTests: XCTestCase {
     struct FakeNaive: NaiveHTTPProtocol {
         let errorDomain = "com.otanistudio.FakeNaive.error"
         
-        var urlSession: NSURLSession {
-            return NSURLSession(configuration: configuration)
+        var urlSession: URLSession {
+            return URLSession(configuration: configuration)
         }
         
-        var configuration: NSURLSessionConfiguration {
-            return NSURLSessionConfiguration.ephemeralSessionConfiguration()
+        var configuration: URLSessionConfiguration {
+            return URLSessionConfiguration.ephemeral()
         }
         
         let commonJSONString = "{\"somekey\":\"somevalue\"}"
         
         private func fakeAsync(
-            success:((data: NSData, response: NSURLResponse)->())?,
-            failure:((error: NSError)->())?) -> NSURLSessionDataTask? {
+            _ success:((data: Data, response: URLResponse)->())?,
+            failure:((error: NSError)->())?) -> URLSessionDataTask? {
                 
             let s = NSString(string: commonJSONString)
-            let data = s.dataUsingEncoding(NSUTF8StringEncoding)
-            let resp = NSURLResponse()
+            let data = s.data(using: String.Encoding.utf8.rawValue)
+            let resp = URLResponse()
             success!(data: data!, response: resp)
             
             return nil
         }
         
-        func performRequest(method: Method, uri: String, body: NSData?, headers: [String : String]?, completion: ((data: NSData?, response: NSURLResponse?, error: NSError?) -> Void)?)  -> NSURLSessionDataTask? {
+        func performRequest(_ method: Method, uri: String, body: Data?, headers: [String : String]?, completion: ((data: Data?, response: URLResponse?, error: NSError?) -> Void)?)  -> URLSessionDataTask? {
             
             return fakeAsync({ (data, response) -> () in
                 completion!(data: data, response: response, error: nil)
@@ -51,16 +51,16 @@ class FakeTests: XCTestCase {
     
     func testBasicFake() {
         let fakeNaive = FakeNaive()
-        let asyncExpectation = self.expectationWithDescription("async expectation")
+        let asyncExpectation = self.expectation(withDescription: "async expectation")
         
         fakeNaive.GET("http://example.com", params: nil, headers: nil) { [asyncExpectation](data, response, error) -> () in
             XCTAssertNil(error)
-            let resultString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+            let resultString = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
             XCTAssertEqual(fakeNaive.commonJSONString, resultString)
             asyncExpectation.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(1.0, handler: nil)
+        self.waitForExpectations(withTimeout: 1.0, handler: nil)
         
     }
     
@@ -68,16 +68,16 @@ class FakeTests: XCTestCase {
         // This is nice because we only needed to write one struct, and we inherit
         // expected behavior from the other protocol extensions
         let fakeNaive = FakeNaive()
-        let asyncExpectation = self.expectationWithDescription("async expectation")
+        let asyncExpectation = self.expectation(withDescription: "async expectation")
         
         fakeNaive.GET("http://example.com/whatever", params: nil, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
-            let json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)
+            let json = try! JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
             XCTAssertEqual("somevalue", json["somekey"]!)
             asyncExpectation.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(1.0, handler: nil)
+        self.waitForExpectations(withTimeout: 1.0, handler: nil)
     }
     
 }

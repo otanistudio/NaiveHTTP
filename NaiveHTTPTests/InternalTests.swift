@@ -18,12 +18,12 @@ class InternalTests: XCTestCase {
     
     func testBadURIString() {
         let naive = NaiveHTTP()
-        let errorExpectation = self.expectationWithDescription("error expectation")
+        let errorExpectation = self.expectation(withDescription: "error expectation")
         naive.performRequest(.GET, uri: "not an url string people", body: nil, headers: nil) { (data, response, error) -> Void in
             XCTAssertEqual(error?.userInfo[NSLocalizedFailureReasonErrorKey] as? String, "could not create NSURL from string")
             errorExpectation.fulfill()
         }
-        waitForExpectationsWithTimeout(timeout, handler: nil)
+        waitForExpectations(withTimeout: timeout, handler: nil)
     }
     
 }
