@@ -9,7 +9,7 @@
 import XCTest
 import NaiveHTTP
 
-let localServerURI = (ProcessInfo.processInfo().environment["NAIVEHTTP_EXTERNAL_TEST_SERVER"] != nil) ? ProcessInfo.processInfo().environment["NAIVEHTTP_EXTERNAL_TEST_SERVER"]! : "https://httpbin.org"
+let localServerURI = (ProcessInfo.processInfo.environment["NAIVEHTTP_EXTERNAL_TEST_SERVER"] != nil) ? ProcessInfo.processInfo.environment["NAIVEHTTP_EXTERNAL_TEST_SERVER"]! : "https://httpbin.org"
 
 struct URI {
     static func loc(_ path: String) -> String {
@@ -23,7 +23,7 @@ class ExternalTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        networkExpectation = self.expectation(withDescription: "naive network expectation")
+        networkExpectation = self.expectation(description: "naive network expectation")
     }
     
     override func tearDown() {
@@ -36,7 +36,7 @@ class ExternalTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         XCTAssertEqual(URI.loc("get") + "?task=data", task?.originalRequest!.url?.absoluteString)
-        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
     }
     
     func testGETWithError() {
@@ -45,7 +45,7 @@ class ExternalTests: XCTestCase {
             XCTAssertEqual(400, error?.code)
             self.networkExpectation!.fulfill()
         }
-        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
     }
     
     func testGET() {
@@ -54,11 +54,12 @@ class ExternalTests: XCTestCase {
             XCTAssertNil(error)
             let httpResponse: HTTPURLResponse = response as! HTTPURLResponse
             XCTAssertEqual(200, httpResponse.statusCode)
-            let jsonResponse = try! JSONSerialization.jsonObject(with: data!, options: [])
-            XCTAssertEqual("this is something", jsonResponse["args"]??["something"])
+            let jsonResponse = try! JSONSerialization.jsonObject(with: data!, options: []) as! [String : AnyObject]
+            let args = jsonResponse["args"] as! [String : AnyObject]
+            XCTAssertEqual("this is something", args["something"] as! String)
             self.networkExpectation!.fulfill()
         }
-        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
     }
     
     func testOPTIONS() {
@@ -72,7 +73,7 @@ class ExternalTests: XCTestCase {
             XCTAssertEqual(allowHeader, "HEAD, OPTIONS, GET")
             self.networkExpectation!.fulfill()
         }
-        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
     }
     
     func testHEAD() {
@@ -84,7 +85,7 @@ class ExternalTests: XCTestCase {
             XCTAssertEqual(200, httpResponse.statusCode)
             self.networkExpectation!.fulfill()
         }
-        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
     }
     
 //    func testBadImageGET() {
@@ -110,7 +111,7 @@ class ExternalTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
     }
     
     func testImage404() {
@@ -123,7 +124,7 @@ class ExternalTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
     }
     
     func testPOSTFormEncoded() {
@@ -135,14 +136,14 @@ class ExternalTests: XCTestCase {
         
         let _ = naive.POST(URI.loc("post"), body: postString.data(using: String.Encoding.utf8), headers: formEncodedHeader) { (data, response, error) -> Void in
             XCTAssertNil(error)
-            let parsedResult = try! JSONSerialization.jsonObject(with: data!, options: [])
-            let receivedFormInfo = parsedResult["form"]!!
-            XCTAssertEqual("blee", receivedFormInfo["blah"])
-            XCTAssertEqual("this is a string folks", receivedFormInfo["hey"])
+            let parsedResult = try! JSONSerialization.jsonObject(with: data!, options: []) as! [String : AnyObject]
+            let receivedFormInfo = parsedResult["form"] as! [String : AnyObject]
+            XCTAssertEqual("blee", receivedFormInfo["blah"] as! String)
+            XCTAssertEqual("this is a string folks", receivedFormInfo["hey"] as! String)
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
     }
     
     
@@ -152,12 +153,13 @@ class ExternalTests: XCTestCase {
         let data = try! JSONSerialization.data(withJSONObject: putBody, options: [])
         let _ = naive.PUT(URI.loc("put"), body: data, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
-            let parsed = try! JSONSerialization.jsonObject(with: data!, options: [])
-            XCTAssertEqual("this", parsed["json"]??["put"])
+            let parsed = try! JSONSerialization.jsonObject(with: data!, options: []) as! [String : AnyObject]
+            let json = parsed["json"] as! [String : AnyObject]
+            XCTAssertEqual("this", json["put"] as! String)
             self.networkExpectation!.fulfill()
         }
     
-        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
     }
     
 
@@ -167,12 +169,13 @@ class ExternalTests: XCTestCase {
         let data = try! JSONSerialization.data(withJSONObject: deleteBody, options: [])
         let _ = naive.DELETE(URI.loc("delete"), body: data, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
-            let parsedResult = try! JSONSerialization.jsonObject(with: data!, options: [])
-            XCTAssertEqual("this", parsedResult["json"]??["delete"])
+            let parsedResult = try! JSONSerialization.jsonObject(with: data!, options: []) as! [String : AnyObject]
+            let json = parsedResult["json"] as! [String : AnyObject]
+            XCTAssertEqual("this", json["delete"] as! String)
             self.networkExpectation!.fulfill()
         }
 
-        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
     }
 
 }

@@ -14,17 +14,17 @@ public extension NaiveHTTPProtocol {
         _ uri: String,
         params: [String: String]?,
         headers: [String: String]?,
-        completion: ((data: Data?, response: URLResponse?, error: NSError?) -> Void)?) -> URLSessionDataTask? {
+        completion: ((_ data: Data?, _ response: URLResponse?, _ error: NSError?) -> Void)?) -> URLSessionDataTask? {
             
         let url: URL =  URL(string: uri, params: params)
-        return performRequest(.GET, uri: url.absoluteString!, body: nil, headers: headers, completion: completion)
+        return performRequest(.GET, uri: url.absoluteString, body: nil, headers: headers, completion: completion)
     }
     
     public func POST(
         _ uri: String,
         body: Data?,
         headers: [String : String]?,
-        completion: ((data: Data?, response: URLResponse?, error: NSError?) -> Void)?) -> URLSessionDataTask? {
+        completion: ((_ data: Data?, _ response: URLResponse?, _ error: NSError?) -> Void)?) -> URLSessionDataTask? {
             
         return performRequest(.POST, uri: uri, body: body, headers: headers, completion: completion)
     }
@@ -33,7 +33,7 @@ public extension NaiveHTTPProtocol {
         _ uri: String,
         body: Data?,
         headers: [String : String]?,
-        completion: ((data: Data?, response: URLResponse?, error: NSError?) -> Void)?) -> URLSessionDataTask? {
+        completion: ((_ data: Data?, _ response: URLResponse?, _ error: NSError?) -> Void)?) -> URLSessionDataTask? {
             
         return performRequest(.PUT, uri: uri, body: body, headers: headers, completion: completion)
     }
@@ -42,7 +42,7 @@ public extension NaiveHTTPProtocol {
         _ uri: String,
         body: Data?,
         headers: [String : String]?,
-        completion: ((data: Data?, response: URLResponse?, error: NSError?) -> Void)?) -> URLSessionDataTask? {
+        completion: ((_ data: Data?, _ response: URLResponse?, _ error: NSError?) -> Void)?) -> URLSessionDataTask? {
 
         return performRequest(.DELETE, uri: uri, body: body, headers: headers, completion: completion)
     }

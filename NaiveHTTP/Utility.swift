@@ -37,7 +37,7 @@ internal extension URL {
         }
         
         if queryItems!.count > 0 {
-            queryItems?.sort(isOrderedBefore: { (qItem1: URLQueryItem, qItem2: URLQueryItem) -> Bool in
+            queryItems?.sort(by: { (qItem1: URLQueryItem, qItem2: URLQueryItem) -> Bool in
                 return qItem1.name < qItem2.name
             })
             urlComponents?.queryItems = queryItems

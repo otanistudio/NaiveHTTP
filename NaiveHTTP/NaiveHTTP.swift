@@ -29,13 +29,13 @@ public protocol NaiveHTTPProtocol {
         uri: String,
         body: Data?,
         headers: [String : String]?,
-        completion: ((data: Data?, response: URLResponse?, error: NSError?) -> Void)?
+        completion: ((_ data: Data?, _ response: URLResponse?, _ error: NSError?) -> Void)?
     ) -> URLSessionDataTask?
 }
 
 public final class NaiveHTTP: NaiveHTTPProtocol {
     public let errorDomain = "com.otanistudio.NaiveHTTP.error"
-    public typealias completionHandler = (data: Data?, response: URLResponse?, error: NSError?) -> Void
+    public typealias completionHandler = (_ data: Data?, _ response: URLResponse?, _ error: NSError?) -> Void
     
     public let urlSession: URLSession
     public let configuration: URLSessionConfiguration
@@ -45,7 +45,7 @@ public final class NaiveHTTP: NaiveHTTPProtocol {
             self.configuration = config
             urlSession = URLSession(configuration: config)
         } else {
-            self.configuration = URLSessionConfiguration.ephemeral()
+            self.configuration = URLSessionConfiguration.ephemeral
             urlSession = URLSession(configuration: self.configuration)
         }
     }
@@ -66,7 +66,7 @@ public final class NaiveHTTP: NaiveHTTPProtocol {
             let urlError = NSError(domain: errorDomain, code: -13, userInfo: [
                 NSLocalizedFailureReasonErrorKey : "could not create NSURL from string"
                 ])
-            completion?(data: nil, response: nil, error: urlError)
+            completion?(nil, nil, urlError)
             return nil
         }
         var req = URLRequest(url: url!)
@@ -81,23 +81,22 @@ public final class NaiveHTTP: NaiveHTTPProtocol {
         if method == .POST || method == .PUT || method == .DELETE {
             req.httpBody = body
         }
-        
 
-        let task = urlSession.dataTask(with: req) { (data: Data?, response: URLResponse?, error: NSError?) in
+        let task = urlSession.dataTask(with: req) { (data, response, error) in
             guard error == nil else {
-                completion?(data: data, response: response, error: error)
+                completion?(data, response, error as NSError?)
                 return
             }
             
             if let httpResponse: HTTPURLResponse = response as? HTTPURLResponse {
                 if (httpResponse.statusCode >= 400) {
                     let responseError = NSError(domain: self.errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
-                    completion?(data: data, response: response, error: responseError)
+                    completion?(data, response, responseError)
                     return
                 }
             }
-            
-            completion?(data: data, response: response, error: error)
+
+            completion?(data, response, error as NSError?)
             
         }
         
