@@ -20,65 +20,57 @@ public enum Method: String {
 public typealias NaiveMethod = Method
 
 public protocol NaiveHTTPProtocol {
-    var urlSession: NSURLSession { get }
-    var configuration: NSURLSessionConfiguration { get }
+    var urlSession: URLSession { get }
+    var configuration: URLSessionConfiguration { get }
     var errorDomain: String { get }
 
     func performRequest(
-        method: Method,
+        _ method: Method,
         uri: String,
-        body: NSData?,
+        body: Data?,
         headers: [String : String]?,
-        completion: ((data: NSData?, response: NSURLResponse?, error: NSError?) -> Void)?
-    ) -> NSURLSessionDataTask?
+        completion: ((_ data: Data?, _ response: URLResponse?, _ error: NSError?) -> Void)?
+    ) -> URLSessionDataTask?
 }
 
 public final class NaiveHTTP: NaiveHTTPProtocol {
     public let errorDomain = "com.otanistudio.NaiveHTTP.error"
-    public typealias completionHandler = (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void
+    public typealias completionHandler = (_ data: Data?, _ response: URLResponse?, _ error: NSError?) -> Void
     
-    let _urlSession: NSURLSession!
-    let _configuration: NSURLSessionConfiguration!
+    public let urlSession: URLSession
+    public let configuration: URLSessionConfiguration
     
-    public var urlSession: NSURLSession {
-        return _urlSession
-    }
-    
-    public var configuration: NSURLSessionConfiguration {
-        return _configuration
-    }
-    
-    required public init(_ configuration: NSURLSessionConfiguration? = nil) {
+    required public init(_ configuration: URLSessionConfiguration? = nil) {
         if let config = configuration {
-            self._configuration = config
-            _urlSession = NSURLSession(configuration: config)
+            self.configuration = config
+            urlSession = URLSession(configuration: config)
         } else {
-            self._configuration = NSURLSessionConfiguration.ephemeralSessionConfiguration()
-            _urlSession = NSURLSession(configuration: NSURLSessionConfiguration.ephemeralSessionConfiguration())
+            self.configuration = URLSessionConfiguration.ephemeral
+            urlSession = URLSession(configuration: self.configuration)
         }
     }
     
     deinit {
-        _urlSession.invalidateAndCancel()
+        urlSession.invalidateAndCancel()
     }
     
     public func performRequest(
-        method: Method,
+        _ method: Method,
         uri: String,
-        body: NSData?,
+        body: Data?,
         headers: [String : String]?,
-        completion: completionHandler?) -> NSURLSessionDataTask? {
+        completion: completionHandler?) -> URLSessionDataTask? {
             
-        let url = NSURL(string: uri)
+        let url = URL(string: uri)
         if url == nil {
             let urlError = NSError(domain: errorDomain, code: -13, userInfo: [
                 NSLocalizedFailureReasonErrorKey : "could not create NSURL from string"
                 ])
-            completion?(data: nil, response: nil, error: urlError)
+            completion?(nil, nil, urlError)
             return nil
         }
-        let req = NSMutableURLRequest(URL: url!)
-        req.HTTPMethod = "\(method)"
+        var req = URLRequest(url: url!)
+        req.httpMethod = "\(method)"
         
         if headers != nil {
             for (k, v) in headers! {
@@ -87,24 +79,24 @@ public final class NaiveHTTP: NaiveHTTPProtocol {
         }
         
         if method == .POST || method == .PUT || method == .DELETE {
-            req.HTTPBody = body
+            req.httpBody = body
         }
-        
-        let task = urlSession.dataTaskWithRequest(req) { (data, response, error) -> Void in
+
+        let task = urlSession.dataTask(with: req) { (data, response, error) in
             guard error == nil else {
-                completion?(data: data, response: response, error: error)
+                completion?(data, response, error as NSError?)
                 return
             }
             
-            if let httpResponse: NSHTTPURLResponse = response as? NSHTTPURLResponse {
+            if let httpResponse: HTTPURLResponse = response as? HTTPURLResponse {
                 if (httpResponse.statusCode >= 400) {
                     let responseError = NSError(domain: self.errorDomain, code: httpResponse.statusCode, userInfo: [NSLocalizedFailureReasonErrorKey: "HTTP 400 or above error", NSLocalizedDescriptionKey: "HTTP Error \(httpResponse.statusCode)"])
-                    completion?(data: data, response: response, error: responseError)
+                    completion?(data, response, responseError)
                     return
                 }
             }
-            
-            completion?(data: data, response: response, error: error)
+
+            completion?(data, response, error as NSError?)
             
         }
         

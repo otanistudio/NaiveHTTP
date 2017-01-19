@@ -7,7 +7,6 @@
 //
 
 import XCTest
-import SwiftyJSON
 
 class ExternalSwiftyHTTPTests: XCTestCase {
     let networkTimeout = 2.0
@@ -15,7 +14,7 @@ class ExternalSwiftyHTTPTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        networkExpectation = self.expectationWithDescription("naive network expectation")
+        networkExpectation = self.expectation(withDescription: "naive network expectation")
     }
     
     override func tearDown() {
@@ -40,13 +39,13 @@ class ExternalSwiftyHTTPTests: XCTestCase {
                 self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
     
     func testGETWithPreFilter() {
         let swiftyHTTP = SwiftyHTTP()
         let prefixFilter = "while(1);</x>"
-        let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
+        let url = Bundle(for: self.dynamicType).urlForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
         
         swiftyHTTP.GET(uri!, params: nil, responseFilter: prefixFilter, headers: nil) { (json, response, error) -> () in
@@ -55,7 +54,7 @@ class ExternalSwiftyHTTPTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
     
     func testJSONPOST() {
@@ -71,7 +70,7 @@ class ExternalSwiftyHTTPTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
     
     func testJSONPOSTWithAdditionalHeaders() {
@@ -85,7 +84,7 @@ class ExternalSwiftyHTTPTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
     
     func testJSONPOSTWithNilPostBody() {
@@ -97,7 +96,7 @@ class ExternalSwiftyHTTPTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
     
     func testJSONPOSTError() {
@@ -112,13 +111,13 @@ class ExternalSwiftyHTTPTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
     
     func testJSONPOSTWithPreFilter() {
         let swiftyHTTP = SwiftyHTTP()
         let prefixFilter = "while(1);</x>"
-        let url = NSBundle(forClass: self.dynamicType).URLForResource("hijack_guarded", withExtension: "json")
+        let url = Bundle(for: self.dynamicType).urlForResource("hijack_guarded", withExtension: "json")
         let uri = url?.absoluteString
         
         swiftyHTTP.POST(uri!, postObject: nil, responseFilter: prefixFilter, headers: nil) { (json, response, error) -> () in
@@ -127,7 +126,7 @@ class ExternalSwiftyHTTPTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
     
     func testJSONPUT() {
@@ -140,7 +139,7 @@ class ExternalSwiftyHTTPTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
     
     func testJSONDELETE() {
@@ -153,6 +152,6 @@ class ExternalSwiftyHTTPTests: XCTestCase {
             self.networkExpectation!.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(networkTimeout, handler: nil)
+        self.waitForExpectations(withTimeout: networkTimeout, handler: nil)
     }
 }
