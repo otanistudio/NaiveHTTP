@@ -10,65 +10,15 @@ import XCTest
 import Foundation
 import NaiveHTTP
 
-fileprivate struct GETResponse {
-    let herp: String
-}
-
-extension GETResponse: Decodable {
-    enum StructKeys: String, CodingKey {
-        case args = "args"
-    }
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: StructKeys.self)
-        let dict = try container.decode(Dictionary<String,String>.self, forKey: .args)
-        let herp: String = dict["herp"]!
-        self.init(herp: herp)
-    }
-}
-
-fileprivate struct POSTResponse {
-    let contents: String
-}
-
-extension POSTResponse: Decodable {
-    enum StructKeys: String, CodingKey {
-        case data = "data"
-    }
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: StructKeys.self)
-        let responseString = try container.decode(String.self, forKey: .data)
-        self.init(contents: responseString)
-    }
-}
-
-fileprivate struct HeaderResponse {
+fileprivate struct HTTPBinResponse: Decodable {
+    let args: [String:String]
+    var data: String?
+    var files: [String:String]?
+    var form: [String:String]?
     let headers: [String:String]
-}
-
-extension HeaderResponse: Decodable {
-    enum StructKeys: String, CodingKey {
-        case headers = "headers"
-    }
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: StructKeys.self)
-        let dict = try container.decode([String:String].self, forKey: .headers)
-        self.init(headers: dict)
-    }
-}
-
-fileprivate struct JSONNullValueCheck {
-    var json: String?
-}
-
-extension JSONNullValueCheck: Decodable {
-    enum StructKeys: String, CodingKey {
-        case json = "json"
-    }
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: StructKeys.self)
-        let json = try container.decodeIfPresent(String.self, forKey: .json)
-        self.init(json: json)
-    }
+    var json: [String:String]?
+    let origin: String
+    let url: String
 }
 
 class JSONTests: XCTestCase {
@@ -114,10 +64,11 @@ class JSONTests: XCTestCase {
             responseFilter: nil,
             headers: nil) { (data, response, error) -> Void in
                 XCTAssertNil(error)
-                let result = try! self.decoder.decode(GETResponse.self, from: data!)
-                XCTAssertEqual("derp", result.herp)
                 let httpResp = response as! HTTPURLResponse
                 XCTAssertEqual(uri + "?herp=derp", httpResp.url!.absoluteString)
+                let httpbinResponse = try! self.decoder.decode(HTTPBinResponse.self, from: data!)
+                debugPrint(httpbinResponse)
+                XCTAssertEqual(["herp":"derp"], httpbinResponse.args)
                 self.networkExpectation!.fulfill()
         }
 
@@ -151,8 +102,9 @@ class JSONTests: XCTestCase {
 
         let _ = naive.POST(URI.loc("post"), postData: postData, responseFilter: nil, headers: nil) { (data, response, error) -> () in
             XCTAssertNil(error)
-            let responseObject = try! self.decoder.decode(POSTResponse.self, from: data!)
-            XCTAssertEqual("{\"herp\":\"derp\"}", responseObject.contents)
+            let httpbinResponse = try! self.decoder.decode(HTTPBinResponse.self, from: data!)
+            XCTAssertEqual("{\"herp\":\"derp\"}", httpbinResponse.data)
+            XCTAssertEqual("http://localhost:5000/post", httpbinResponse.url)
             let httpResp = response as! HTTPURLResponse
             XCTAssertEqual(URI.loc("post"), httpResp.url!.absoluteString)
             self.networkExpectation!.fulfill()
@@ -171,8 +123,9 @@ class JSONTests: XCTestCase {
 
         let _ = naive.POST(URI.loc("post"), postData: postData, responseFilter: nil, headers: additionalHeaders) { (data, response, error) -> () in
             XCTAssertNil(error)
-            let headerCheck = try! self.decoder.decode(HeaderResponse.self, from: data!)
-            XCTAssertEqual("hey-hi-ho", headerCheck.headers["X-Some-Custom-Header"])
+            let httpbinResponse = try! self.decoder.decode(HTTPBinResponse.self, from: data!)
+            XCTAssertEqual("hey-hi-ho", httpbinResponse.headers["X-Some-Custom-Header"])
+            XCTAssertEqual("http://localhost:5000/post", httpbinResponse.url)
             self.networkExpectation!.fulfill()
         }
 
@@ -184,8 +137,9 @@ class JSONTests: XCTestCase {
 
         let _ = naive.POST(URI.loc("post"), postData: nil, responseFilter: nil, headers: nil) { (data, response, error) -> () in
             XCTAssertNil(error)
-            let jsonResponse = try! self.decoder.decode(JSONNullValueCheck.self, from: data!)
-            XCTAssertNil(jsonResponse.json)
+            let httpbinResponse = try! self.decoder.decode(HTTPBinResponse.self, from: data!)
+            XCTAssertEqual("http://localhost:5000/post", httpbinResponse.url)
+            XCTAssertNil(httpbinResponse.json)
             self.networkExpectation!.fulfill()
         }
 
@@ -231,8 +185,9 @@ class JSONTests: XCTestCase {
 
         let _ = naive.PUT(URI.loc("put"), putData: putData, responseFilter: nil, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
-            let responseObject = try! self.decoder.decode(POSTResponse.self, from: data!)
-            XCTAssertEqual("{\"herp\":\"derp\"}", responseObject.contents)
+            let httpbinResponse = try! self.decoder.decode(HTTPBinResponse.self, from: data!)
+            XCTAssertEqual("{\"herp\":\"derp\"}", httpbinResponse.data)
+            XCTAssertEqual("http://localhost:5000/put", httpbinResponse.url)
             self.networkExpectation!.fulfill()
         }
 
@@ -247,8 +202,8 @@ class JSONTests: XCTestCase {
 
         let _ = naive.DELETE(URI.loc("delete"), body: dataForDeleteReq, responseFilter: nil, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
-            let responseObject = try! self.decoder.decode(POSTResponse.self, from: data!)
-            XCTAssertEqual("{\"herp\":\"derp\"}", responseObject.contents)
+            let httpbinResponse = try! self.decoder.decode(HTTPBinResponse.self, from: data!)
+            XCTAssertEqual("{\"herp\":\"derp\"}", httpbinResponse.data)
             self.networkExpectation!.fulfill()
         }
 
