@@ -26,10 +26,6 @@ class ExternalTests: XCTestCase {
         networkExpectation = self.expectation(description: "naive network expectation")
     }
     
-    override func tearDown() {
-        super.tearDown()
-    }
-    
     func testDataTask() {
         let naive = NaiveHTTP()
         let task = naive.performRequest(.GET, uri: URI.loc("get") + "?task=data", body: nil, headers: nil) { (data, response, error) -> Void in
