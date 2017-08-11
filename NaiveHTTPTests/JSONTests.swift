@@ -27,9 +27,10 @@ extension TestObject: Decodable {
 }
 
 class JSONTests: XCTestCase {
-    let networkTimeout = 5.0
+    let networkTimeout = 1.0
     var networkExpectation: XCTestExpectation?
-    
+    let decoder = JSONDecoder()
+
     override func setUp() {
         super.setUp()
         networkExpectation = self.expectation(description: "naive (JSONTests) network expectation")
@@ -57,7 +58,6 @@ class JSONTests: XCTestCase {
 
         let params = ["herp":"derp"]
         let uri = URI.loc("get")
-        let decoder = JSONDecoder()
 
         let _ = naive.GET(
             uri,
@@ -65,12 +65,30 @@ class JSONTests: XCTestCase {
             responseFilter: nil,
             headers: nil) { (data, response, error) -> Void in
                 XCTAssertNil(error)
-                let result = try! decoder.decode(TestObject.self, from: data!)
+                let result = try! self.decoder.decode(TestObject.self, from: data!)
                 XCTAssertEqual("derp", result.herp)
                 let httpResp = response as! HTTPURLResponse
                 debugPrint(httpResp)
                 XCTAssertEqual(uri + "?herp=derp", httpResp.url!.absoluteString)
                 self.networkExpectation!.fulfill()
+        }
+
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
+    }
+
+    func testGETWithPreFilter() {
+        let naive = NaiveHTTP()
+        let prefixFilter = "while(1);</x>"
+        let url = Bundle(for: JSONTests.self).url(forResource: "hijack_guarded", withExtension: "json")
+        let uri = url?.absoluteString
+
+        let expectedString = "{\"feh\":\"bleh\"}\n"
+
+        let _ = naive.GET(uri!, params: nil, responseFilter: prefixFilter, headers: nil) { (data, response, error) -> () in
+            XCTAssertNil(error)
+            let json = String(data: data!, encoding: .utf8)
+            XCTAssertEqual(expectedString, json)
+            self.networkExpectation!.fulfill()
         }
 
         self.waitForExpectations(timeout: networkTimeout, handler: nil)
