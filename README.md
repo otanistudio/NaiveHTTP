@@ -1,10 +1,10 @@
 # NaiveHTTP
 
-Work-in-progress at a focused `NSURLSession` simplification wrapper that is also my learning exercise for [Protocol-Oriented Programming](https://developer.apple.com/videos/wwdc/2015/?id=408).
+Work-in-progress at a focused `URLSession` simplification wrapper reduces boilerplate work.
 
 ## Installation
 
-This is a framework, so you can either build it as such or include it as a submodule/subproject and link it to your binary in Build Phases.
+This is only a framework, so you can either build it as such or include it as a submodule/subproject and link it to your binary in Build Phases.
 
 > Don't forget to `git submodule update --init` to download other dependencies.
 
@@ -27,11 +27,9 @@ naive.GET(
     }
 ```
 
-Convenience functions, like `jsonGET` let you work with "pure JSON" endpoints.
+## JSON
 
-## Protocols
-
-This project is taking on some shape with respect to use of Protocols, which has been helping with testing against fake network responses.
+JSON encoding/decoding happens outside of this framework via Swift's `Codable` protocol, `JSONEncoder`, and `JSONDecoder`.
 
 ## Tests
 
