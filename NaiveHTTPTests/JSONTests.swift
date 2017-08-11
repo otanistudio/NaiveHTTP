@@ -25,10 +25,7 @@ class JSONTests: XCTestCase {
     let networkTimeout = 1.0
     var networkExpectation: XCTestExpectation?
     let decoder = JSONDecoder()
-
-    struct SamplePostData: Encodable {
-        let herp: String
-    }
+    let encoder = JSONEncoder()
 
     override func setUp() {
         super.setUp()
@@ -96,9 +93,7 @@ class JSONTests: XCTestCase {
     func testJSONPOST() {
         let naive = NaiveHTTP()
 
-        let postObject = SamplePostData(herp: "derp")
-        let encoder = JSONEncoder()
-        let postData = try! encoder.encode(postObject)
+        let postData = try! encoder.encode(["herp":"derp"])
 
         let _ = naive.POST(URI.loc("post"), postData: postData, responseFilter: nil, headers: nil) { (data, response, error) -> () in
             XCTAssertNil(error)
@@ -115,9 +110,7 @@ class JSONTests: XCTestCase {
 
     func testJSONPOSTWithAdditionalHeaders() {
         let naive = NaiveHTTP()
-        let postObject = SamplePostData(herp: "derp")
-        let encoder = JSONEncoder()
-        let postData = try! encoder.encode(postObject)
+        let postData = try! encoder.encode(["herp":"derp"])
 
         let additionalHeaders = ["X-Some-Custom-Header":"hey-hi-ho"]
 
@@ -148,9 +141,7 @@ class JSONTests: XCTestCase {
 
     func testJSONPOSTError() {
         let naive = NaiveHTTP()
-        let postObject = SamplePostData(herp: "derp")
-        let encoder = JSONEncoder()
-        let postData = try! encoder.encode(postObject)
+        let postData = try! encoder.encode(["herp":"derp"])
 
         let _ = naive.POST(URI.loc("status/500"), postData: postData, responseFilter: nil, headers: nil) { (data, response, error) -> () in
             XCTAssertEqual(0, data?.count)
@@ -179,14 +170,12 @@ class JSONTests: XCTestCase {
 
     func testJSONPUT() {
         let naive = NaiveHTTP()
-        let sampleData = SamplePostData(herp: "derp")
-        let encoder = JSONEncoder()
-        let putData = try! encoder.encode(sampleData)
+        let putData = try! encoder.encode(["put":"something here"])
 
         let _ = naive.PUT(URI.loc("put"), putData: putData, responseFilter: nil, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
             let httpbinResponse = try! self.decoder.decode(HTTPBinResponse.self, from: data!)
-            XCTAssertEqual("{\"herp\":\"derp\"}", httpbinResponse.data)
+            XCTAssertEqual("{\"put\":\"something here\"}", httpbinResponse.data)
             XCTAssertEqual("http://localhost:5000/put", httpbinResponse.url)
             self.networkExpectation!.fulfill()
         }
@@ -196,14 +185,13 @@ class JSONTests: XCTestCase {
 
     func testJSONDELETE() {
         let naive = NaiveHTTP()
-        let sampleData = SamplePostData(herp: "derp")
-        let encoder = JSONEncoder()
-        let dataForDeleteReq = try! encoder.encode(sampleData)
+        let dataForDeleteReq = try! encoder.encode(["thing":"should be deleted"])
 
         let _ = naive.DELETE(URI.loc("delete"), body: dataForDeleteReq, responseFilter: nil, headers: nil) { (data, response, error) -> Void in
             XCTAssertNil(error)
             let httpbinResponse = try! self.decoder.decode(HTTPBinResponse.self, from: data!)
-            XCTAssertEqual("{\"herp\":\"derp\"}", httpbinResponse.data)
+            XCTAssertEqual("{\"thing\":\"should be deleted\"}", httpbinResponse.data)
+            XCTAssertEqual("http://localhost:5000/delete", httpbinResponse.url)
             self.networkExpectation!.fulfill()
         }
 
