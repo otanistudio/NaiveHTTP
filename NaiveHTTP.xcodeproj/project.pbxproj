@@ -96,11 +96,9 @@
 		5C871B231B98E9A9006FC22F /* hijack_guarded.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = hijack_guarded.json; sourceTree = "<group>"; };
 		5CC389B61B9CC7DA0058CE06 /* UtilityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilityTests.swift; sourceTree = "<group>"; };
 		5CC389BB1B9E82070058CE06 /* NaiveHTTP+Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NaiveHTTP+Image.swift"; sourceTree = "<group>"; };
-		5CC389BE1B9E82BB0058CE06 /* SwiftyHTTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyHTTP.swift; sourceTree = "<group>"; };
 		5CC389C11B9E83390058CE06 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		5CC389C41B9E973B0058CE06 /* NaiveHTTP+Base.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NaiveHTTP+Base.swift"; sourceTree = "<group>"; };
 		5CC389C71B9EA4D40058CE06 /* FakabilityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakabilityTests.swift; sourceTree = "<group>"; };
-		5CEE75671BE58FB300445D21 /* ExternalSwiftyHTTPTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExternalSwiftyHTTPTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
