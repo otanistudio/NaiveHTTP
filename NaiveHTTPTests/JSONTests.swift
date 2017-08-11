@@ -208,4 +208,19 @@ class JSONTests: XCTestCase {
         self.waitForExpectations(timeout: networkTimeout, handler: nil)
     }
 
+    func testJSONPOSTWithPreFilter() {
+        let naive = NaiveHTTP()
+        let prefixFilter = "while(1);</x>"
+        let url = Bundle(for: JSONTests.self).url(forResource: "hijack_guarded", withExtension: "json")
+        let uri = url?.absoluteString
+
+        let _ = naive.POST(uri!, postData: nil, responseFilter: prefixFilter, headers: nil) { (data, response, error) -> () in
+            XCTAssertNil(error)
+            XCTAssertEqual("{\"feh\":\"bleh\"}\n", String(data: data!, encoding: .utf8))
+            self.networkExpectation!.fulfill()
+        }
+
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
+    }
+
 }
