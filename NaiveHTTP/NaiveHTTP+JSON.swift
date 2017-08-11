@@ -124,6 +124,46 @@ extension NaiveHTTPProtocol {
         })
     }
 
+    public func PUT(
+        _ uri: String,
+        putData: Data?,
+        responseFilter: String?,
+        headers: [String : String]?,
+        completion: ((Data?, URLResponse?, NSError?) -> Void)?) -> URLSessionDataTask? {
+
+        let headers = jsonHeaders(headers)
+
+        return performRequest(.PUT, uri: uri, body: putData, headers: headers, completion: { (unfilteredData, response, requestError) in
+
+            guard requestError == nil else {
+                completion?(unfilteredData, response, requestError)
+                return
+            }
+
+            guard unfilteredData != nil else {
+                completion?(nil, response, requestError)
+                return
+            }
+
+            guard let unfilteredJSONStr = String(data: unfilteredData!, encoding: .utf8) else {
+                completion?(unfilteredData, response, requestError)
+                return
+            }
+
+            guard !unfilteredJSONStr.isEmpty else {
+                completion?(unfilteredData, response, requestError)
+                return
+            }
+
+            if let filter = responseFilter {
+                let filteredData = self.filter(string: unfilteredJSONStr, using: filter)
+                completion?(filteredData, response, requestError)
+                return
+            }
+
+            completion?(unfilteredData, response, requestError)
+        })
+    }
 
 
 }

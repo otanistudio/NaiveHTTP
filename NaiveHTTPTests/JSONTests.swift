@@ -152,7 +152,7 @@ class JSONTests: XCTestCase {
         let _ = naive.POST(URI.loc("post"), postData: postData, responseFilter: nil, headers: nil) { (data, response, error) -> () in
             XCTAssertNil(error)
             let responseObject = try! self.decoder.decode(POSTResponse.self, from: data!)
-            XCTAssertEqual(responseObject.contents, "{\"herp\":\"derp\"}")
+            XCTAssertEqual("{\"herp\":\"derp\"}", responseObject.contents)
             let httpResp = response as! HTTPURLResponse
             XCTAssertEqual(URI.loc("post"), httpResp.url!.absoluteString)
             self.networkExpectation!.fulfill()
@@ -222,5 +222,23 @@ class JSONTests: XCTestCase {
 
         self.waitForExpectations(timeout: networkTimeout, handler: nil)
     }
+
+    func testJSONPUT() {
+        let naive = NaiveHTTP()
+        let sampleData = SamplePostData(herp: "derp")
+        let encoder = JSONEncoder()
+        let putData = try! encoder.encode(sampleData)
+
+        let _ = naive.PUT(URI.loc("put"), putData: putData, responseFilter: nil, headers: nil) { (data, response, error) -> Void in
+            XCTAssertNil(error)
+            let responseObject = try! self.decoder.decode(POSTResponse.self, from: data!)
+            XCTAssertEqual("{\"herp\":\"derp\"}", responseObject.contents)
+            self.networkExpectation!.fulfill()
+        }
+
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
+    }
+
+    
 
 }
