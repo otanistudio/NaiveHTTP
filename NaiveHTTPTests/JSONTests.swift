@@ -239,6 +239,20 @@ class JSONTests: XCTestCase {
         self.waitForExpectations(timeout: networkTimeout, handler: nil)
     }
 
-    
+    func testJSONDELETE() {
+        let naive = NaiveHTTP()
+        let sampleData = SamplePostData(herp: "derp")
+        let encoder = JSONEncoder()
+        let dataForDeleteReq = try! encoder.encode(sampleData)
+
+        let _ = naive.DELETE(URI.loc("delete"), body: dataForDeleteReq, responseFilter: nil, headers: nil) { (data, response, error) -> Void in
+            XCTAssertNil(error)
+            let responseObject = try! self.decoder.decode(POSTResponse.self, from: data!)
+            XCTAssertEqual("{\"herp\":\"derp\"}", responseObject.contents)
+            self.networkExpectation!.fulfill()
+        }
+
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
+    }
 
 }
