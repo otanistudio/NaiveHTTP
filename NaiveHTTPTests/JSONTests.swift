@@ -56,6 +56,21 @@ extension HeaderResponse: Decodable {
     }
 }
 
+fileprivate struct JSONNullValueCheck {
+    var json: String?
+}
+
+extension JSONNullValueCheck: Decodable {
+    enum StructKeys: String, CodingKey {
+        case json = "json"
+    }
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: StructKeys.self)
+        let json = try container.decodeIfPresent(String.self, forKey: .json)
+        self.init(json: json)
+    }
+}
+
 class JSONTests: XCTestCase {
     let networkTimeout = 1.0
     var networkExpectation: XCTestExpectation?
@@ -158,6 +173,19 @@ class JSONTests: XCTestCase {
             XCTAssertNil(error)
             let headerCheck = try! self.decoder.decode(HeaderResponse.self, from: data!)
             XCTAssertEqual("hey-hi-ho", headerCheck.headers["X-Some-Custom-Header"])
+            self.networkExpectation!.fulfill()
+        }
+
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
+    }
+
+    func testJSONPOSTWithNilPostBody() {
+        let naive = NaiveHTTP()
+
+        let _ = naive.POST(URI.loc("post"), postData: nil, responseFilter: nil, headers: nil) { (data, response, error) -> () in
+            XCTAssertNil(error)
+            let jsonResponse = try! self.decoder.decode(JSONNullValueCheck.self, from: data!)
+            XCTAssertNil(jsonResponse.json)
             self.networkExpectation!.fulfill()
         }
 
