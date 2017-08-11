@@ -41,10 +41,29 @@ extension POSTResponse: Decodable {
     }
 }
 
+fileprivate struct HeaderResponse {
+    let headers: [String:String]
+}
+
+extension HeaderResponse: Decodable {
+    enum StructKeys: String, CodingKey {
+        case headers = "headers"
+    }
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: StructKeys.self)
+        let dict = try container.decode([String:String].self, forKey: .headers)
+        self.init(headers: dict)
+    }
+}
+
 class JSONTests: XCTestCase {
     let networkTimeout = 1.0
     var networkExpectation: XCTestExpectation?
     let decoder = JSONDecoder()
+
+    struct SamplePostData: Encodable {
+        let herp: String
+    }
 
     override func setUp() {
         super.setUp()
@@ -111,11 +130,7 @@ class JSONTests: XCTestCase {
     func testJSONPOST() {
         let naive = NaiveHTTP()
 
-        struct SamplePostData: Encodable {
-            let herp: String
-        }
-
-        let postObject = SamplePostData(herp: "derp");
+        let postObject = SamplePostData(herp: "derp")
         let encoder = JSONEncoder()
         let postData = try! encoder.encode(postObject)
 
@@ -125,6 +140,24 @@ class JSONTests: XCTestCase {
             XCTAssertEqual(responseObject.contents, "{\"herp\":\"derp\"}")
             let httpResp = response as! HTTPURLResponse
             XCTAssertEqual(URI.loc("post"), httpResp.url!.absoluteString)
+            self.networkExpectation!.fulfill()
+        }
+
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
+    }
+
+    func testJSONPOSTWithAdditionalHeaders() {
+        let naive = NaiveHTTP()
+        let postObject = SamplePostData(herp: "derp")
+        let encoder = JSONEncoder()
+        let postData = try! encoder.encode(postObject)
+
+        let additionalHeaders = ["X-Some-Custom-Header":"hey-hi-ho"]
+
+        let _ = naive.POST(URI.loc("post"), postData: postData, responseFilter: nil, headers: additionalHeaders) { (data, response, error) -> () in
+            XCTAssertNil(error)
+            let headerCheck = try! self.decoder.decode(HeaderResponse.self, from: data!)
+            XCTAssertEqual("hey-hi-ho", headerCheck.headers["X-Some-Custom-Header"])
             self.networkExpectation!.fulfill()
         }
 

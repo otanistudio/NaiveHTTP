@@ -113,7 +113,7 @@ extension NaiveHTTPProtocol {
                 completion?(unfilteredData, response, requestError)
                 return
             }
-            
+
             if let filter = responseFilter {
                 let filteredData = self.filter(string: unfilteredJSONStr, using: filter)
                 completion?(filteredData, response, requestError)
@@ -122,7 +122,8 @@ extension NaiveHTTPProtocol {
 
             completion?(unfilteredData, response, requestError)
         })
-
     }
+
+
 
 }
