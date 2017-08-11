@@ -29,14 +29,22 @@ extension NaiveHTTPProtocol {
         return headers!
     }
 
-    private func filter(string: String, using filter: String) -> Data? {
+    func filter(data: Data, using filter: String) -> Data? {
+        guard !filter.isEmpty else {
+            return data
+        }
+        guard let string = String.init(data: data, encoding: .utf8) else {
+            return data
+        }
+        guard string.hasPrefix(filter) else {
+            return data
+        }
         var filteredStr: String?
         if let range = string.range(of: filter) {
             filteredStr = String(string.suffix(from: range.upperBound))
         } else {
             filteredStr = string
         }
-
         let filteredData = filteredStr?.data(using: .utf8)
         return filteredData
     }
@@ -63,18 +71,7 @@ extension NaiveHTTPProtocol {
                 return
             }
 
-            guard let unfilteredJSONStr = String(data: unfilteredData!, encoding: .utf8) else {
-                completion?(unfilteredData, response, requestError)
-                return
-            }
-
-            guard !unfilteredJSONStr.isEmpty else {
-                completion?(unfilteredData, response, requestError)
-                return
-            }
-
-            if let filter = responseFilter {
-                let filteredData = self.filter(string: unfilteredJSONStr, using: filter)
+            if let filter = responseFilter, let filteredData = self.filter(data: unfilteredData!, using: filter) {
                 completion?(filteredData, response, requestError)
                 return
             }
@@ -104,18 +101,7 @@ extension NaiveHTTPProtocol {
                 return
             }
 
-            guard let unfilteredJSONStr = String(data: unfilteredData!, encoding: .utf8) else {
-                completion?(unfilteredData, response, requestError)
-                return
-            }
-
-            guard !unfilteredJSONStr.isEmpty else {
-                completion?(unfilteredData, response, requestError)
-                return
-            }
-
-            if let filter = responseFilter {
-                let filteredData = self.filter(string: unfilteredJSONStr, using: filter)
+            if let filter = responseFilter, let filteredData = self.filter(data: unfilteredData!, using: filter) {
                 completion?(filteredData, response, requestError)
                 return
             }
@@ -145,18 +131,7 @@ extension NaiveHTTPProtocol {
                 return
             }
 
-            guard let unfilteredJSONStr = String(data: unfilteredData!, encoding: .utf8) else {
-                completion?(unfilteredData, response, requestError)
-                return
-            }
-
-            guard !unfilteredJSONStr.isEmpty else {
-                completion?(unfilteredData, response, requestError)
-                return
-            }
-
-            if let filter = responseFilter {
-                let filteredData = self.filter(string: unfilteredJSONStr, using: filter)
+            if let filter = responseFilter, let filteredData = self.filter(data: unfilteredData!, using: filter) {
                 completion?(filteredData, response, requestError)
                 return
             }
@@ -186,18 +161,7 @@ extension NaiveHTTPProtocol {
                 return
             }
 
-            guard let unfilteredJSONStr = String(data: unfilteredData!, encoding: .utf8) else {
-                completion?(unfilteredData, response, requestError)
-                return
-            }
-
-            guard !unfilteredJSONStr.isEmpty else {
-                completion?(unfilteredData, response, requestError)
-                return
-            }
-
-            if let filter = responseFilter {
-                let filteredData = self.filter(string: unfilteredJSONStr, using: filter)
+            if let filter = responseFilter, let filteredData = self.filter(data: unfilteredData!, using: filter) {
                 completion?(filteredData, response, requestError)
                 return
             }
