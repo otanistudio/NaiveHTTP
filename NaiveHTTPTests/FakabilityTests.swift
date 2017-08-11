@@ -56,7 +56,7 @@ class FakeTests: XCTestCase {
         let _ = fakeNaive.GET("http://example.com", params: nil, headers: nil) { [asyncExpectation](data, response, error) in
             XCTAssertNil(error)
             let resultString = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-            XCTAssertEqual(fakeNaive.commonJSONString, resultString as! String)
+            XCTAssertEqual(fakeNaive.commonJSONString, resultString! as String)
             asyncExpectation.fulfill()
         }
         
