@@ -10,11 +10,11 @@ import XCTest
 import Foundation
 import NaiveHTTP
 
-fileprivate struct TestObject {
+fileprivate struct GETResponse {
     let herp: String
 }
 
-extension TestObject: Decodable {
+extension GETResponse: Decodable {
     enum StructKeys: String, CodingKey {
         case args = "args"
     }
@@ -23,6 +23,21 @@ extension TestObject: Decodable {
         let dict = try container.decode(Dictionary<String,String>.self, forKey: .args)
         let herp: String = dict["herp"]!
         self.init(herp: herp)
+    }
+}
+
+fileprivate struct POSTResponse {
+    let contents: String
+}
+
+extension POSTResponse: Decodable {
+    enum StructKeys: String, CodingKey {
+        case data = "data"
+    }
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: StructKeys.self)
+        let responseString = try container.decode(String.self, forKey: .data)
+        self.init(contents: responseString)
     }
 }
 
@@ -65,10 +80,9 @@ class JSONTests: XCTestCase {
             responseFilter: nil,
             headers: nil) { (data, response, error) -> Void in
                 XCTAssertNil(error)
-                let result = try! self.decoder.decode(TestObject.self, from: data!)
+                let result = try! self.decoder.decode(GETResponse.self, from: data!)
                 XCTAssertEqual("derp", result.herp)
                 let httpResp = response as! HTTPURLResponse
-                debugPrint(httpResp)
                 XCTAssertEqual(uri + "?herp=derp", httpResp.url!.absoluteString)
                 self.networkExpectation!.fulfill()
         }
@@ -88,6 +102,29 @@ class JSONTests: XCTestCase {
             XCTAssertNil(error)
             let json = String(data: data!, encoding: .utf8)
             XCTAssertEqual(expectedString, json)
+            self.networkExpectation!.fulfill()
+        }
+
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
+    }
+
+    func testJSONPOST() {
+        let naive = NaiveHTTP()
+
+        struct SamplePostData: Encodable {
+            let herp: String
+        }
+
+        let postObject = SamplePostData(herp: "derp");
+        let encoder = JSONEncoder()
+        let postData = try! encoder.encode(postObject)
+
+        let _ = naive.POST(URI.loc("post"), postData: postData, responseFilter: nil, headers: nil) { (data, response, error) -> () in
+            XCTAssertNil(error)
+            let responseObject = try! self.decoder.decode(POSTResponse.self, from: data!)
+            XCTAssertEqual(responseObject.contents, "{\"herp\":\"derp\"}")
+            let httpResp = response as! HTTPURLResponse
+            XCTAssertEqual(URI.loc("post"), httpResp.url!.absoluteString)
             self.networkExpectation!.fulfill()
         }
 
