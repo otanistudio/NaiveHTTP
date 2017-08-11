@@ -64,7 +64,6 @@ class JSONTests: XCTestCase {
                 let httpResp = response as! HTTPURLResponse
                 XCTAssertEqual(uri + "?herp=derp", httpResp.url!.absoluteString)
                 let httpbinResponse = try! self.decoder.decode(HTTPBinResponse.self, from: data!)
-                debugPrint(httpbinResponse)
                 XCTAssertEqual(["herp":"derp"], httpbinResponse.args)
                 self.networkExpectation!.fulfill()
         }
