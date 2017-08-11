@@ -12,6 +12,9 @@
 		5C2660C91B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */; };
 		5C2660CA1B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */; };
 		5C2AE1F21C40D9160088A0CA /* InternalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2AE1F11C40D9160088A0CA /* InternalTests.swift */; };
+		5C46C9331EEA4598007065A5 /* JSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C46C9321EEA4598007065A5 /* JSONTests.swift */; };
+		5C46C93C1EEA4774007065A5 /* NaiveHTTP+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C46C93B1EEA4774007065A5 /* NaiveHTTP+JSON.swift */; };
+		5C46C93D1EEA477D007065A5 /* NaiveHTTP+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C46C93B1EEA4774007065A5 /* NaiveHTTP+JSON.swift */; };
 		5C65BA281B3B67D6005B4DCE /* ExternalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C65BA271B3B67D6005B4DCE /* ExternalTests.swift */; };
 		5C871B241B98E9A9006FC22F /* hijack_guarded.json in Resources */ = {isa = PBXBuildFile; fileRef = 5C871B231B98E9A9006FC22F /* hijack_guarded.json */; };
 		5CC389B71B9CC7DA0058CE06 /* UtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC389B61B9CC7DA0058CE06 /* UtilityTests.swift */; };
@@ -92,6 +95,8 @@
 		5C2660C81B3B30D3004DF6E7 /* NaiveHTTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaiveHTTP.swift; sourceTree = "<group>"; };
 		5C2A453B1CDD2D6600F4172E /* SwiftyJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftyJSON.xcodeproj; path = SwiftyJSON/SwiftyJSON.xcodeproj; sourceTree = "<group>"; };
 		5C2AE1F11C40D9160088A0CA /* InternalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternalTests.swift; sourceTree = "<group>"; };
+		5C46C9321EEA4598007065A5 /* JSONTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONTests.swift; sourceTree = "<group>"; };
+		5C46C93B1EEA4774007065A5 /* NaiveHTTP+JSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NaiveHTTP+JSON.swift"; sourceTree = "<group>"; };
 		5C65BA271B3B67D6005B4DCE /* ExternalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExternalTests.swift; sourceTree = "<group>"; };
 		5C871B231B98E9A9006FC22F /* hijack_guarded.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = hijack_guarded.json; sourceTree = "<group>"; };
 		5CC389B61B9CC7DA0058CE06 /* UtilityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilityTests.swift; sourceTree = "<group>"; };
@@ -156,12 +161,12 @@
 		5C2660BC1B3B30A1004DF6E7 /* NaiveHTTPTests */ = {
 			isa = PBXGroup;
 			children = (
-				5CEE75671BE58FB300445D21 /* ExternalSwiftyHTTPTests.swift */,
 				5C65BA271B3B67D6005B4DCE /* ExternalTests.swift */,
 				5CC389C71B9EA4D40058CE06 /* FakabilityTests.swift */,
 				5C871B231B98E9A9006FC22F /* hijack_guarded.json */,
 				5C2660BF1B3B30A1004DF6E7 /* Info.plist */,
 				5C2AE1F11C40D9160088A0CA /* InternalTests.swift */,
+				5C46C9321EEA4598007065A5 /* JSONTests.swift */,
 				5CC389B61B9CC7DA0058CE06 /* UtilityTests.swift */,
 			);
 			path = NaiveHTTPTests;
@@ -192,7 +197,7 @@
 		5C2A45841CDD408600F4172E /* JSON Support */ = {
 			isa = PBXGroup;
 			children = (
-				5CC389BE1B9E82BB0058CE06 /* SwiftyHTTP.swift */,
+				5C46C93B1EEA4774007065A5 /* NaiveHTTP+JSON.swift */,
 			);
 			name = "JSON Support";
 			sourceTree = "<group>";
@@ -377,6 +382,7 @@
 				5C2660C91B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */,
 				5CC389C21B9E83390058CE06 /* Utility.swift in Sources */,
 				5CC389C51B9E973B0058CE06 /* NaiveHTTP+Base.swift in Sources */,
+				5C46C93C1EEA4774007065A5 /* NaiveHTTP+JSON.swift in Sources */,
 				5CC389BC1B9E82070058CE06 /* NaiveHTTP+Image.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -388,7 +394,9 @@
 				5C65BA281B3B67D6005B4DCE /* ExternalTests.swift in Sources */,
 				5CC389C91B9EA4D40058CE06 /* FakabilityTests.swift in Sources */,
 				5CC389B71B9CC7DA0058CE06 /* UtilityTests.swift in Sources */,
+				5C46C93D1EEA477D007065A5 /* NaiveHTTP+JSON.swift in Sources */,
 				5CC389BD1B9E82070058CE06 /* NaiveHTTP+Image.swift in Sources */,
+				5C46C9331EEA4598007065A5 /* JSONTests.swift in Sources */,
 				5C2AE1F21C40D9160088A0CA /* InternalTests.swift in Sources */,
 				5C2660CA1B3B30D3004DF6E7 /* NaiveHTTP.swift in Sources */,
 				5CC389C61B9E973B0058CE06 /* NaiveHTTP+Base.swift in Sources */,
