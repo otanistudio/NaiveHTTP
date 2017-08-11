@@ -192,4 +192,20 @@ class JSONTests: XCTestCase {
         self.waitForExpectations(timeout: networkTimeout, handler: nil)
     }
 
+    func testJSONPOSTError() {
+        let naive = NaiveHTTP()
+        let postObject = SamplePostData(herp: "derp")
+        let encoder = JSONEncoder()
+        let postData = try! encoder.encode(postObject)
+
+        let _ = naive.POST(URI.loc("status/500"), postData: postData, responseFilter: nil, headers: nil) { (data, response, error) -> () in
+            XCTAssertEqual(0, data?.count)
+            XCTAssertEqual(500, error!.code)
+            XCTAssertEqual("HTTP Error 500", error!.userInfo[NSLocalizedDescriptionKey] as? String)
+            self.networkExpectation!.fulfill()
+        }
+
+        self.waitForExpectations(timeout: networkTimeout, handler: nil)
+    }
+
 }
